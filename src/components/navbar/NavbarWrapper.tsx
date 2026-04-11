@@ -5,6 +5,7 @@ import { Navbar, NavbarAuthState } from "./Navbar";
 import { logoutAction } from "./logoutAction";
 
 
+
 /**
  * Server component that reads the accessToken cookie,
  * decodes the user's role/name/email, and passes
