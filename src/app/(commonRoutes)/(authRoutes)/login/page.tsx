@@ -1,8 +1,15 @@
-export default function LoginPage() {
-  return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold">Login</h1>
-      <p className="text-gray-600 mt-2">Sign in to your account.</p>
-    </div>
-  );
+import LoginForm from "@/components/modules/Auth/LoginForm";
+
+interface LoginParams {
+  searchParams: Promise<{ redirect?: string }>;
 }
+
+const LoginPage = async ({ searchParams }: LoginParams) => {
+  const params = await searchParams;
+  const redirectPath = params.redirect;
+  return (
+    <LoginForm redirectPath={redirectPath}/>
+  )
+}
+
+export default LoginPage
