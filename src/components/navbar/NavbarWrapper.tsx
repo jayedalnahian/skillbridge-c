@@ -1,7 +1,8 @@
-import { getCookie, deleteCookie } from "@/lib/cookieUtils";
+import { getCookie } from "@/lib/cookieUtils";
 import { jwtUtils } from "@/lib/jwtUtils";
 import { type UserRole } from "@/lib/authUtils";
 import { Navbar, NavbarAuthState } from "./Navbar";
+import { logoutAction } from "./logoutAction";
 
 
 /**
@@ -32,11 +33,5 @@ export default async function NavbarWrapper() {
     }
   }
 
-  const handleLogout = async () => {
-    "use server";
-    await deleteCookie("accessToken");
-    await deleteCookie("refreshToken");
-  };
-
-  return <Navbar auth={auth} onLogout={handleLogout} />;
+  return <Navbar auth={auth} onLogout={logoutAction} />;
 }

@@ -25,9 +25,20 @@ export async function proxy(request: NextRequest) {
         const accessToken = request.cookies.get("accessToken")?.value;
         const refreshToken = request.cookies.get("refreshToken")?.value;
 
-        const decodedAccessToken = accessToken && jwtUtils.verifyToken(accessToken, process.env.JWT_ACCESS_SECRET as string).data;
+        // Verify token safely - handle edge runtime crypto limitations
+        let decodedAccessToken: { role: string } | null = null;
+        let isValidAccessToken = false;
 
-        const isValidAccessToken = accessToken && jwtUtils.verifyToken(accessToken, process.env.JWT_ACCESS_SECRET as string).success;
+        if (accessToken) {
+            try {
+                const verification = jwtUtils.verifyToken(accessToken, process.env.JWT_ACCESS_SECRET as string);
+                isValidAccessToken = verification.success;
+                decodedAccessToken = verification.data as { role: string } | null;
+            } catch {
+                // Token verification failed - treat as invalid
+                isValidAccessToken = false;
+            }
+        }
 
         let userRole: UserRole | null = null;
 
@@ -41,7 +52,7 @@ export async function proxy(request: NextRequest) {
 
 
         //proactively refresh token if refresh token exists and access token is expired or about to expire
-        if (isValidAccessToken && refreshToken && (await isTokenExpiringSoon(accessToken))) {
+        if (isValidAccessToken && refreshToken && accessToken && (await isTokenExpiringSoon(accessToken))) {
             const requestHeaders = new Headers(request.headers);
 
             const response = NextResponse.next({
@@ -121,15 +132,16 @@ export async function proxy(request: NextRequest) {
         }
 
         // Rule - 4 User is Not logged in but trying to access protected route -> redirect to login
-        if (!accessToken || !isValidAccessToken) {
+        // NOTE: This check only applies to protected routes (routerOwner !== null)
+        if (routerOwner !== null && (!accessToken || !isValidAccessToken)) {
             const loginUrl = new URL("/login", request.url);
             loginUrl.searchParams.set("redirect", pathWithQuery);
             return NextResponse.redirect(loginUrl);
         }
 
-        //Rule - Enforcing user to stay in reset password or verify email page if their needPasswordChange or isEmailVerified flags are not satisfied respectively
-
-        if (accessToken) {
+        // Rule - 5: Account state enforcement (email verification, password change)
+        // Only check for users with valid tokens accessing protected routes
+        if (accessToken && isValidAccessToken && routerOwner !== null) {
             const userInfo = await getUserInfo();
 
             if (userInfo) {
@@ -165,23 +177,28 @@ export async function proxy(request: NextRequest) {
             }
         }
 
-        // Rule - 5 User trying to access Common protected route -> allow
-        if (routerOwner === "COMMON") {
+        // Rule - 6 User trying to access Common protected route -> allow if authenticated
+        if (routerOwner === "COMMON" && isValidAccessToken) {
             return NextResponse.next();
         }
 
-        //Rule-6 User trying to visit role based protected but doesn't have required role -> redirect to their default dashboard
-
-        if (routerOwner === "ADMIN" || routerOwner === "TEACHER" || routerOwner === "STUDENT") {
-            if (routerOwner !== userRole) {
-                return NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole as UserRole), request.url));
+        // Rule - 7 User trying to visit role based protected route
+        // Allow if user has the required role, otherwise redirect to their dashboard
+        if ((routerOwner === "ADMIN" || routerOwner === "TEACHER" || routerOwner === "STUDENT") && isValidAccessToken) {
+            if (routerOwner === userRole) {
+                return NextResponse.next();
             }
+            // Wrong role - redirect to their own dashboard
+            return NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole as UserRole), request.url));
         }
 
+        // Default: Allow the request
         return NextResponse.next();
 
     } catch (error) {
         console.error("Error in proxy middleware:", error);
+        // On error, allow the request to proceed rather than blocking the user
+        return NextResponse.next();
     }
 }
 

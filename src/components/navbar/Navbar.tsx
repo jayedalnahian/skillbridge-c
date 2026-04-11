@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useTransition } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -101,6 +101,7 @@ export function Navbar({
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isLogoutPending, startLogoutTransition] = useTransition();
 
   // ---- Scroll listener for glassmorphism effect ----
   useEffect(() => {
@@ -247,11 +248,12 @@ export function Navbar({
                     <>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem
-                        onClick={onLogout}
-                        className="cursor-pointer text-destructive focus:bg-destructive focus:text-destructive-foreground"
+                        onClick={() => startLogoutTransition(onLogout)}
+                        disabled={isLogoutPending}
+                        className="cursor-pointer text-destructive focus:bg-destructive focus:text-destructive-foreground disabled:opacity-50"
                       >
                         <LogOut className="mr-2 h-4 w-4" />
-                        Logout
+                        {isLogoutPending ? "Logging out..." : "Logout"}
                       </DropdownMenuItem>
                     </>
                   )}
@@ -380,13 +382,16 @@ export function Navbar({
                     <Button
                       variant="destructive"
                       className="w-full justify-start"
+                      disabled={isLogoutPending}
                       onClick={() => {
-                        onLogout();
-                        setMobileOpen(false);
+                        startLogoutTransition(async () => {
+                          await onLogout();
+                          setMobileOpen(false);
+                        });
                       }}
                     >
                       <LogOut className="mr-2 h-4 w-4" />
-                      Logout
+                      {isLogoutPending ? "Logging out..." : "Logout"}
                     </Button>
                   )}
                 </>
