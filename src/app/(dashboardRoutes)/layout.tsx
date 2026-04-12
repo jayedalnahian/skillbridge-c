@@ -1,17 +1,34 @@
-export default function DashboardRoutesLayout({
+import DashboardNavbar from "@/components/modules/dashboard/DashboardNavbar";
+import DashboardSidebar from "@/components/modules/dashboard/DashboardSidebar";
+import { getUserInfo } from "@/services/auth.services";
+import { redirect } from "next/navigation";
+
+export default async function DashboardRoutesLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const userInfo = await getUserInfo();
+
+  if (!userInfo) {
+    redirect("/login");
+  }
+
   return (
-    <div className="min-h-screen flex bg-background">
-      <aside className="w-64 bg-card border-r border-border text-foreground p-4">
-        <div className="text-xl font-bold mb-8 text-primary">Dashboard</div>
-        <nav>Sidebar Menu</nav>
-      </aside>
-      <main className="flex-1 p-8 bg-background">
-        {children}
-      </main>
+    <div className="flex h-screen overflow-hidden bg-background">
+      {/* Sidebar - Desktop */}
+      <DashboardSidebar userInfo={userInfo} />
+
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Navbar */}
+        <DashboardNavbar userInfo={userInfo} />
+
+        {/* Page Content */}
+        <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
+          {children}
+        </main>
+      </div>
     </div>
   );
 }

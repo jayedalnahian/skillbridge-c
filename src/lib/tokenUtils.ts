@@ -1,4 +1,4 @@
-import { decodeJwt } from "jose";
+import jwt from "jsonwebtoken";
 import { setCookie } from "./cookieUtils";
 
 
@@ -6,13 +6,13 @@ import { setCookie } from "./cookieUtils";
 const getTokenSecondsRemaining = (token: string): number => {
     if (!token) return 0;
     try {
-        const tokenPayload = decodeJwt(token);
+        const tokenPayload = jwt.decode(token);
 
-        if (tokenPayload && !tokenPayload.exp) {
+        if (!tokenPayload || typeof tokenPayload === "string" || !tokenPayload.exp) {
             return 0;
         }
 
-        const remainingSeconds = (tokenPayload.exp as number) - Math.floor(Date.now() / 1000)
+        const remainingSeconds = tokenPayload.exp - Math.floor(Date.now() / 1000)
 
         return remainingSeconds > 0 ? remainingSeconds : 0;
 

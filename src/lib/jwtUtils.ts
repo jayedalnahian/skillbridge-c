@@ -1,28 +1,33 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { jwtVerify, decodeJwt } from "jose";
+import jwt, { JwtPayload } from "jsonwebtoken"
 
-const verifyToken = async (token: string, secret: string) => {
+
+
+const verifyToken = (token: string, secret: string) => {
     try {
-        const secretKey = new TextEncoder().encode(secret);
-        const { payload } = await jwtVerify(token, secretKey);
+        const decoded = jwt.verify(token, secret) as JwtPayload
         return {
             success: true,
-            data: payload
-        };
+            data: decoded
+        }
     } catch (error: any) {
         return {
             success: false,
             message: error.message,
             error
-        };
+        }
     }
-};
 
-const decodedToken = (token: string) => {
-    return decodeJwt(token);
-};
+
+}
+
+const decodeToken = (token: string) => {
+    const decoded = jwt.decode(token) as JwtPayload;
+    return decoded
+
+}
 
 export const jwtUtils = {
     verifyToken,
-    decodedToken,
+    decodeToken,
 };

@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, X } from "lucide-react";
+import { Loader2, Search, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 interface DataTableSearchProps {
@@ -22,6 +22,14 @@ const DataTableSearch = ({
 }: DataTableSearchProps) => {
   const [value, setValue] = useState(initialValue);
   const skipNextDebounceRef = useRef(false);
+
+  // Sync with prop when it change from outside (e.g. URL change, clear filters, etc.)
+  useEffect(() => {
+    if (initialValue !== value) {
+      setValue(initialValue);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- We only want to sync on prop change
+  }, [initialValue]);
 
   useEffect(() => {
     if (skipNextDebounceRef.current) {
@@ -44,13 +52,16 @@ const DataTableSearch = ({
 
   return (
     <div className="relative w-full md:max-w-sm">
-      <Search className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
+      {isLoading ? (
+        <Loader2 className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 animate-spin" />
+      ) : (
+        <Search className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
+      )}
       <Input
         value={value}
         onChange={(event) => setValue(event.target.value)}
         placeholder={placeholder}
         className="h-9 pr-9 pl-9"
-        disabled={isLoading}
       />
 
       {value.length > 0 && (
@@ -61,7 +72,6 @@ const DataTableSearch = ({
           className="absolute top-1/2 right-1 -translate-y-1/2"
           onClick={handleClear}
           aria-label="Clear search"
-          disabled={isLoading}
         >
           <X className="h-3.5 w-3.5" />
         </Button>

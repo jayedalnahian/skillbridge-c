@@ -79,9 +79,9 @@ const ROLE_LINKS: Record<UserRole, { label: string; href: string; icon: React.El
     { label: "Browse Tutors", href: "/tutors", icon: Users },
     { label: "My Bookings", href: "/dashboard/bookings", icon: Calendar },
   ],
-  TEACHER: [
-    { label: "My Availability", href: "/teacher/dashboard/availability", icon: Calendar },
-    { label: "Teaching Sessions", href: "/teacher/dashboard/bookings", icon: Users },
+  TUTOR: [
+    { label: "My Availability", href: "/tutor/dashboard/availability", icon: Calendar },
+    { label: "Teaching Sessions", href: "/tutor/dashboard/bookings", icon: Users },
   ],
   ADMIN: [
     { label: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },

@@ -1,4 +1,4 @@
-export type UserRole = "ADMIN" | "TEACHER" | "STUDENT";
+export type UserRole = "ADMIN" | "TUTOR" | "STUDENT";
 
 export const authRoutes = [ "/login", "/register", "/forgot-password", "/reset-password", "/verify-email" ];
 
@@ -16,13 +16,13 @@ export const commonProtectedRoutes : RouteConfig = {
     pattern : []
 }
 
-export const teacherProtectedRoutes : RouteConfig = {
-    pattern: [/^\/teacher\/dashboard/ ], // Matches any path that starts with /teacher/dashboard
-    exact : []
+export const tutorProtectedRoutes : RouteConfig = {
+    pattern: [/^\/tutor/ ], // Matches any path that starts with /tutor
+    exact : [] 
 }
 
 export const adminProtectedRoutes : RouteConfig = {
-    pattern: [/^\/admin\/dashboard/ ], // Matches any path that starts with /admin/dashboard
+    pattern: [/^\/admin/ ], // Matches any path that starts with /admin
     exact : []
 }
 
@@ -43,9 +43,9 @@ export const isRouteMatches = (pathname : string, routes : RouteConfig) => {
     return routes.pattern.some((pattern : RegExp) => pattern.test(pathname));
 }
 
-export const getRouteOwner = (pathname : string) : "ADMIN" | "TEACHER" | "STUDENT" | "COMMON" | null => {
-    if(isRouteMatches(pathname, teacherProtectedRoutes)) {
-        return "TEACHER";
+export const getRouteOwner = (pathname : string) : "ADMIN" | "TUTOR" | "STUDENT" | "COMMON" | null => {
+    if(isRouteMatches(pathname, tutorProtectedRoutes)) {
+        return "TUTOR";
     }
 
     // if (isRouteMatches(pathname, superAdminProtectedRoutes)) {
@@ -71,8 +71,8 @@ export const getDefaultDashboardRoute = (role : UserRole) => {
     if(role === "ADMIN") {
         return "/admin/dashboard";
     }
-    if(role === "TEACHER") {
-        return "/teacher/dashboard";
+    if(role === "TUTOR") {
+        return "/tutor/dashboard";
     }
     if(role === "STUDENT") {
         return "/dashboard";

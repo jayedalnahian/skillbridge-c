@@ -20,7 +20,7 @@ export default async function NavbarWrapper() {
   let auth: NavbarAuthState = { isLoggedIn: false };
 
   if (accessToken) {
-    const decoded = jwtUtils.decodedToken(accessToken);
+    const decoded = jwtUtils.decodeToken(accessToken);
 
     if (decoded) {
       const rawRole = (decoded.role as UserRole | "SUPER_ADMIN") ?? "ADMIN";
