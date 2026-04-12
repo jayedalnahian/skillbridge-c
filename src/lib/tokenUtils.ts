@@ -1,28 +1,26 @@
-"use server"
-
-import jwt, { JwtPayload } from "jsonwebtoken";
+import { decodeJwt } from "jose";
 import { setCookie } from "./cookieUtils";
 
 
 
-const getTokenSecondsRemaining =  (token: string): number => {
-    if(!token) return 0;
+const getTokenSecondsRemaining = (token: string): number => {
+    if (!token) return 0;
     try {
-        const tokenPayload= jwt.decode(token) as JwtPayload;
+        const tokenPayload = decodeJwt(token);
 
-        if (tokenPayload && !tokenPayload.exp){
+        if (tokenPayload && !tokenPayload.exp) {
             return 0;
         }
 
-        const remainingSeconds = tokenPayload.exp as number - Math.floor(Date.now() / 1000)
+        const remainingSeconds = (tokenPayload.exp as number) - Math.floor(Date.now() / 1000)
 
         return remainingSeconds > 0 ? remainingSeconds : 0;
 
     } catch (error) {
-        console.error("Error decoding token:", error);
+        console.error("Error decoding token in Edge Runtime:", error);
         return 0;
     }
-} 
+}
 
 export const setTokenInCookies = async (
     name : string,

@@ -1,8 +1,21 @@
-export default function ResetPasswordPage() {
+import ResetPasswordForm from "@/components/modules/Auth/ResetPasswordForm";
+import { redirect } from "next/navigation";
+
+interface ResetPasswordParams {
+  searchParams: Promise<{ email?: string }>;
+}
+
+export default async function ResetPasswordPage({ searchParams }: ResetPasswordParams) {
+  const params = await searchParams;
+  const email = params.email;
+
+  if (!email) {
+    redirect("/forgot-password");
+  }
+
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold">Reset Password</h1>
-      <p className="text-gray-600 mt-2">Reset your account password.</p>
+    <div className="flex items-center justify-center min-vh-100 py-12 px-4 sm:px-6 lg:px-8">
+      <ResetPasswordForm email={email} />
     </div>
   );
 }

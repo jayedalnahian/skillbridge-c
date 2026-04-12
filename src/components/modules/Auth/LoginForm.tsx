@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { ILoginPayload, loginZodSchema } from "@/zod/auth.validation";
 import { useForm } from "@tanstack/react-form";
-import { useMutation } from "@tanstack/react-query";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -22,10 +21,7 @@ const LoginForm = ({ redirectPath }: LoginFormProps) => {
 
     const [serverError, setServerError] = useState<string | null>(null);
     const [showPassword, setShowPassword] = useState(false);
-
-    const { mutateAsync , isPending} = useMutation({
-        mutationFn : (payload : ILoginPayload) => loginAction(payload, redirectPath),
-    })
+    const [isPending, setIsPending] = useState(false);
 
     const form = useForm({
         defaultValues : {
@@ -35,17 +31,16 @@ const LoginForm = ({ redirectPath }: LoginFormProps) => {
 
         onSubmit : async ({value}) => {
             setServerError(null);
-            try {
-                const result = await mutateAsync(value) as any;
-
-                if(!result.success ){
-                    setServerError(result.message || "Login failed");
-                    return ;
-                }
-            } catch (error : any) {
-                console.log(`Login failed: ${error.message}`);
-                setServerError(`Login failed: ${error.message}`);
+            setIsPending(true);
+            
+            const result = await loginAction(value, redirectPath) as any;
+            
+            setIsPending(false);
+            
+            if(!result.success){
+                setServerError(result.message || "Login failed");
             }
+            // On success, redirect is handled by server action - no code needed here
         }
     })
   return (

@@ -1,8 +1,16 @@
-export default function VerifyPasswordPage() {
+import VerifyEmailForm from "@/components/modules/Auth/VerifyEmailForm";
+
+interface VerifyEmailPageProps {
+  searchParams: Promise<{ email?: string }>;
+}
+
+export default async function VerifyEmailPage({ searchParams }: VerifyEmailPageProps) {
+  const params = await searchParams;
+  const email = params.email || "";
+
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold">Verify Password</h1>
-      <p className="text-gray-600 mt-2">Verify your password.</p>
+    <div className="min-h-screen flex items-center justify-center p-4">
+      <VerifyEmailForm email={email} />
     </div>
   );
 }

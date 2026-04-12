@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 export const logoutAction = async (): Promise<void> => {
   try {
     // Call backend logout endpoint to invalidate session in database
-    await httpClient.post("/auth/logout", null);
+    await httpClient.post("/auth/logout", {});
   } catch (error) {
     // Log error but continue with client-side cleanup
     // Even if backend fails, we must clear cookies to ensure user can log out

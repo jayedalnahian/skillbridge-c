@@ -9,7 +9,9 @@ import { ILoginResponse } from "@/types/auth.types";
 import { IRegisterPayload, registerZodSchema } from "@/zod/register.validation";
 import { redirect } from "next/navigation";
 
-export const registerAction = async (payload: IRegisterPayload): Promise<ILoginResponse | ApiErrorResponse> => {
+export const registerAction = async (
+  payload: IRegisterPayload,
+): Promise<ILoginResponse | ApiErrorResponse> => {
   const parsedPayload = registerZodSchema.safeParse(payload);
 
   if (!parsedPayload.success) {
@@ -26,16 +28,20 @@ export const registerAction = async (payload: IRegisterPayload): Promise<ILoginR
     formData.append("name", parsedPayload.data.name);
     formData.append("email", parsedPayload.data.email);
     formData.append("password", parsedPayload.data.password);
-    
+
     if (parsedPayload.data.image) {
       formData.append("file", parsedPayload.data.image);
     }
 
-    const response = await httpClient.post<ILoginResponse>("/auth/register", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
+    const response = await httpClient.post<ILoginResponse>(
+      "/auth/register",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       },
-    });
+    );
 
     const { accessToken, refreshToken, token, user } = response.data;
     const { role, emailVerified, needPasswordChange, email } = user;
@@ -52,7 +58,7 @@ export const registerAction = async (payload: IRegisterPayload): Promise<ILoginR
       redirect(getDefaultDashboardRoute(role as UserRole));
     }
   } catch (error: any) {
-    console.log(error, "error");
+    // console.log(error, "error");
     if (
       error &&
       typeof error === "object" &&

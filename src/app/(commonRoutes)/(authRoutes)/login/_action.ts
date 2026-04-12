@@ -1,7 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
-import { getDefaultDashboardRoute, isValidRedirectForRole, UserRole } from "@/lib/authUtils";
+import {
+  getDefaultDashboardRoute,
+  isValidRedirectForRole,
+  UserRole,
+} from "@/lib/authUtils";
 import { httpClient } from "@/lib/axios/httpClient";
 import { setTokenInCookies } from "@/lib/tokenUtils";
 import { ApiErrorResponse } from "@/types/api.types";
@@ -11,7 +15,7 @@ import { redirect } from "next/navigation";
 
 export const loginAction = async (
   payload: ILoginPayload,
-  redirectPath?: string
+  redirectPath?: string,
 ): Promise<ILoginResponse | ApiErrorResponse> => {
   const parsedPayload = loginZodSchema.safeParse(payload);
 
@@ -26,7 +30,10 @@ export const loginAction = async (
   let redirectTarget: string | null = null;
 
   try {
-    const response = await httpClient.post<ILoginResponse>("/auth/login", parsedPayload.data);
+    const response = await httpClient.post<ILoginResponse>(
+      "/auth/login",
+      parsedPayload.data,
+    );
 
     const { accessToken, refreshToken, token, user } = response.data;
     const { role, emailVerified, needPasswordChange } = user;
@@ -72,6 +79,7 @@ export const loginAction = async (
 
   // Perform redirect outside try/catch to avoid NEXT_REDIRECT being caught
   if (redirectTarget) {
+    // console.log("Redirecting to:", redirectTarget);
     redirect(redirectTarget);
   }
 
