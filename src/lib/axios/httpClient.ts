@@ -2,11 +2,8 @@
 
 
 import axios from 'axios';
-import { cookies, headers } from 'next/headers';
-
 import { ApiResponse } from '@/types/api.types';
 import { isTokenExpiringSoon } from '../tokenUtils';
-import { getNewTokensWithRefreshToken } from '@/services/auth.services';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -14,44 +11,47 @@ if(!API_BASE_URL) {
     throw new Error('API_BASE_URL is not defined in environment variables');
 }
 
-async function tryRefreshToken(
-    accessToken: string,
-    refreshToken: string,
-    sessionToken: string
-): Promise<void>
-{
-    if(!(await isTokenExpiringSoon(accessToken))) {
-        return;
+const axiosInstance = async () => {
+    // If we are in the browser, return a simple instance
+    // The browser will automatically handle cookies
+    if (typeof window !== 'undefined') {
+        return axios.create({
+            baseURL: API_BASE_URL,
+            timeout: 30000,
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
     }
 
+    // If we are on the server (Server Actions, Server Components, etc.)
+    // We use dynamic imports to hide next/headers from the client bundle
+    const { cookies, headers } = await import('next/headers');
+    const { getNewTokensWithRefreshToken } = await import('@/services/auth.services');
+
+    const cookieStore = await cookies();
     const requestHeader = await headers();
 
-    if (requestHeader.get("x-token-refreshed") === "1") {
-        return; // avoid multiple refresh attempts in the same request lifecycle
-    }
-
-    try {
-        await getNewTokensWithRefreshToken(refreshToken, sessionToken);
-    } catch (error : any) {
-        console.error("Error refreshing token in http client:", error);
-    }
-}
-
-const axiosInstance = async () => {
-    const cookieStore = await cookies();
     const accessToken = cookieStore.get("accessToken")?.value;
     const refreshToken = cookieStore.get("refreshToken")?.value;
     const sessionToken = cookieStore.get("better-auth.session_token")?.value;
 
     if(accessToken && refreshToken && sessionToken){
-        await tryRefreshToken(accessToken, refreshToken, sessionToken);
+        if(await isTokenExpiringSoon(accessToken)) {
+            if (requestHeader.get("x-token-refreshed") !== "1") {
+                try {
+                    await getNewTokensWithRefreshToken(refreshToken, sessionToken);
+                } catch (error : any) {
+                    console.error("Error refreshing token in server http client:", error);
+                }
+            }
+        }
     }
 
     const cookieHeader = cookieStore
                                 .getAll()
                                 .map((cookie) => `${cookie.name}=${cookie.value}`)
                                 .join("; ");    
-    // eg Cookie: "accessToken=abc123; refreshToken=def456"
 
     const instance = axios.create({
         baseURL : API_BASE_URL,

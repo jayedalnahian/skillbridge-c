@@ -211,7 +211,7 @@ const DataTablePagination = <TData,>({
             <SelectValue placeholder="Limit" />
           </SelectTrigger>
 
-          <SelectContent>
+          <SelectContent className="bg-[#222831] border-[#393E46] shadow-2xl shadow-black/50">
             {DEFAULT_PAGE_SIZES.map((size) => (
               <SelectItem key={size} value={String(size)}>
                 {size}

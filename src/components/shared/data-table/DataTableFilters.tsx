@@ -395,7 +395,7 @@ const DataTableFilters = ({
               </Button>
             </PopoverTrigger>
 
-            <PopoverContent align="start" className="w-80">
+            <PopoverContent align="start" className="w-80 bg-[#222831] border-[#393E46] shadow-2xl shadow-black/50">
               <div className="mb-3 flex items-center justify-between">
                 <h3 className="text-sm font-semibold">{filter.label}</h3>
               </div>

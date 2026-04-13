@@ -120,7 +120,7 @@ const DataTable = <TData,>({
                   </Button>
                 </DropdownMenuTrigger>
 
-                <DropdownMenuContent align="end">
+                <DropdownMenuContent align="end" className="bg-[#222831] border-[#393E46] shadow-2xl shadow-black/50">
                   {actions.onView && (
                     <DropdownMenuItem onClick={() => actions.onView?.(rowData)}>
                       View

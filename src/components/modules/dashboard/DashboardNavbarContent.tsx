@@ -8,9 +8,10 @@ import { NavSection } from "@/types/dashboard.types";
 import { Menu, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import DashboardMobileSidebar from "./DashboardMobileSidebar";
+
+import { User } from "@/types/user.types";
 import NotificationDropdown from "./NotificationDropdown";
 import UserDropdown from "./UserDropdown";
-import { User } from "@/types/user.types";
 
 interface DashboardNavbarProps {
     userInfo : User;

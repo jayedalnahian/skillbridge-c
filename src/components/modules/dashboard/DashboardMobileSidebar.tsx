@@ -2,6 +2,7 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { SheetTitle } from "@/components/ui/sheet";
 import { getIconComponent } from "@/lib/iconMapper";
+
 import { cn } from "@/lib/utils";
 import { NavSection } from "@/types/dashboard.types";
 import { User } from "@/types/user.types";
