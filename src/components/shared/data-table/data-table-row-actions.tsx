@@ -79,18 +79,7 @@ export function DataTableRowActions<TData>({
             <Pen className="mr-2 h-4 w-4" />
             Edit
           </DropdownMenuItem>
-          {unresolvedOnDelete && (
-            <>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={() => setIsDeleteOpen(true)}
-                className="text-red-600 focus:text-red-600"
-              >
-                <Trash2 className="mr-2 h-4 w-4" />
-                Delete
-              </DropdownMenuItem>
-            </>
-          )}
+
         </DropdownMenuContent>
       </DropdownMenu>
 
