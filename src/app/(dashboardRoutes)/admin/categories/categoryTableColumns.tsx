@@ -1,6 +1,5 @@
 "use client"
 
-
 import { DataTableColumnHeader } from "@/components/shared/data-table/data-table-column-header";
 import { DataTableRowActions } from "@/components/shared/data-table/data-table-row-actions";
 import { Badge } from "@/components/ui/badge";
@@ -9,6 +8,13 @@ import { ICategory } from "@/types/category.types";
 import { ColumnDef } from "@tanstack/react-table";
 import { Check, Copy } from "lucide-react";
 import { useState } from "react";
+
+// Module-level formatter - created once, reused for all cells
+const dateFormatter = new Intl.DateTimeFormat("en-US", {
+  month: "short",
+  day: "numeric",
+  year: "numeric",
+});
 
 
 const IdCell = ({ id }: { id: string }) => {
@@ -103,13 +109,7 @@ export const columns: ColumnDef<ICategory>[] = [
       const date = row.getValue("createdAt") as string;
       return (
         <div className="text-sm text-slate-500">
-          {date
-            ? new Intl.DateTimeFormat("en-US", {
-                month: "short",
-                day: "numeric",
-                year: "numeric",
-              }).format(new Date(date))
-            : "N/A"}
+          {date ? dateFormatter.format(new Date(date)) : "N/A"}
         </div>
       );
     },

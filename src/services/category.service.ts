@@ -1,5 +1,3 @@
-"use server";
-
 import { httpClient } from "@/lib/axios/httpClient";
 import {
   ICategory,

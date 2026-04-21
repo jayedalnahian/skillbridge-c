@@ -2,7 +2,7 @@
 
 import { OnChangeFn, PaginationState, SortingState } from "@tanstack/react-table";
 import { ReadonlyURLSearchParams, usePathname, useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState, useTransition } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 interface UseServerManagedDataTableParams {
   searchParams: ReadonlyURLSearchParams;
@@ -42,7 +42,7 @@ export const useServerManagedDataTable = ({
 }: UseServerManagedDataTableParams) => {
   const router = useRouter();
   const pathname = usePathname();
-  const [isRouteRefreshPending, startRouteRefreshTransition] = useTransition();
+  const [isUrlUpdating, setIsUrlUpdating] = useState(false);
 
   const queryStringFromUrl = useMemo(() => searchParams.toString(), [searchParams]);
 
@@ -78,7 +78,12 @@ export const useServerManagedDataTable = ({
     setOptimisticPaginationState(paginationStateFromUrl);
   }, [paginationStateFromUrl]);
 
-  const updateUrlAndRefresh = useCallback((params: URLSearchParams) => {
+  // Reset URL updating flag when searchParams change (navigation completed)
+  useEffect(() => {
+    setIsUrlUpdating(false);
+  }, [searchParams]);
+
+  const updateUrlOnly = useCallback((params: URLSearchParams) => {
     const nextQuery = params.toString();
     const currentQuery = window.location.search.replace(/^\?/, "");
 
@@ -88,13 +93,12 @@ export const useServerManagedDataTable = ({
 
     const nextUrl = nextQuery ? `${pathname}?${nextQuery}` : pathname;
 
-    // Update URL immediately for optimistic UX, then refresh server components.
-    window.history.pushState(null, "", nextUrl);
-
-    startRouteRefreshTransition(() => {
-      router.refresh();
-    });
-  }, [pathname, router, startRouteRefreshTransition]);
+    // Client-only URL update - no server component refresh
+    // This updates the URL for shareability and back/forward navigation
+    // while keeping the data fetch client-side via React Query
+    setIsUrlUpdating(true);
+    router.replace(nextUrl, { scroll: false });
+  }, [pathname, router]);
 
   const updateParams = useCallback<UpdateParamsFn>((
     updater: (params: URLSearchParams) => void,
@@ -112,8 +116,8 @@ export const useServerManagedDataTable = ({
       }));
     }
 
-    updateUrlAndRefresh(params);
-  }, [updateUrlAndRefresh]);
+    updateUrlOnly(params);
+  }, [updateUrlOnly]);
 
   const handleSortingChange: OnChangeFn<SortingState> = useCallback((updaterOrValue) => {
     const nextState = typeof updaterOrValue === "function" ? updaterOrValue(optimisticSortingState) : updaterOrValue;
@@ -147,7 +151,7 @@ export const useServerManagedDataTable = ({
     queryStringFromUrl,
     optimisticSortingState,
     optimisticPaginationState,
-    isRouteRefreshPending,
+    isRouteRefreshPending: isUrlUpdating,
     updateParams,
     handleSortingChange,
     handlePaginationChange,

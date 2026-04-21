@@ -215,6 +215,12 @@ const CategoryTable = ({
   const { data, isLoading, isFetching, error } = useQuery({
     queryKey: ["categorys", queryString],
     queryFn: () => getAllCategories(queryString),
+    // Align with server prefetch settings to prevent double-fetching
+    staleTime: 1000 * 60 * 60, // 1 hour - same as server prefetch
+    gcTime: 1000 * 60 * 60 * 6, // 6 hours - same as server prefetch
+    refetchOnMount: false, // Don't refetch on mount - use hydrated data
+    refetchOnWindowFocus: false, // Don't refetch when window regains focus
+    refetchOnReconnect: false, // Don't refetch on reconnect
   });
 
   const filters = [
