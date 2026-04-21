@@ -49,85 +49,85 @@
 }
 
 :root {
-  /* Deep Background - #222831 */
-  --background: 218 17% 16%;
-  /* Off-White Text - #EEEEEE */
-  --foreground: 0 0% 93%;
-  /* Surface Layer - #393E46 */
-  --card: 218 10% 25%;
-  --card-foreground: 0 0% 93%;
-  --popover: 218 10% 25%;
-  --popover-foreground: 0 0% 93%;
+  /* Light Background - #ffffff */
+  --background: 0 0% 100%;
+  /* Dark Text - #1f2937 */
+  --foreground: 220 13% 15%;
+  /* Surface Layer - #f8fafc */
+  --card: 210 40% 98%;
+  --card-foreground: 220 13% 15%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 220 13% 15%;
   /* Primary Action Color - #00ADB5 */
   --primary: 182 100% 35%;
   --primary-foreground: 0 0% 100%;
-  /* Secondary - Slightly lighter surface */
-  --secondary: 218 10% 30%;
-  --secondary-foreground: 0 0% 93%;
+  /* Secondary - Light gray */
+  --secondary: 210 40% 96%;
+  --secondary-foreground: 220 13% 15%;
   /* Muted - For less prominent text */
-  --muted: 218 10% 20%;
-  --muted-foreground: 0 0% 60%;
+  --muted: 210 40% 96%;
+  --muted-foreground: 215 16% 47%;
   /* Accent - Subtle highlight */
   --accent: 182 100% 25%;
-  --accent-foreground: 0 0% 93%;
+  --accent-foreground: 0 0% 100%;
   /* Destructive - Red for errors */
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
-  /* Borders & Inputs - Slightly lighter than background */
-  --border: 218 10% 30%;
-  --input: 218 10% 30%;
+  /* Borders & Inputs - Light gray */
+  --border: 214 32% 91%;
+  --input: 214 32% 91%;
   --ring: 182 100% 35%;
   /* Chart colors */
   --chart-1: 182 100% 35%;
-  --chart-2: 218 10% 40%;
-  --chart-3: 218 10% 50%;
+  --chart-2: 210 40% 40%;
+  --chart-3: 210 40% 50%;
   --chart-4: 182 80% 45%;
-  --chart-5: 218 10% 60%;
+  --chart-5: 210 40% 60%;
   --radius: 0.625rem;
-  /* Sidebar - Same as card */
-  --sidebar: 218 10% 25%;
-  --sidebar-foreground: 0 0% 93%;
+  /* Sidebar - Light theme */
+  --sidebar: 0 0% 100%;
+  --sidebar-foreground: 220 13% 15%;
   --sidebar-primary: 182 100% 35%;
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 218 10% 30%;
-  --sidebar-accent-foreground: 0 0% 93%;
-  --sidebar-border: 218 10% 30%;
+  --sidebar-accent: 210 40% 96%;
+  --sidebar-accent-foreground: 220 13% 15%;
+  --sidebar-border: 214 32% 91%;
   --sidebar-ring: 182 100% 35%;
 }
 
 .dark {
-  /* Same as :root - SkillBridge is dark-first */
-  --background: 218 17% 16%;
-  --foreground: 0 0% 93%;
-  --card: 218 10% 25%;
-  --card-foreground: 0 0% 93%;
-  --popover: 218 10% 25%;
-  --popover-foreground: 0 0% 93%;
+  /* Light theme values - SkillBridge is now light-first */
+  --background: 0 0% 100%;
+  --foreground: 220 13% 15%;
+  --card: 210 40% 98%;
+  --card-foreground: 220 13% 15%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 220 13% 15%;
   --primary: 182 100% 35%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 218 10% 30%;
-  --secondary-foreground: 0 0% 93%;
-  --muted: 218 10% 20%;
-  --muted-foreground: 0 0% 60%;
+  --secondary: 210 40% 96%;
+  --secondary-foreground: 220 13% 15%;
+  --muted: 210 40% 96%;
+  --muted-foreground: 215 16% 47%;
   --accent: 182 100% 25%;
-  --accent-foreground: 0 0% 93%;
+  --accent-foreground: 0 0% 100%;
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
-  --border: 218 10% 30%;
-  --input: 218 10% 30%;
+  --border: 214 32% 91%;
+  --input: 214 32% 91%;
   --ring: 182 100% 35%;
   --chart-1: 182 100% 35%;
-  --chart-2: 218 10% 40%;
-  --chart-3: 218 10% 50%;
+  --chart-2: 210 40% 40%;
+  --chart-3: 210 40% 50%;
   --chart-4: 182 80% 45%;
-  --chart-5: 218 10% 60%;
-  --sidebar: 218 10% 25%;
-  --sidebar-foreground: 0 0% 93%;
+  --chart-5: 210 40% 60%;
+  --sidebar: 0 0% 100%;
+  --sidebar-foreground: 220 13% 15%;
   --sidebar-primary: 182 100% 35%;
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 218 10% 30%;
-  --sidebar-accent-foreground: 0 0% 93%;
-  --sidebar-border: 218 10% 30%;
+  --sidebar-accent: 210 40% 96%;
+  --sidebar-accent-foreground: 220 13% 15%;
+  --sidebar-border: 214 32% 91%;
   --sidebar-ring: 182 100% 35%;
 }
 

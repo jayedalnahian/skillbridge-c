@@ -1,7 +1,12 @@
 "use server";
 
 import { httpClient } from "@/lib/axios/httpClient";
-import { ICategory, ICategoryCreateInput, ICategoryQueryParams, ICategoryUpdateInput } from "@/types/category.types";
+import {
+  ICategory,
+  ICategoryCreateInput,
+  ICategoryQueryParams,
+  ICategoryUpdateInput,
+} from "@/types/category.types";
 
 function buildQueryString(params: ICategoryQueryParams): string {
   const query = new URLSearchParams();
@@ -17,7 +22,9 @@ function buildQueryString(params: ICategoryQueryParams): string {
   return query.toString();
 }
 
-export const getAllCategories = async (params?: ICategoryQueryParams | string) => {
+export const getAllCategories = async (
+  params?: ICategoryQueryParams | string,
+) => {
   try {
     let queryString: string;
 
@@ -31,13 +38,31 @@ export const getAllCategories = async (params?: ICategoryQueryParams | string) =
 
     const response = await httpClient.get<ICategory[]>(url);
 
+    // Handle both wrapped (ApiResponse) and unwrapped (raw array) responses
+    const isApiResponse = response && typeof response === "object" && "data" in response && Array.isArray(response.data);
+
+    if (isApiResponse) {
+      return {
+        data: response.data || [],
+        meta: response.meta || {
+          page: 1,
+          limit: 10,
+          total: 0,
+          totalPages: 0,
+        },
+      };
+    }
+
+    // If response is a raw array (not wrapped in ApiResponse)
+    const rawData = Array.isArray(response) ? response : [];
+
     return {
-      data: response.data || [],
-      meta: response.meta || {
+      data: rawData,
+      meta: {
         page: 1,
         limit: 10,
-        total: 0,
-        totalPages: 0,
+        total: rawData.length,
+        totalPages: 1,
       },
     };
   } catch (error) {
@@ -83,12 +108,18 @@ export const createCategory = async (payload: ICategoryCreateInput) => {
     console.error("Create category error:", error);
     return {
       success: false,
-      message: error?.response?.data?.message || error.message || "An unexpected error occurred",
+      message:
+        error?.response?.data?.message ||
+        error.message ||
+        "An unexpected error occurred",
     };
   }
 };
 
-export const updateCategory = async (id: string, payload: ICategoryUpdateInput) => {
+export const updateCategory = async (
+  id: string,
+  payload: ICategoryUpdateInput,
+) => {
   try {
     const result = await httpClient.patch(`/category/${id}`, payload);
 
@@ -109,7 +140,10 @@ export const updateCategory = async (id: string, payload: ICategoryUpdateInput) 
     console.error("Update category error:", error);
     return {
       success: false,
-      message: error?.response?.data?.message || error.message || "An unexpected error occurred",
+      message:
+        error?.response?.data?.message ||
+        error.message ||
+        "An unexpected error occurred",
     };
   }
 };
@@ -135,7 +169,10 @@ export const deleteCategory = async (id: string) => {
     console.error("Delete category error:", error);
     return {
       success: false,
-      message: error?.response?.data?.message || error.message || "An unexpected error occurred",
+      message:
+        error?.response?.data?.message ||
+        error.message ||
+        "An unexpected error occurred",
     };
   }
 };

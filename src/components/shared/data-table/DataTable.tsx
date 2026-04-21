@@ -1,12 +1,16 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  ColumnDef,
+  ColumnFiltersState,
+  PaginationState,
+  SortingState,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+  OnChangeFn,
+} from "@tanstack/react-table";
+
 import {
   Table,
   TableBody,
@@ -15,258 +19,197 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { PaginationMeta } from "@/types/api.types";
-import {
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  PaginationState,
-  SortingState,
-  useReactTable,
-} from "@tanstack/react-table";
-import { ArrowDown, ArrowUp, ArrowUpDown, MoreHorizontal } from "lucide-react";
-import { useEffect, useState } from "react";
-import DataTableFilters, {
-  DataTableFilterConfig,
-  DataTableFilterValue,
-  DataTableFilterValues,
-} from "./DataTableFilters";
-import DataTablePagination from "./DataTablePagination";
-import DataTableSearch from "./DataTableSearch";
 
-interface DataTableActions<TData> {
-  onView?: (data: TData) => void;
-  onEdit?: (data: TData) => void;
-  onDelete?: (data: TData) => void;
-}
+import { DataTablePagination } from "./data-table-pagination";
+import { DataTableToolbar } from "./data-table-toolbar";
+import { Checkbox } from "@/components/ui/checkbox";
+import { z } from "zod";
+import { UseMutationResult } from "@tanstack/react-query";
+import { useEffect, useMemo, useState } from "react";
 
-interface DataTableProps<TData> {
+interface DataTableProps<TData, TValue> {
+  columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  columns: ColumnDef<TData>[];
-  actions?: DataTableActions<TData>;
-  enableHardcodedActions?: boolean;
-  toolbarAction?: React.ReactNode;
-  emptyMessage?: string;
-  isLoading?: boolean;
-  sorting?: {
+  meta?: {
+    total: number;
+    totalPages: number;
+    page: number;
+    limit: number;
+  };
+  // Hook State & Dispatchers
+  sorting: {
     state: SortingState;
-    onSortingChange: (state: SortingState) => void;
+    onSortingChange: OnChangeFn<SortingState>;
   };
-  pagination?: {
+  pagination: {
     state: PaginationState;
-    onPaginationChange: (state: PaginationState) => void;
+    onPaginationChange: OnChangeFn<PaginationState>;
   };
-  search?: {
-    initialValue?: string;
+  search: {
+    initialValue: string;
     placeholder?: string;
-    debounceMs?: number;
-    onDebouncedChange: (value: string) => void;
+    onSearchChange: (value: string) => void;
   };
+  columnFilters?: {
+    state: ColumnFiltersState;
+    onColumnFiltersChange: OnChangeFn<ColumnFiltersState>;
+  };
+  isLoading?: boolean;
   filters?: {
-    configs: DataTableFilterConfig[];
-    values: DataTableFilterValues;
-    onFilterChange: (
-      filterId: string,
-      value: DataTableFilterValue | undefined,
-    ) => void;
-    onClearAll?: () => void;
+    columnId: string;
+    title: string;
+    options: {
+      label: string;
+      value: string;
+      icon?: React.ComponentType<{ className?: string }>;
+    }[];
+  }[];
+  editConfig?: {
+    schema: z.ZodType<any>;
+    mutation: UseMutationResult<any, any, any>;
+    children: (form: any) => React.ReactNode;
+    onSuccess?: (data: any) => void;
+    submitLabel?: string;
   };
-  meta?: PaginationMeta;
+  viewConfig?: {
+    children: (form: any) => React.ReactNode;
+  };
+  onDelete?: (ids: string[]) => void;
 }
 
-const DataTable = <TData,>({
-  data = [] as TData[],
+export function DataTable<TData, TValue>({
   columns,
-  actions,
-  enableHardcodedActions = true,
-  toolbarAction,
-  emptyMessage,
-  isLoading,
+  data,
+  meta,
   sorting,
   pagination,
   search,
+  columnFilters,
+  isLoading,
   filters,
-  meta,
-}: DataTableProps<TData>) => {
-  const [hasHydrated, setHasHydrated] = useState(false);
+  editConfig,
+  viewConfig,
+  onDelete,
+}: DataTableProps<TData, TValue>) {
+  const [rowSelection, setRowSelection] = useState({});
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
-  useEffect(() => {
-    setHasHydrated(true);
-  }, []);
+  const finalColumns = useMemo(
+    () => [
+      {
+        id: "select",
+        header: ({ table }) => (
+          <Checkbox
+            checked={
+              (table.getIsAllPageRowsSelected() ||
+                (table.getIsSomePageRowsSelected() && "indeterminate")) as any
+            }
+            onCheckedChange={(value) =>
+              table.toggleAllPageRowsSelected(!!value)
+            }
+            aria-label="Select all"
+            className="translate-y-[2px]"
+          />
+        ),
+        cell: ({ row }) => (
+          <Checkbox
+            checked={row.getIsSelected()}
+            onCheckedChange={(value) => {
+              row.toggleSelected(!!value);
+            }}
+            aria-label="Select row"
+            className="translate-y-[2px]"
+          />
+        ),
+        enableSorting: false,
+        enableHiding: false,
+      } as ColumnDef<TData, TValue>,
+      ...columns,
+    ],
+    [columns],
+  );
 
-  const hydratedIsLoading = hasHydrated ? Boolean(isLoading) : false;
-  const showLoadingOverlay = hydratedIsLoading;
-
-  const tableColumns: ColumnDef<TData>[] = actions && enableHardcodedActions
-    ? [
-        ...columns,
-
-        // Action column
-        {
-          id: "actions", // Unique id for the column
-          header: "Actions",
-          enableSorting: false,
-          cell: ({ row }) => {
-            const rowData = row.original;
-
-            return (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant={"ghost"} className="h-8 w-8 p-0">
-                    <span className="sr-only">Open Menu</span>
-                    <MoreHorizontal className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-
-                <DropdownMenuContent align="end" className="bg-[#222831] border-[#393E46] shadow-2xl shadow-black/50">
-                  {actions.onView && (
-                    <DropdownMenuItem onClick={() => actions.onView?.(rowData)}>
-                      View
-                    </DropdownMenuItem>
-                  )}
-
-                  {actions.onEdit && (
-                    <DropdownMenuItem onClick={() => actions.onEdit?.(rowData)}>
-                      Edit
-                    </DropdownMenuItem>
-                  )}
-
-                  {actions.onDelete && (
-                    <DropdownMenuItem
-                      onClick={() => actions.onDelete?.(rowData)}
-                    >
-                      Delete
-                    </DropdownMenuItem>
-                  )}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            );
-          },
-        },
-      ]
-    : columns;
-
-  // eslint-disable-next-line react-hooks/incompatible-library -- TanStack Table is intentionally used here and React Compiler already skips memoization for this hook.
   const table = useReactTable({
     data,
-    columns: tableColumns,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    manualSorting: !!sorting,
-    manualPagination: !!pagination,
-    pageCount: pagination ? Math.max(meta?.totalPages ?? 0, 0) : undefined,
+    columns: finalColumns,
     state: {
-      ...(sorting ? { sorting: sorting.state } : {}),
-      ...(pagination ? { pagination: pagination.state } : {}),
+      pagination: pagination.state,
+      sorting: sorting.state,
+      columnFilters: columnFilters?.state ?? [],
+      globalFilter: search.initialValue,
+      rowSelection,
     },
-    onSortingChange: sorting
-      ? (updater) => {
-          const currentSortingState = sorting.state;
-
-          const nextSortingState =
-            typeof updater === "function"
-              ? updater(currentSortingState)
-              : updater;
-
-          sorting.onSortingChange(nextSortingState);
-        }
-      : undefined,
-    onPaginationChange: pagination
-      ? (updater) => {
-          const currentPaginationState = pagination.state;
-          const nextPaginationState =
-            typeof updater === "function"
-              ? updater(currentPaginationState)
-              : updater;
-
-          pagination.onPaginationChange(nextPaginationState);
-        }
-      : undefined,
+    onRowSelectionChange: setRowSelection,
+    onPaginationChange: pagination.onPaginationChange,
+    onSortingChange: sorting.onSortingChange,
+    onColumnFiltersChange: columnFilters?.onColumnFiltersChange,
+    onGlobalFilterChange: search.onSearchChange,
+    getCoreRowModel: getCoreRowModel(),
+    manualPagination: true,
+    manualSorting: true,
+    manualFiltering: true,
+    pageCount: meta?.totalPages ?? -1,
+    meta: {
+      editConfig,
+      viewConfig,
+      onDelete,
+    },
   });
+
+  // Sync selected IDs whenever row selection changes
+  useEffect(() => {
+    const selectedRows = table.getFilteredSelectedRowModel().rows;
+    // Assuming TData has an 'id' property. Cast to any for flexibility in the generic component.
+    const ids = selectedRows.map((row) => (row.original as any).id);
+    setSelectedIds(ids);
+  }, [rowSelection, table]);
+
   return (
-    <div className="relative">
-      {showLoadingOverlay && (
-        <div className="absolute inset-0 bg-background/50 backdrop-blur-sm z-10 flex items-center justify-center">
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-            <span className="text-sm text-muted-foreground">Loading...</span>
-          </div>
-        </div>
-      )}
-
-      {(search || filters || toolbarAction) && (
-        <div className="mb-4 flex flex-wrap items-start gap-3">
-          {search && (
-            <DataTableSearch
-              initialValue={search.initialValue}
-              placeholder={search.placeholder}
-              debounceMs={search.debounceMs}
-              onDebouncedChange={search.onDebouncedChange}
-              isLoading={hydratedIsLoading}
-            />
-          )}
-
-          {filters && (
-            <DataTableFilters
-              filters={filters.configs}
-              values={filters.values}
-              onFilterChange={filters.onFilterChange}
-              onClearAll={filters.onClearAll}
-              isLoading={hydratedIsLoading}
-            />
-          )}
-
-          {toolbarAction && (
-            <div className="ml-auto shrink-0">{toolbarAction}</div>
-          )}
-        </div>
-      )}
-
-      {/* // Table */}
-      <div className="rounded-lg border">
+    <div className="space-y-4">
+      <DataTableToolbar
+        table={table}
+        onSearchChange={search.onSearchChange}
+        searchValue={search.initialValue}
+        filters={filters}
+        selectedIds={selectedIds}
+        onDelete={onDelete}
+      />
+      <div className="rounded-md border">
         <Table>
           <TableHeader>
-            {table.getHeaderGroups().map((hg) => (
-              <TableRow key={hg.id}>
-                {hg.headers.map((header) => (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder ? null : header.column.getCanSort() ? (
-                      <Button
-                        variant={"ghost"}
-                        className="h-auto cursor-pointer p-0 font-semibold hover:bg-transparent hover:text-inherit focus-visible:ring-0"
-                        onClick={header.column.getToggleSortingHandler()}
-                      >
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-
-                        {header.column.getIsSorted() === "asc" ? (
-                          <ArrowUp className="ml-1 h-4 w-4" />
-                        ) : header.column.getIsSorted() === "desc" ? (
-                          <ArrowDown className="ml-1 h-4 w-4" />
-                        ) : (
-                          <ArrowUpDown className="ml-1 h-4 w-4 opacity-50" />
-                        )}
-                      </Button>
-                    ) : (
-                      flexRender(
-                        header.column.columnDef.header,
-                        header.getContext(),
-                      )
-                    )}
-                  </TableHead>
-                ))}
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
+                    </TableHead>
+                  );
+                })}
               </TableRow>
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel()?.rows?.length ? (
+            {isLoading ? (
+              <TableRow>
+                <TableCell
+                  colSpan={finalColumns.length}
+                  className="h-24 text-center"
+                >
+                  Loading...
+                </TableCell>
+              </TableRow>
+            ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(
@@ -280,27 +223,17 @@ const DataTable = <TData,>({
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={tableColumns.length}
+                  colSpan={finalColumns.length}
                   className="h-24 text-center"
                 >
-                  {emptyMessage || "No data available."}
+                  No results.
                 </TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
-
-        {pagination && (
-          <DataTablePagination
-            table={table}
-            totalPages={meta?.totalPages}
-            totalRows={meta?.total}
-            isLoading={hydratedIsLoading}
-          />
-        )}
       </div>
+      <DataTablePagination table={table} meta={meta} />
     </div>
   );
-};
-
-export default DataTable;
+}

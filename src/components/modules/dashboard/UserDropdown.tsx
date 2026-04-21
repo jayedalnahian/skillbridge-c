@@ -29,7 +29,7 @@ const UserDropdown = ({ userInfo }: UserDropdownProps) => {
         <button className="flex items-center gap-2 p-1.5 rounded-xl hover:bg-accent/80 transition-all duration-200 outline-none group">
           <Avatar className="h-9 w-9 border-2 border-primary/10 group-hover:border-primary/30 transition-colors duration-200">
             <AvatarImage src="" />
-            <AvatarFallback className="bg-gradient-to-br from-[#00ADB5] to-[#008f96] text-[#EEEEEE] font-bold">
+            <AvatarFallback className="bg-gradient-to-br from-[#00ADB5] to-[#008f96] text-white font-bold">
               {userInfo.name?.charAt(0).toUpperCase()}
             </AvatarFallback>
           </Avatar>

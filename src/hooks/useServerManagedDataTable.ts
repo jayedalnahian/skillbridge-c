@@ -1,6 +1,6 @@
 "use client";
 
-import { PaginationState, SortingState } from "@tanstack/react-table";
+import { OnChangeFn, PaginationState, SortingState } from "@tanstack/react-table";
 import { ReadonlyURLSearchParams, usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState, useTransition } from "react";
 
@@ -115,11 +115,12 @@ export const useServerManagedDataTable = ({
     updateUrlAndRefresh(params);
   }, [updateUrlAndRefresh]);
 
-  const handleSortingChange = useCallback((state: SortingState) => {
-    setOptimisticSortingState(state);
+  const handleSortingChange: OnChangeFn<SortingState> = useCallback((updaterOrValue) => {
+    const nextState = typeof updaterOrValue === "function" ? updaterOrValue(optimisticSortingState) : updaterOrValue;
+    setOptimisticSortingState(nextState);
 
     updateParams((params) => {
-      const nextSorting = state[0];
+      const nextSorting = nextState[0];
 
       if (nextSorting) {
         params.set("sortBy", nextSorting.id);
@@ -130,16 +131,17 @@ export const useServerManagedDataTable = ({
       params.delete("sortBy");
       params.delete("sortOrder");
     }, { resetPage: true });
-  }, [updateParams]);
+  }, [optimisticSortingState, updateParams]);
 
-  const handlePaginationChange = useCallback((state: PaginationState) => {
-    setOptimisticPaginationState(state);
+  const handlePaginationChange: OnChangeFn<PaginationState> = useCallback((updaterOrValue) => {
+    const nextState = typeof updaterOrValue === "function" ? updaterOrValue(optimisticPaginationState) : updaterOrValue;
+    setOptimisticPaginationState(nextState);
 
     updateParams((params) => {
-      params.set("page", String(state.pageIndex + 1));
-      params.set("limit", String(state.pageSize));
+      params.set("page", String(nextState.pageIndex + 1));
+      params.set("limit", String(nextState.pageSize));
     });
-  }, [updateParams]);
+  }, [optimisticPaginationState, updateParams]);
 
   return {
     queryStringFromUrl,
