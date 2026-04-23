@@ -75,6 +75,8 @@ interface DataTableProps<TData, TValue> {
     children: (form: any) => React.ReactNode;
   };
   onDelete?: (ids: string[]) => void;
+  onCreate?: () => void;
+  createButtonLabel?: string;
 }
 
 export function DataTable<TData, TValue>({
@@ -90,6 +92,8 @@ export function DataTable<TData, TValue>({
   editConfig,
   viewConfig,
   onDelete,
+  onCreate,
+  createButtonLabel,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = useState({});
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -173,6 +177,8 @@ export function DataTable<TData, TValue>({
         filters={filters}
         selectedIds={selectedIds}
         onDelete={onDelete}
+        onCreate={onCreate}
+        createButtonLabel={createButtonLabel}
       />
       <div className="rounded-md border">
         <Table>

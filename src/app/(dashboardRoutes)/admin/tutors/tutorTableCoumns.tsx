@@ -28,13 +28,13 @@ const IdCell = ({ id }: { id: string }) => {
 
   return (
     <div className="flex items-center gap-2 group">
-      <code className="text-xs font-mono text-slate-500 truncate max-w-[120px]  hover:text-[#00ADB5]">
+      <code className="text-xs font-mono text-slate-500 truncate max-w-[120px]">
         {id}
       </code>
       <Button
         variant="ghost"
         size="icon"
-        className="h-6 w-6 opacity-40 group-hover:opacity-100 transition-opacity cursor-pointer"
+        className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
         onClick={handleCopy}
       >
         {copied ? (
@@ -54,28 +54,30 @@ export const columns: ColumnDef<ICategory>[] = [
       <DataTableColumnHeader column={column} title="Category Name" />
     ),
     cell: ({ row }) => (
-      <div className="font-semibold text-slate-900  hover:text-[#00ADB5] italic">
+      <div className="font-semibold text-slate-900 italic">
         {row.getValue("name")}
       </div>
     ),
   },
   {
-    accessorKey: "slug",
+    accessorKey: "email",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Slug" />
+      <DataTableColumnHeader column={column} title="Email" />
     ),
     cell: ({ row }) => (
-      <div className="max-w-[300px] truncate text-slate-500  hover:text-[#00ADB5]">
-        {row.getValue("slug")}
+      <div className="max-w-[300px] truncate text-slate-500">
+        {row.getValue("email")}
       </div>
     ),
   },
   {
-    accessorKey: "description",
-    header: "Description",
+    accessorKey: "experienceYears",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Experience" />
+    ),
     cell: ({ row }) => (
-      <div className="max-w-[300px] truncate text-slate-500  hover:text-[#00ADB5]">
-        {row.getValue("description") || "No description provided"}
+      <div className="max-w-[300px] truncate text-slate-500">
+        {row.getValue("experienceYears") || "Freasher"}
       </div>
     ),
   },
@@ -87,7 +89,7 @@ export const columns: ColumnDef<ICategory>[] = [
 
   {
     accessorKey: "isDeleted",
-    header: "Status",
+    header: "Deleted",
     cell: ({ row }) => {
       const isDeleted = row.getValue("isDeleted") as boolean;
       return (
@@ -95,7 +97,7 @@ export const columns: ColumnDef<ICategory>[] = [
           variant={isDeleted ? "destructive" : "default"}
           className={isDeleted ? "bg-red-100 text-red-700 hover:bg-red-200" : "bg-green-100 text-green-700 hover:bg-green-200"}
         >
-          {isDeleted ? "Deleted" : "Active"}
+          {isDeleted ? "True" : "False"}
         </Badge>
       );
     },
@@ -104,14 +106,41 @@ export const columns: ColumnDef<ICategory>[] = [
     },
   },
   {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ row }) => {
+      const status = row.getValue("status") as string;
+      return (
+        <Badge
+          variant={status === "ACTIVE" ? "default" : status === "BANNED" ? "destructive" : "secondary"}
+          className={status === "BANNED" ? "bg-red-100 text-red-700 hover:bg-red-200" : status === "INACTIVE" ? "bg-yellow-700 text-black hover:bg-yellow-200" : "bg-green-100 text-green-700 hover:bg-green-200"}
+        >
+          {status}
+        </Badge>
+      );
+    },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
+  },
+  {
+    accessorKey: "hourlyRate",
+    header: "Hourly Rate",
+    cell: ({ row }) => (
+      <div className="font-semibold text-slate-900 italic">
+        {row.getValue("hourlyRate")}
+      </div>
+    )
+  },
+  {
     accessorKey: "createdAt",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Created At" />
+      <DataTableColumnHeader column={column} title="Joining Date" />
     ),
     cell: ({ row }) => {
       const date = row.getValue("createdAt") as string;
       return (
-        <div className="text-sm text-slate-500 hover:text-[#00ADB5]">
+        <div className="text-sm text-slate-500">
           {date ? dateFormatter.format(new Date(date)) : "N/A"}
         </div>
       );

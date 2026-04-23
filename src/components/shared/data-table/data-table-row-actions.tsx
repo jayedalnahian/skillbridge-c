@@ -66,7 +66,7 @@ export function DataTableRowActions<TData>({
   return (
     <>
       <DropdownMenu>
-        <DropdownMenuTrigger className="flex h-8 w-8 items-center justify-center rounded-md border border-input bg-background p-0 text-sm font-medium shadow-sm hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring data-[state=open]:bg-muted">
+        <DropdownMenuTrigger className="flex h-8 w-8 items-center cursor-pointer justify-center rounded-md border border-input bg-background p-0 text-sm font-medium shadow-sm hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring data-[state=open]:bg-muted">
           <MoreHorizontal className="h-4 w-4" />
           <span className="sr-only">Open menu</span>
         </DropdownMenuTrigger>

@@ -1,7 +1,6 @@
 "use client";
 
-
-import { FormField } from "@/components/shared/data-form/data-form";
+import { SmartForm, FormField } from "@/components/shared/data-form/data-form";
 import { DataTable } from "@/components/shared/data-table/DataTable";
 import {
   Card,
@@ -15,11 +14,19 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useServerManagedDataTable } from "@/hooks/useServerManagedDataTable";
 import { useServerManagedDataTableSearch } from "@/hooks/useServerManagedDataTableSearch";
-import { getAllCategories } from "@/services/category.service";
+import { getAllCategories, createCategory, bulkDeleteCategories } from "@/services/category.service";
 import { ICategory } from "@/types/category.types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import {
   ColumnFiltersState,
   PaginationState,
@@ -38,10 +45,18 @@ import { useCallback, useMemo, useState } from "react";
 import z from "zod";
 import { columns } from "@/app/(dashboardRoutes)/admin/categories/categoryTableColumns";
 
+// Schema for editing (optional fields)
 const categorySchema = z.object({
   name: z.string().optional(),
   description: z.string().optional(),
   slug: z.string().optional(),
+});
+
+// Schema for creating (required fields with validation messages)
+const createCategorySchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  slug: z.string().min(1, "Slug is required"),
+  description: z.string().min(1, "Description is required"),
 });
 
 const DEFAULT_PAGE = 1;
@@ -197,6 +212,8 @@ const CategoryTable = ({
 
   const queryClient = useQueryClient();
 
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+
   const editMutation = useMutation({
     mutationFn: async (
       values: z.infer<typeof categorySchema> & { id: string },
@@ -211,6 +228,29 @@ const CategoryTable = ({
       queryClient.invalidateQueries({ queryKey: ["categorys"] });
     },
   });
+
+  const createMutation = useMutation({
+    mutationFn: async (values: z.infer<typeof createCategorySchema>) => {
+      const result = await createCategory(values);
+      if (!result.success) {
+        throw new Error(result.message || "Failed to create category");
+      }
+      return result.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["categorys"] });
+      setIsCreateOpen(false);
+    },
+  });
+
+  const handleCreateClick = useCallback(() => {
+    setIsCreateOpen(true);
+  }, []);
+
+  const handleCloseCreate = useCallback(() => {
+    setIsCreateOpen(false);
+    createMutation.reset();
+  }, [createMutation]);
 
   const { data, isLoading, isFetching, error } = useQuery({
     queryKey: ["categorys", queryString],
@@ -274,14 +314,40 @@ const CategoryTable = ({
     return [];
   }, [searchParams]);
 
+  const deleteMutation = useMutation({
+    mutationFn: async (ids: string[]): Promise<{ deleted?: string[]; inUse?: string[]; notFound?: string[]; errors?: { id: string; message: string }[] }> => {
+      const result = await bulkDeleteCategories(ids);
+      if (!result.success) {
+        throw new Error(result.message || "Failed to delete categories");
+      }
+      return result.data as { deleted?: string[]; inUse?: string[]; notFound?: string[]; errors?: { id: string; message: string }[] };
+    },
+    onSuccess: (data: { deleted?: string[]; inUse?: string[]; notFound?: string[]; errors?: { id: string; message: string }[] } | undefined) => {
+      const deletedCount = data?.deleted?.length ?? 0;
+      const inUseCount = data?.inUse?.length ?? 0;
+      const notFoundCount = data?.notFound?.length ?? 0;
+
+      if (deletedCount > 0) {
+        toast.success(`Successfully deleted ${deletedCount} categor${deletedCount === 1 ? 'y' : 'ies'}`);
+      }
+      if (inUseCount > 0) {
+        toast.error(`${inUseCount} categor${inUseCount === 1 ? 'y' : 'ies'} cannot be deleted because ${inUseCount === 1 ? 'it is' : 'they are'} in use by tutor(s)`);
+      }
+      if (notFoundCount > 0) {
+        toast.error(`${notFoundCount} categor${notFoundCount === 1 ? 'y was' : 'ies were'} not found`);
+      }
+
+      queryClient.invalidateQueries({ queryKey: ["categorys"] });
+    },
+    onError: (error) => {
+      const message = error instanceof Error ? error.message : "Failed to delete categories";
+      toast.error(message);
+    },
+  });
+
   const handleDelete = useCallback((ids: string[]) => {
-    console.log("Deleting categories with IDs:", ids);
-    if (ids.length === 1) {
-      alert(`Dummy Individual Delete: Category with ID "${ids[0]}" deleted.`);
-    } else {
-      alert(`Dummy Bulk Delete: ${ids.length} categories deleted.`);
-    }
-  }, []);
+    deleteMutation.mutate(ids);
+  }, [deleteMutation]);
 
   return (
     <main className="container mx-auto min-h-screen ">
@@ -343,6 +409,8 @@ const CategoryTable = ({
                 }}
                 filters={filters}
                 onDelete={handleDelete}
+                onCreate={handleCreateClick}
+                createButtonLabel="Add Category"
                 viewConfig={{
                   children: (item) => <CategoryDetailsView item={item} />,
                 }}
@@ -389,6 +457,63 @@ const CategoryTable = ({
             )}
           </CardContent>
         </Card>
+
+        {/* Create Category Modal */}
+        <Dialog open={isCreateOpen} onOpenChange={handleCloseCreate}>
+          <DialogContent className="sm:max-w-[425px] bg-white">
+            <DialogHeader>
+              <DialogTitle className="text-[#00ADB5]">Create New Category</DialogTitle>
+              <DialogDescription>
+                Fill in the details below to create a new category.
+              </DialogDescription>
+            </DialogHeader>
+            <SmartForm
+              schema={createCategorySchema}
+              mutation={createMutation}
+              defaultValues={{ name: "", slug: "", description: "" }}
+              onSuccess={() => {
+                // Success handled by mutation onSuccess
+              }}
+              submitLabel="Create Category"
+            >
+              {(form) => (
+                <div className="grid gap-4 py-4">
+                  <FormField
+                    form={form}
+                    name="name"
+                    label="Category Name"
+                    placeholder="Enter category name"
+                  />
+                  <FormField
+                    form={form}
+                    name="slug"
+                    label="Slug"
+                    placeholder="Enter slug (e.g., electronics)"
+                  />
+                  <FormField
+                    form={form}
+                    name="description"
+                    label="Description"
+                    render={(field) => (
+                      <Textarea
+                        id={field.name}
+                        placeholder="Enter category description"
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        className={
+                          field.state.meta.errors.length
+                            ? "border-destructive focus-visible:ring-destructive"
+                            : ""
+                        }
+                      />
+                    )}
+                  />
+                </div>
+              )}
+            </SmartForm>
+          </DialogContent>
+        </Dialog>
     </main>
   );
 };

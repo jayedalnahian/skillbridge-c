@@ -1,4 +1,6 @@
-import { Trash2, X } from "lucide-react";
+"use client";
+
+import { Trash2, X, Plus } from "lucide-react";
 import { Table } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
@@ -22,6 +24,8 @@ interface DataTableToolbarProps<TData> {
   }[];
   onDelete?: (ids: string[]) => void;
   selectedIds?: string[];
+  onCreate?: () => void;
+  createButtonLabel?: string;
 }
 
 export function DataTableToolbar<TData>({
@@ -31,6 +35,8 @@ export function DataTableToolbar<TData>({
   filters = [],
   onDelete,
   selectedIds = [],
+  onCreate,
+  createButtonLabel = "Create New",
 }: DataTableToolbarProps<TData>) {
   const [localSearchValue, setLocalSearchValue] = useState(initialSearchValue);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
@@ -106,6 +112,16 @@ export function DataTableToolbar<TData>({
             </Button>
           )}
         </div>
+        {onCreate && (
+          <Button
+            size="sm"
+            onClick={onCreate}
+            className="h-8 bg-[#00ADB5] hover:bg-[#008f96] text-white"
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            {createButtonLabel}
+          </Button>
+        )}
       </div>
 
       <ConfirmModal

@@ -174,3 +174,32 @@ export const deleteCategory = async (id: string) => {
     };
   }
 };
+
+export const bulkDeleteCategories = async (ids: string[]) => {
+  try {
+    const result = await httpClient.post("/category/bulk-delete", { ids });
+
+    if (!result.success) {
+      return {
+        success: false,
+        message: result.message || "Failed to delete categories",
+        error: result,
+      };
+    }
+
+    return {
+      success: true,
+      data: result.data,
+      message: result.message || "Categories deleted successfully",
+    };
+  } catch (error: any) {
+    console.error("Bulk delete categories error:", error);
+    return {
+      success: false,
+      message:
+        error?.response?.data?.message ||
+        error.message ||
+        "An unexpected error occurred",
+    };
+  }
+};

@@ -43,14 +43,14 @@ export const ConfirmModal = ({
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
-          <DialogDescription className="py-2">
+          <DialogDescription className="py-2 text-2xl font-semibold text-red-700">
             {description}
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 gap-2 mt-4">
-          <Button 
-            disabled={loading} 
-            variant="ghost" 
+          <Button
+            disabled={loading}
+            variant="ghost"
             onClick={onClose}
             className="w-full sm:w-auto"
           >
@@ -60,7 +60,7 @@ export const ConfirmModal = ({
             disabled={loading}
             variant={variant}
             onClick={handleConfirm}
-            className="w-full sm:w-auto"
+            className="w-full sm:w-auto bg-red-100 text-red-700 hover:bg-red-200"
           >
             {loading ? "Processing..." : confirmText}
           </Button>
