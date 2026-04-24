@@ -110,7 +110,7 @@ export default function CategoryTable({ initialQueryString }: CategoryTableProps
   );
 
   // Mutations
-  const { editMutation, createMutation, deleteMutation, permanentDeleteMutation } = useCategoryMutations();
+  const { editMutation, createMutation, deleteMutation, permanentDeleteMutation, restoreMutation } = useCategoryMutations();
 
   const handleCreateClick = useCallback(() => {
     setIsCreateOpen(true);
@@ -134,6 +134,13 @@ export default function CategoryTable({ initialQueryString }: CategoryTableProps
       permanentDeleteMutation.mutate(id);
     },
     [permanentDeleteMutation],
+  );
+
+  const handleRestore = useCallback(
+    (id: string) => {
+      restoreMutation.mutate(id);
+    },
+    [restoreMutation],
   );
 
 
@@ -191,8 +198,10 @@ export default function CategoryTable({ initialQueryString }: CategoryTableProps
               filters={categoryFilters}
               onDelete={handleDelete}
               onPermanentDelete={handlePermanentDelete}
+              onRestore={handleRestore}
               onCreate={handleCreateClick}
               createButtonLabel="Add Category"
+              queryKey={[QUERY_KEYS.CATEGORIES]}
               viewConfig={{
                 children: (item) => <CategoryDetailsView item={item} />,
               }}

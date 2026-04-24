@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Copy, Eye, MoreHorizontal, Pen, Trash2 } from "lucide-react";
+import { Check, Copy, Eye, MoreHorizontal, Pen, RotateCcw, Trash2 } from "lucide-react";
 import { Row, Table } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { CalendarIcon, Clock } from "lucide-react";
@@ -33,6 +33,7 @@ interface DataTableRowActionsProps<TData> {
   onEdit?: (value: TData) => void;
   onDelete?: (ids: string[]) => void;
   onPermanentDelete?: (id: string) => void;
+  onRestore?: (id: string) => void;
 }
 
 export function DataTableRowActions<TData>({
@@ -41,10 +42,13 @@ export function DataTableRowActions<TData>({
   onEdit,
   onDelete,
   onPermanentDelete,
+  onRestore,
 }: DataTableRowActionsProps<TData>) {
   const [isViewOpen, setIsViewOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [isRestoreOpen, setIsRestoreOpen] = useState(false);
+  const [isRestoring, setIsRestoring] = useState(false);
 
   const { hasCopiedRecently, copyText } = useCopyToClipboard();
 
@@ -57,10 +61,21 @@ export function DataTableRowActions<TData>({
   const viewConfig = tableMeta?.viewConfig;
   const metaOnDelete = tableMeta?.onDelete;
   const metaOnPermanentDelete = tableMeta?.onPermanentDelete;
+  const metaOnRestore = tableMeta?.onRestore;
 
   // Use prop if provided, otherwise fallback to meta
   const unresolvedOnDelete = onDelete || metaOnDelete;
   const unresolvedOnPermanentDelete = onPermanentDelete || metaOnPermanentDelete;
+  const unresolvedOnRestore = onRestore || metaOnRestore;
+
+  // Check if category is deleted
+  const isDeleted = item.isDeleted === true;
+
+  const handleRestore = () => {
+    unresolvedOnRestore?.(item.id as string);
+    setIsRestoreOpen(false);
+    table.resetRowSelection();
+  };
 
   return (
     <>
@@ -86,7 +101,20 @@ export function DataTableRowActions<TData>({
                 className="text-red-600 focus:text-red-600"
               >
                 <Trash2 className="mr-2 h-4 w-4" />
-                Delete
+                P. Delete
+              </DropdownMenuItem>
+            </>
+          )}
+          {unresolvedOnRestore && (
+            <>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => setIsRestoreOpen(true)}
+                disabled={!isDeleted}
+                className="text-green-600 focus:text-green-600 data-[disabled]:opacity-50 data-[disabled]:cursor-not-allowed"
+              >
+                <RotateCcw className="mr-2 h-4 w-4" />
+                Restore
               </DropdownMenuItem>
             </>
           )}
@@ -106,6 +134,18 @@ export function DataTableRowActions<TData>({
         title="Delete Record"
         description="Are you sure you want to delete this record? This action cannot be undone."
         confirmText="Delete"
+      />
+
+      <ConfirmModal
+        isOpen={isRestoreOpen}
+        onClose={() => setIsRestoreOpen(false)}
+        enabledSoftDelete={false}
+        enabledPermanentDelete={true}
+        onPermanentDelete={handleRestore}
+        title="Restore Record"
+        description="Are you sure you want to restore this category?"
+        confirmText="Restore"
+        permanentDeleteText="Restore"
       />
 
       {/* View Dialog */}

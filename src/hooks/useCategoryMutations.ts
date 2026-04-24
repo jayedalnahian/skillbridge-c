@@ -2,7 +2,7 @@
 
 import { useMutation, useQueryClient, UseMutationResult } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { createCategory, bulkDeleteCategories, deleteCategory } from "@/services/category.service";
+import { createCategory, bulkDeleteCategories, deleteCategory, updateCategory, restoreCategory } from "@/services/category.service";
 import { QUERY_KEYS } from "@/lib/constants";
 import { CategoryEditInput, CreateCategoryInput, UseCategoryMutationsReturn } from "../components/modules/dashboard/admin/categories/categoryTypes";
 
@@ -19,13 +19,20 @@ export function useCategoryMutations(): UseCategoryMutationsReturn {
 
   const editMutation = useMutation({
     mutationFn: async (values: CategoryEditInput & { id: string }) => {
-      // In a real app, this would be a PATCH/PUT request
-      console.log("Simulating API Update for ID:", values.id, values);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      return values;
+      const { id, ...data } = values;
+      const result = await updateCategory(id, data);
+      if (!result.success) {
+        throw new Error(result.message || "Failed to update category");
+      }
+      return result.data;
     },
     onSuccess: () => {
+      toast.success("Category updated successfully");
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.CATEGORIES] });
+    },
+    onError: (error) => {
+      const message = error instanceof Error ? error.message : "Failed to update category";
+      toast.error(message);
     },
   });
 
@@ -101,10 +108,29 @@ export function useCategoryMutations(): UseCategoryMutationsReturn {
     },
   });
 
+  const restoreMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const result = await restoreCategory(id);
+      if (!result.success) {
+        throw new Error(result.message || "Failed to restore category");
+      }
+      return result.data;
+    },
+    onSuccess: () => {
+      toast.success("Category restored successfully");
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.CATEGORIES] });
+    },
+    onError: (error) => {
+      const message = error instanceof Error ? error.message : "Failed to restore category";
+      toast.error(message);
+    },
+  });
+
   return {
     editMutation,
     createMutation,
     deleteMutation,
-    permanentDeleteMutation
+    permanentDeleteMutation,
+    restoreMutation,
   };
 }

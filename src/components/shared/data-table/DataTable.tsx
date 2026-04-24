@@ -75,9 +75,11 @@ interface DataTableProps<TData extends { id: string }, TValue> {
     children: (form: any) => React.ReactNode;
   };
   onPermanentDelete?: (id: string) => void;
+  onRestore?: (id: string) => void;
   onDelete?: (ids: string[]) => void;
   onCreate?: () => void;
   createButtonLabel?: string;
+  queryKey?: string[];
 }
 
 export function DataTable<TData extends { id: string }, TValue>({
@@ -94,8 +96,10 @@ export function DataTable<TData extends { id: string }, TValue>({
   viewConfig,
   onDelete,
   onPermanentDelete,
+  onRestore,
   onCreate,
   createButtonLabel,
+  queryKey,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = useState({});
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -160,6 +164,7 @@ export function DataTable<TData extends { id: string }, TValue>({
       viewConfig,
       onDelete,
       onPermanentDelete,
+      onRestore,
     },
   });
 
@@ -181,6 +186,7 @@ export function DataTable<TData extends { id: string }, TValue>({
         onDelete={onDelete}
         onCreate={onCreate}
         createButtonLabel={createButtonLabel}
+        queryKey={queryKey}
       />
       <div className="rounded-md border">
         <Table>

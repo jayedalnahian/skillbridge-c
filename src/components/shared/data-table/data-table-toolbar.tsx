@@ -1,12 +1,13 @@
 "use client";
 
-import { Trash2, X, Plus } from "lucide-react";
+import { Trash2, X, Plus, RefreshCw } from "lucide-react";
 import { Table } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DataTableFacetedFilter } from "./data-table-faceted-filter";
 import { useEffect, useRef, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { ConfirmModal } from "../modals/confirm-modal";
 
 interface DataTableToolbarProps<TData> {
@@ -26,6 +27,7 @@ interface DataTableToolbarProps<TData> {
   selectedIds?: string[];
   onCreate?: () => void;
   createButtonLabel?: string;
+  queryKey?: string[];
 }
 
 export function DataTableToolbar<TData>({
@@ -37,7 +39,9 @@ export function DataTableToolbar<TData>({
   selectedIds = [],
   onCreate,
   createButtonLabel = "Create New",
+  queryKey,
 }: DataTableToolbarProps<TData>) {
+  const queryClient = useQueryClient();
   const [localSearchValue, setLocalSearchValue] = useState(initialSearchValue);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const isFocusedRef = useRef(false);
@@ -112,16 +116,31 @@ export function DataTableToolbar<TData>({
             </Button>
           )}
         </div>
-        {onCreate && (
-          <Button
-            size="sm"
-            onClick={onCreate}
-            className="h-8 bg-[#00ADB5] hover:bg-[#008f96] text-white"
-          >
-            <Plus className="mr-2 h-4 w-4" />
-            {createButtonLabel}
-          </Button>
-        )}
+        <div className="flex items-center gap-2">
+          {queryKey && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                queryClient.invalidateQueries({ queryKey });
+              }}
+              className="h-8"
+            >
+              <RefreshCw className="mr-2 h-4 w-4" />
+              Refresh
+            </Button>
+          )}
+          {onCreate && (
+            <Button
+              size="sm"
+              onClick={onCreate}
+              className="h-8 bg-[#00ADB5] hover:bg-[#008f96] text-white"
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              {createButtonLabel}
+            </Button>
+          )}
+        </div>
       </div>
 
       <ConfirmModal
@@ -135,7 +154,7 @@ export function DataTableToolbar<TData>({
           table.resetRowSelection();
         }}
         title="Confirm Deletion"
-        description={`Are you sure you want to delete ${selectedIds.length} selected items? This action cannot be undone.`}
+        description={`Are you sure you want to delete ${selectedIds.length} selected items?`}
         confirmText="Soft Delete"   
       />
     </>

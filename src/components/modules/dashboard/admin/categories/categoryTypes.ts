@@ -33,7 +33,7 @@ export interface CategoryErrorStateProps {
 
 export interface UseCategoryMutationsReturn {
   editMutation: UseMutationResult<
-    (CategoryEditInput & { id: string }) | null,
+    unknown,
     Error,
     CategoryEditInput & { id: string },
     unknown
@@ -45,6 +45,6 @@ export interface UseCategoryMutationsReturn {
     string[],
     unknown
   >;
-  permanentDeleteMutation:UseMutationResult<unknown, Error, string, unknown>
-
+  permanentDeleteMutation: UseMutationResult<unknown, Error, string, unknown>;
+  restoreMutation: UseMutationResult<unknown, Error, string, unknown>;
 }

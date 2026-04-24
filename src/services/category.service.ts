@@ -203,3 +203,32 @@ export const bulkDeleteCategories = async (ids: string[]) => {
     };
   }
 };
+
+export const restoreCategory = async (id: string) => {
+  try {
+    const result = await httpClient.patch(`/category/restore/${id}`, {});
+
+    if (!result.success) {
+      return {
+        success: false,
+        message: result.message || "Failed to restore category",
+        error: result,
+      };
+    }
+
+    return {
+      success: true,
+      data: result.data,
+      message: result.message || "Category restored successfully",
+    };
+  } catch (error: any) {
+    console.error("Restore category error:", error);
+    return {
+      success: false,
+      message:
+        error?.response?.data?.message ||
+        error.message ||
+        "An unexpected error occurred",
+    };
+  }
+};
