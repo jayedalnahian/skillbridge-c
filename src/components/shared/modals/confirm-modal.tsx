@@ -14,28 +14,43 @@ import { ReactNode } from "react";
 interface ConfirmModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: () => void;
+  enabledSoftDelete: boolean;
+  onSoftDelete?: () => void;
+  onPermanentDelete?: () => void;
   loading?: boolean;
   title?: string;
   description?: ReactNode;
   confirmText?: string;
   cancelText?: string;
   variant?: "default" | "destructive";
+  enabledPermanentDelete: boolean;
+  permanentDeleteText?: string;
+  onPermanentDeleteLoading?: boolean;
 }
 
 export const ConfirmModal = ({
   isOpen,
   onClose,
-  onConfirm,
+  enabledSoftDelete = true,
+  onSoftDelete,
+  onPermanentDelete,
   loading = false,
   title = "Are you sure?",
   description = "This action cannot be undone.",
   confirmText = "Confirm",
   cancelText = "Cancel",
   variant = "destructive",
+  enabledPermanentDelete = false,
+  permanentDeleteText = "Permanently Delete",
 }: ConfirmModalProps) => {
-  const handleConfirm = () => {
-    onConfirm();
+
+
+  const handleSoftDelete = () => {
+    onSoftDelete?.();
+  };
+
+  const handlePermanentDelete = () => {
+    onPermanentDelete?.();
   };
 
   return (
@@ -56,14 +71,28 @@ export const ConfirmModal = ({
           >
             {cancelText}
           </Button>
-          <Button
-            disabled={loading}
-            variant={variant}
-            onClick={handleConfirm}
-            className="w-full sm:w-auto bg-red-100 text-red-700 hover:bg-red-200"
-          >
-            {loading ? "Processing..." : confirmText}
-          </Button>
+          {
+            enabledSoftDelete && (
+              <Button
+                disabled={loading}
+                variant={variant}
+                onClick={handleSoftDelete}
+                className="w-full sm:w-auto bg-red-100 text-red-700 hover:bg-red-200"
+              >
+                {loading ? "Processing..." : confirmText}
+              </Button>
+            )
+          }
+          {enabledPermanentDelete && (
+            <Button
+              disabled={loading}
+              variant={variant}
+              onClick={handlePermanentDelete}
+              className="w-full sm:w-auto bg-red-100 text-red-700 hover:bg-red-200"
+            >
+              {loading ? "Processing..." : permanentDeleteText}
+            </Button>
+          )}
         </DialogFooter>
       </DialogContent>
     </Dialog>

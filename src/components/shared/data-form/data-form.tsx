@@ -127,9 +127,17 @@ export function FormField<TData extends Record<string, any>>({
               />
             )}
           </FormControl>
-          {field.state.meta.errors && (
+          {field.state.meta.errors && field.state.meta.errors.length > 0 && (
             <FormMessage>
-              {field.state.meta.errors.join(", ")}
+              {field.state.meta.errors
+                .map((err: unknown) => {
+                  if (typeof err === "string") return err;
+                  if (err && typeof err === "object" && "message" in err) {
+                    return String((err as { message: unknown }).message);
+                  }
+                  return String(err);
+                })
+                .join(", ")}
             </FormMessage>
           )}
         </FormItem>

@@ -27,7 +27,7 @@ import { z } from "zod";
 import { UseMutationResult } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 
-interface DataTableProps<TData, TValue> {
+interface DataTableProps<TData extends { id: string }, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   meta?: {
@@ -74,12 +74,13 @@ interface DataTableProps<TData, TValue> {
   viewConfig?: {
     children: (form: any) => React.ReactNode;
   };
+  onPermanentDelete?: (id: string) => void;
   onDelete?: (ids: string[]) => void;
   onCreate?: () => void;
   createButtonLabel?: string;
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends { id: string }, TValue>({
   columns,
   data,
   meta,
@@ -92,6 +93,7 @@ export function DataTable<TData, TValue>({
   editConfig,
   viewConfig,
   onDelete,
+  onPermanentDelete,
   onCreate,
   createButtonLabel,
 }: DataTableProps<TData, TValue>) {
@@ -157,14 +159,14 @@ export function DataTable<TData, TValue>({
       editConfig,
       viewConfig,
       onDelete,
+      onPermanentDelete,
     },
   });
 
   // Sync selected IDs whenever row selection changes
   useEffect(() => {
     const selectedRows = table.getFilteredSelectedRowModel().rows;
-    // Assuming TData has an 'id' property. Cast to any for flexibility in the generic component.
-    const ids = selectedRows.map((row) => (row.original as any).id);
+    const ids = selectedRows.map((row) => row.original.id);
     setSelectedIds(ids);
   }, [rowSelection, table]);
 

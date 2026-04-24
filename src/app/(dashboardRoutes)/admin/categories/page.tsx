@@ -39,7 +39,7 @@ const CategoryPage = async ({
   const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery({
-    queryKey: ["categorys", queryString],
+    queryKey: ["categories", queryString],
     queryFn: () => getAllCategories(queryString),
     staleTime: 1000 * 60 * 60,
     gcTime: 1000 * 60 * 60 * 6,

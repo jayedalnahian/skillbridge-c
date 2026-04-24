@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { DataTableColumnHeader } from "@/components/shared/data-table/data-table-column-header";
 import { DataTableRowActions } from "@/components/shared/data-table/data-table-row-actions";
@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ICategory } from "@/types/category.types";
 import { ColumnDef } from "@tanstack/react-table";
 import { Check, Copy } from "lucide-react";
-import { useState } from "react";
+import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 
 // Module-level formatter - created once, reused for all cells
 const dateFormatter = new Intl.DateTimeFormat("en-US", {
@@ -18,12 +18,10 @@ const dateFormatter = new Intl.DateTimeFormat("en-US", {
 
 
 const IdCell = ({ id }: { id: string }) => {
-  const [copied, setCopied] = useState(false);
+  const { hasCopiedRecently, copyText } = useCopyToClipboard();
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(id);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    copyText(id);
   };
 
   return (
@@ -37,7 +35,7 @@ const IdCell = ({ id }: { id: string }) => {
         className="h-6 w-6 opacity-40 group-hover:opacity-100 transition-opacity cursor-pointer"
         onClick={handleCopy}
       >
-        {copied ? (
+        {hasCopiedRecently ? (
           <Check className="h-3 w-3 text-green-500" />
         ) : (
           <Copy className="h-3 w-3" />

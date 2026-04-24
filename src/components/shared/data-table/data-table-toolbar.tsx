@@ -125,16 +125,18 @@ export function DataTableToolbar<TData>({
       </div>
 
       <ConfirmModal
+        enabledSoftDelete={true}
+        enabledPermanentDelete={false}
         isOpen={isConfirmOpen}
         onClose={() => setIsConfirmOpen(false)}
-        onConfirm={() => {
+        onSoftDelete={() => {
           onDelete?.(selectedIds);
           setIsConfirmOpen(false);
           table.resetRowSelection();
         }}
         title="Confirm Deletion"
         description={`Are you sure you want to delete ${selectedIds.length} selected items? This action cannot be undone.`}
-        confirmText="Delete Selected"
+        confirmText="Soft Delete"   
       />
     </>
   );
