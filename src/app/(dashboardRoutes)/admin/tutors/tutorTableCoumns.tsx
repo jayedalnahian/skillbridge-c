@@ -1,13 +1,13 @@
-"use client"
+"use client";
 
 import { DataTableColumnHeader } from "@/components/shared/data-table/data-table-column-header";
 import { DataTableRowActions } from "@/components/shared/data-table/data-table-row-actions";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ICategory } from "@/types/category.types";
+import { ITutor } from "@/types/tutor.types";
 import { ColumnDef } from "@tanstack/react-table";
 import { Check, Copy } from "lucide-react";
-import { useState } from "react";
+import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 
 // Module-level formatter - created once, reused for all cells
 const dateFormatter = new Intl.DateTimeFormat("en-US", {
@@ -18,26 +18,24 @@ const dateFormatter = new Intl.DateTimeFormat("en-US", {
 
 
 const IdCell = ({ id }: { id: string }) => {
-  const [copied, setCopied] = useState(false);
+  const { hasCopiedRecently, copyText } = useCopyToClipboard();
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(id);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    copyText(id);
   };
 
   return (
     <div className="flex items-center gap-2 group">
-      <code className="text-xs font-mono text-slate-500 truncate max-w-[120px]">
+      <code className="text-xs font-mono text-slate-500 truncate max-w-[120px] hover:text-[#00ADB5]">
         {id}
       </code>
       <Button
         variant="ghost"
         size="icon"
-        className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+        className="h-6 w-6 opacity-40 group-hover:opacity-100 transition-opacity cursor-pointer"
         onClick={handleCopy}
       >
-        {copied ? (
+        {hasCopiedRecently ? (
           <Check className="h-3 w-3 text-green-500" />
         ) : (
           <Copy className="h-3 w-3" />
@@ -47,14 +45,14 @@ const IdCell = ({ id }: { id: string }) => {
   );
 };
 
-export const columns: ColumnDef<ICategory>[] = [
+export const columns: ColumnDef<ITutor>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Category Name" />
+      <DataTableColumnHeader column={column} title="Tutor Name" />
     ),
     cell: ({ row }) => (
-      <div className="font-semibold text-slate-900 italic">
+      <div className="font-semibold text-slate-900 hover:text-[#00ADB5] italic">
         {row.getValue("name")}
       </div>
     ),
@@ -65,8 +63,26 @@ export const columns: ColumnDef<ICategory>[] = [
       <DataTableColumnHeader column={column} title="Email" />
     ),
     cell: ({ row }) => (
-      <div className="max-w-[300px] truncate text-slate-500">
+      <div className="max-w-[300px] truncate text-slate-500 hover:text-[#00ADB5]">
         {row.getValue("email")}
+      </div>
+    ),
+  },
+  {
+    accessorKey: "contactNumber",
+    header: "Contact",
+    cell: ({ row }) => (
+      <div className="text-slate-500 hover:text-[#00ADB5]">
+        {row.getValue("contactNumber") || "N/A"}
+      </div>
+    ),
+  },
+  {
+    accessorKey: "designation",
+    header: "Designation",
+    cell: ({ row }) => (
+      <div className="max-w-[200px] truncate text-slate-500 hover:text-[#00ADB5]">
+        {row.getValue("designation") || "N/A"}
       </div>
     ),
   },
@@ -76,8 +92,8 @@ export const columns: ColumnDef<ICategory>[] = [
       <DataTableColumnHeader column={column} title="Experience" />
     ),
     cell: ({ row }) => (
-      <div className="max-w-[300px] truncate text-slate-500">
-        {row.getValue("experienceYears") || "Freasher"}
+      <div className="max-w-[300px] truncate text-slate-500 hover:text-[#00ADB5]">
+        {row.getValue("experienceYears") ? `${row.getValue("experienceYears")} years` : "Fresher"}
       </div>
     ),
   },
@@ -88,6 +104,15 @@ export const columns: ColumnDef<ICategory>[] = [
   },
 
   {
+    accessorKey: "educationLevel",
+    header: "Education",
+    cell: ({ row }) => (
+      <div className="max-w-[200px] truncate text-slate-500 hover:text-[#00ADB5]">
+        {row.getValue("educationLevel") || "N/A"}
+      </div>
+    ),
+  },
+  {
     accessorKey: "isDeleted",
     header: "Deleted",
     cell: ({ row }) => {
@@ -97,7 +122,7 @@ export const columns: ColumnDef<ICategory>[] = [
           variant={isDeleted ? "destructive" : "default"}
           className={isDeleted ? "bg-red-100 text-red-700 hover:bg-red-200" : "bg-green-100 text-green-700 hover:bg-green-200"}
         >
-          {isDeleted ? "True" : "False"}
+          {isDeleted ? "Yes" : "No"}
         </Badge>
       );
     },
@@ -125,12 +150,14 @@ export const columns: ColumnDef<ICategory>[] = [
   },
   {
     accessorKey: "hourlyRate",
-    header: "Hourly Rate",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Hourly Rate" />
+    ),
     cell: ({ row }) => (
-      <div className="font-semibold text-slate-900 italic">
-        {row.getValue("hourlyRate")}
+      <div className="font-semibold text-slate-900 hover:text-[#00ADB5]">
+        ${row.getValue("hourlyRate")}/hr
       </div>
-    )
+    ),
   },
   {
     accessorKey: "createdAt",
@@ -140,7 +167,7 @@ export const columns: ColumnDef<ICategory>[] = [
     cell: ({ row }) => {
       const date = row.getValue("createdAt") as string;
       return (
-        <div className="text-sm text-slate-500">
+        <div className="text-sm text-slate-500 hover:text-[#00ADB5]">
           {date ? dateFormatter.format(new Date(date)) : "N/A"}
         </div>
       );

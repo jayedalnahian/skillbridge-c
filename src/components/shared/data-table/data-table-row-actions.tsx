@@ -31,7 +31,7 @@ interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
   table: Table<TData>;
   onEdit?: (value: TData) => void;
-  onDelete?: (ids: string[]) => void;
+  onSoftDelete?: (ids: string[]) => void;
   onPermanentDelete?: (id: string) => void;
   onRestore?: (id: string) => void;
 }
@@ -40,7 +40,6 @@ export function DataTableRowActions<TData>({
   row,
   table,
   onEdit,
-  onDelete,
   onPermanentDelete,
   onRestore,
 }: DataTableRowActionsProps<TData>) {
@@ -64,7 +63,7 @@ export function DataTableRowActions<TData>({
   const metaOnRestore = tableMeta?.onRestore;
 
   // Use prop if provided, otherwise fallback to meta
-  const unresolvedOnDelete = onDelete || metaOnDelete;
+  const unresolvedOnDelete = onPermanentDelete || metaOnPermanentDelete;
   const unresolvedOnPermanentDelete = onPermanentDelete || metaOnPermanentDelete;
   const unresolvedOnRestore = onRestore || metaOnRestore;
 
@@ -150,7 +149,7 @@ export function DataTableRowActions<TData>({
 
       {/* View Dialog */}
       <Dialog open={isViewOpen} onOpenChange={setIsViewOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[425px] mt-2">
           <DialogHeader>
             <DialogTitle>View Details</DialogTitle>
             <DialogDescription>
@@ -194,7 +193,7 @@ export function DataTableRowActions<TData>({
             </div>
           )}
 
-          <DialogFooter>
+          <DialogFooter className="mb-2">
             <Button onClick={() => setIsViewOpen(false)}>Close</Button>
           </DialogFooter>
         </DialogContent>
@@ -202,28 +201,29 @@ export function DataTableRowActions<TData>({
 
       {/* Edit Dialog */}
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
+        <DialogContent className="sm:max-w-[425px] max-h-[90vh] flex flex-col p-0">
+          <DialogHeader className="px-6 pt-6 pb-2 shrink-0">
             <DialogTitle>Edit Information</DialogTitle>
             <DialogDescription>
               Make changes to your information over here. Click save when you're done.
             </DialogDescription>
           </DialogHeader>
 
-          {editConfig ? (
-            <SmartForm
-              schema={editConfig.schema}
-              mutation={editConfig.mutation}
-              defaultValues={item}
-              onSuccess={(data) => {
-                editConfig.onSuccess?.(data);
-                setIsEditOpen(false);
-              }}
-              submitLabel={editConfig.submitLabel || "Save changes"}
-            >
-              {(form) => editConfig.children(form)}
-            </SmartForm>
-          ) : (
+          <div className="overflow-y-auto px-6 py-2">
+            {editConfig ? (
+              <SmartForm
+                schema={editConfig.schema}
+                mutation={editConfig.mutation}
+                defaultValues={item}
+                onSuccess={(data) => {
+                  editConfig.onSuccess?.(data);
+                  setIsEditOpen(false);
+                }}
+                submitLabel={editConfig.submitLabel || "Save changes"}
+              >
+                {(form) => editConfig.children(form)}
+              </SmartForm>
+            ) : (
             <>
               <div className="grid gap-4 py-4">
                 <div className="grid grid-cols-4 items-center gap-4">
@@ -247,7 +247,7 @@ export function DataTableRowActions<TData>({
                   />
                 </div>
               </div>
-              <DialogFooter>
+              <DialogFooter className="pt-4">
                 <Button variant="outline" onClick={() => setIsEditOpen(false)}>
                   Cancel
                 </Button>
@@ -263,6 +263,7 @@ export function DataTableRowActions<TData>({
               </DialogFooter>
             </>
           )}
+          </div>
         </DialogContent>
       </Dialog>
     </>

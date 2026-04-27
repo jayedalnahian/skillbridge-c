@@ -10,27 +10,53 @@ import {
 } from "@/components/ui/card";
 import { useServerManagedDataTable } from "@/hooks/useServerManagedDataTable";
 import { useServerManagedDataTableSearch } from "@/hooks/useServerManagedDataTableSearch";
-import { getAllCategories } from "@/services/category.service";
+import { getAllTutors } from "@/services/tutor.service";
 import { useQuery } from "@tanstack/react-query";
 import { ColumnFiltersState } from "@tanstack/react-table";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useMemo, useState } from "react";
-import { columns } from "@/app/(dashboardRoutes)/admin/categories/categoryTableColumns";
 import { CACHE_DURATIONS, QUERY_KEYS } from "@/lib/constants";
-import { CategoryDetailsView } from "./CategoryDetailsView";
-import { CategoryCreateModal } from "./CategoryCreateModal";
-import { CategoryErrorState } from "./CategoryErrorState";
-import { CategoryEditForm } from "./CategoryEditForm";
-import { useCategoryMutations } from "../../../../../hooks/useCategoryMutations";
-import { categoryFilters, CATEGORY_TABLE_CONFIG } from "./categoryConfig";
-import { categorySchema } from "./categoryValidators";
-import { CategoryTableProps } from "./categoryTypes";
+import { TutorDetailsView } from "./TutorDetailsView";
+import { TutorCreateModal } from "./TutorCreateModal";
+import { TutorErrorState } from "./TutorErrorState";
+import { TutorEditForm } from "./TutorEditForm";
+import { columns } from "@/app/(dashboardRoutes)/admin/tutors/tutorTableCoumns";
+import { ITutorWithRelations } from "@/types/tutor.types";
+import { useTutorMutations } from "@/hooks/useTutorMutations";
+import { updateTutorSchema } from "./tutorValidators";
 
+// Table configuration
+const TUTOR_TABLE_CONFIG = {
+  defaultPage: 1,
+  defaultLimit: 10,
+} as const;
 
+// Filter options for the table
+const tutorFilters = [
+  {
+    columnId: "isDeleted",
+    title: "Deleted",
+    options: [
+      { label: "No", value: "false" },
+      { label: "Yes", value: "true" },
+    ],
+  },
+  {
+    columnId: "status",
+    title: "Tutor Status",
+    options: [
+      { label: "Active", value: "ACTIVE" },
+      { label: "Banned", value: "BANNED" },
+      { label: "Inactive", value: "INACTIVE" },
+    ],
+  },
+];
 
+interface TutorTableProps {
+  initialQueryString?: string;
+}
 
-
-export default function CategoryTable({ initialQueryString }: CategoryTableProps) {
+export default function TutorTable({ initialQueryString }: TutorTableProps) {
   const searchParams = useSearchParams();
   const [isCreateOpen, setIsCreateOpen] = useState(false);
 
@@ -45,8 +71,8 @@ export default function CategoryTable({ initialQueryString }: CategoryTableProps
     handlePaginationChange,
   } = useServerManagedDataTable({
     searchParams,
-    defaultPage: CATEGORY_TABLE_CONFIG.defaultPage,
-    defaultLimit: CATEGORY_TABLE_CONFIG.defaultLimit,
+    defaultPage: TUTOR_TABLE_CONFIG.defaultPage,
+    defaultLimit: TUTOR_TABLE_CONFIG.defaultLimit,
   });
 
   const queryString = queryStringFromUrl || initialQueryString;
@@ -59,8 +85,8 @@ export default function CategoryTable({ initialQueryString }: CategoryTableProps
 
   // Data fetching
   const { data, isLoading, isFetching, error } = useQuery({
-    queryKey: [QUERY_KEYS.CATEGORIES, queryString],
-    queryFn: () => getAllCategories(queryString),
+    queryKey: [QUERY_KEYS.TUTORS, queryString],
+    queryFn: () => getAllTutors(queryString),
     staleTime: CACHE_DURATIONS.ONE_HOUR,
     gcTime: CACHE_DURATIONS.SIX_HOURS,
     refetchOnMount: false,
@@ -70,11 +96,17 @@ export default function CategoryTable({ initialQueryString }: CategoryTableProps
 
   // Column filters from URL
   const columnFiltersStateFromUrl = useMemo<ColumnFiltersState>(() => {
+    const filters: ColumnFiltersState = [];
     const isDeleted = searchParams.get("isDeleted");
+    const status = searchParams.get("status");
+
     if (isDeleted) {
-      return [{ id: "isDeleted", value: [isDeleted] }];
+      filters.push({ id: "isDeleted", value: [isDeleted] });
     }
-    return [];
+    if (status) {
+      filters.push({ id: "status", value: [status] });
+    }
+    return filters;
   }, [searchParams]);
 
   // Filter change handler
@@ -92,6 +124,7 @@ export default function CategoryTable({ initialQueryString }: CategoryTableProps
       updateParams(
         (params) => {
           const isDeletedFilter = nextFilters.find((f) => f.id === "isDeleted");
+          const statusFilter = nextFilters.find((f) => f.id === "status");
 
           if (isDeletedFilter) {
             const val = Array.isArray(isDeletedFilter.value)
@@ -101,6 +134,15 @@ export default function CategoryTable({ initialQueryString }: CategoryTableProps
           } else {
             params.delete("isDeleted");
           }
+
+          if (statusFilter) {
+            const val = Array.isArray(statusFilter.value)
+              ? statusFilter.value[0]
+              : statusFilter.value;
+            params.set("status", String(val));
+          } else {
+            params.delete("status");
+          }
         },
         { resetPage: true },
       );
@@ -109,8 +151,9 @@ export default function CategoryTable({ initialQueryString }: CategoryTableProps
   );
 
   // Mutations
-  const { editMutation, createMutation, deleteMutation, permanentDeleteMutation, restoreMutation } = useCategoryMutations();
+  const { editMutation, createMutation, bulkSoftDeleteTutorsMutation, permanentDeleteMutation, restoreMutation } = useTutorMutations();
 
+  // Event handlers
   const handleCreateClick = useCallback(() => {
     setIsCreateOpen(true);
   }, []);
@@ -122,11 +165,10 @@ export default function CategoryTable({ initialQueryString }: CategoryTableProps
 
   const handleDelete = useCallback(
     (ids: string[]) => {
-      deleteMutation.mutate(ids);
+      bulkSoftDeleteTutorsMutation.mutate(ids);
     },
-    [deleteMutation],
+    [bulkSoftDeleteTutorsMutation],
   );
-
 
   const handlePermanentDelete = useCallback(
     (id: string) => {
@@ -142,7 +184,6 @@ export default function CategoryTable({ initialQueryString }: CategoryTableProps
     [restoreMutation],
   );
 
-
   const isTableLoading = isLoading || isFetching || isRouteRefreshPending;
 
   return (
@@ -152,10 +193,10 @@ export default function CategoryTable({ initialQueryString }: CategoryTableProps
           <div className="flex items-center justify-between">
             <div>
               <CardTitle className="text-2xl font-bold text-[#00ADB5]">
-                Categories
+                Tutors
               </CardTitle>
               <CardDescription className="mt-1">
-                Showing All Categories
+                Manage your tutors and their details
               </CardDescription>
             </div>
             {isTableLoading && (
@@ -170,7 +211,7 @@ export default function CategoryTable({ initialQueryString }: CategoryTableProps
         </CardHeader>
         <CardContent className="p-6">
           {error ? (
-            <CategoryErrorState />
+            <TutorErrorState />
           ) : (
             <DataTable
               isLoading={isTableLoading}
@@ -187,36 +228,39 @@ export default function CategoryTable({ initialQueryString }: CategoryTableProps
               }}
               search={{
                 initialValue: searchTermFromUrl,
-                placeholder: "Search categories...",
+                placeholder: "Search tutors by name, email...",
                 onSearchChange: handleDebouncedSearchChange,
               }}
               columnFilters={{
                 state: columnFiltersStateFromUrl,
                 onColumnFiltersChange: handleColumnFiltersChange,
               }}
-              filters={categoryFilters}
+              filters={tutorFilters}
+              onSoftDelete={handleDelete}
               onPermanentDelete={handlePermanentDelete}
               onRestore={handleRestore}
               onCreate={handleCreateClick}
-              createButtonLabel="Add Category"
-              queryKey={[QUERY_KEYS.CATEGORIES]}
+              createButtonLabel="Add Tutor"
+              queryKey={[QUERY_KEYS.TUTORS]}
               viewConfig={{
-                children: (item) => <CategoryDetailsView item={item} />,
+                children: (item: ITutorWithRelations) => (
+                  <TutorDetailsView item={item} />
+                ),
               }}
               editConfig={{
-                schema: categorySchema,
-                mutation: editMutation,
-                children: (form) => <CategoryEditForm form={form} />,
+                schema: updateTutorSchema,
+                mutation: editMutation as any,
+                children: (form) => <TutorEditForm form={form} />,
               }}
             />
           )}
         </CardContent>
       </Card>
 
-      <CategoryCreateModal
+      <TutorCreateModal
         isOpen={isCreateOpen}
         onClose={handleCloseCreate}
-        createMutation={createMutation}
+        createMutation={createMutation as any}
       />
     </main>
   );

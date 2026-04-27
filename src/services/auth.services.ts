@@ -64,10 +64,10 @@ export async function getUserInfo() {
                 Cookie: `accessToken=${accessToken}; better-auth.session_token=${sessionToken}`
             }
         });
-        console.log("Response:", res);
+        // console.log("Response:", res);
 
         if (!res.ok) {
-            console.error("Failed to fetch user info:", res.status, res.statusText);
+            // console.error("Failed to fetch user info:", res.status, res.statusText);
             return null;
         }
 

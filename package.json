@@ -4,11 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "bun --bun next dev --webpack",
-    "build": "bun --bun next build",
+    "build": "bun --bun next build --webpack",
     "start": "bun --bun next start",
     "lint": "eslint"
   },
   "dependencies": {
+    "@base-ui/react": "^1.4.1",
     "@tanstack/react-devtools": "^0.10.2",
     "@tanstack/react-form": "^1.28.6",
     "@tanstack/react-form-devtools": "^0.2.20",
@@ -19,6 +20,7 @@
     "axios": "^1.15.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "cmdk": "^1.1.1",
     "date-fns": "^4.1.0",
     "input-otp": "^1.4.2",
     "json-schema": "^0.4.0",
@@ -34,7 +36,8 @@
     "recharts": "^3.8.1",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.5.0",
-    "vaul": "^1.1.2"
+    "vaul": "^1.1.2",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

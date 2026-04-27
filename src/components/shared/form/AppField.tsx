@@ -65,7 +65,14 @@ const AppField = ({
                 value={field.state.value}
                 placeholder={placeholder}
                 onBlur={field.handleBlur}
-                onChange={(e) => field.handleChange(e.target.value)}
+                onChange={(e) => {
+                    if (type === "number") {
+                        const valueAsNumber = (e.target as HTMLInputElement).valueAsNumber;
+                        field.handleChange(Number.isNaN(valueAsNumber) ? 0 : valueAsNumber);
+                        return;
+                    }
+                    field.handleChange(e.target.value);
+                }}
                 disabled={disabled}
                 aria-invalid={hasError}
                 aria-describedby={hasError ? `${field.name}-error` : undefined}

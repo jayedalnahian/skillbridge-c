@@ -76,7 +76,7 @@ interface DataTableProps<TData extends { id: string }, TValue> {
   };
   onPermanentDelete?: (id: string) => void;
   onRestore?: (id: string) => void;
-  onDelete?: (ids: string[]) => void;
+  onSoftDelete?: (ids: string[]) => void;
   onCreate?: () => void;
   createButtonLabel?: string;
   queryKey?: string[];
@@ -94,7 +94,7 @@ export function DataTable<TData extends { id: string }, TValue>({
   filters,
   editConfig,
   viewConfig,
-  onDelete,
+  onSoftDelete,
   onPermanentDelete,
   onRestore,
   onCreate,
@@ -162,7 +162,7 @@ export function DataTable<TData extends { id: string }, TValue>({
     meta: {
       editConfig,
       viewConfig,
-      onDelete,
+      onSoftDelete,
       onPermanentDelete,
       onRestore,
     },
@@ -183,7 +183,7 @@ export function DataTable<TData extends { id: string }, TValue>({
         searchValue={search.initialValue}
         filters={filters}
         selectedIds={selectedIds}
-        onDelete={onDelete}
+        onDelete={onSoftDelete}
         onCreate={onCreate}
         createButtonLabel={createButtonLabel}
         queryKey={queryKey}

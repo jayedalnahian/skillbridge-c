@@ -14,4 +14,5 @@ export const UI_TIMEOUTS = {
 // Query keys
 export const QUERY_KEYS = {
   CATEGORIES: "categories",
+  TUTORS: "tutors",
 } as const;

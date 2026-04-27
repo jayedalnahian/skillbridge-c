@@ -32,9 +32,9 @@ export async function proxy(request: NextRequest) {
     const sessionToken = request.cookies.get("better-auth.session_token")?.value;
     const accessToken = request.cookies.get("accessToken")?.value;
     const refreshToken = request.cookies.get("refreshToken")?.value;
-    console.log("refreshToken", refreshToken);
-    console.log("accessToken", accessToken);
-    console.log("sessionToken", sessionToken);
+    // console.log("refreshToken", refreshToken);
+    // console.log("accessToken", accessToken);
+    // console.log("sessionToken", sessionToken);
     
 
     // Verify token safely - handle edge runtime crypto limitations
@@ -50,12 +50,12 @@ export async function proxy(request: NextRequest) {
         isValidAccessToken = verification.success;
         decodedAccessToken = verification.data as { role: string } | null;
         if (!verification.success) {
-          console.log("Token verification failed! Reason:", verification.message);
-          console.log("Secret length:", process.env.ACCESS_TOKEN_SECRET?.length);
+          // console.log("Token verification failed! Reason:", verification.message);
+          // console.log("Secret length:", process.env.ACCESS_TOKEN_SECRET?.length);
         }
       } catch (err) {
         // Token verification failed - treat as invalid
-        console.log("Token verification threw an error!", err);
+        // console.log("Token verification threw an error!", err);
         isValidAccessToken = false;
       }
     }
@@ -93,13 +93,13 @@ export async function proxy(request: NextRequest) {
 
     // Rule - 1 : Logged-in users should not access auth pages,
     // except pages that may be mandatory due to account state.
-    console.log("Rule-1 Debug:", { 
-      isAuth, 
-      isValidAccessToken, 
-      pathname, 
-      userRole,
-      hasAccessToken: !!accessToken 
-    });
+    // console.log("Rule-1 Debug:", { 
+    //   isAuth, 
+    //   isValidAccessToken, 
+    //   pathname, 
+    //   userRole,
+    //   hasAccessToken: !!accessToken 
+    // });
   
     if (
       isAuth &&
@@ -107,7 +107,7 @@ export async function proxy(request: NextRequest) {
       pathname !== "/verify-email" &&
       pathname !== "/reset-password"
     ) {
-      console.log("Rule-1: Redirecting to", getDefaultDashboardRoute(userRole as UserRole));
+      // console.log("Rule-1: Redirecting to", getDefaultDashboardRoute(userRole as UserRole));
       return NextResponse.redirect(
         new URL(getDefaultDashboardRoute(userRole as UserRole), request.url),
       );

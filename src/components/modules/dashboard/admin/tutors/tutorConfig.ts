@@ -1,11 +1,11 @@
 import { CheckCircle2, XCircle } from "lucide-react";
 
-export const CATEGORY_TABLE_CONFIG = {
+export const TUTOR_TABLE_CONFIG = {
   defaultPage: 1,
   defaultLimit: 10,
 } as const;
 
-export const categoryFilters = [
+export const tutorFilters = [
   {
     columnId: "isDeleted",
     title: "Deleted",
@@ -14,4 +14,5 @@ export const categoryFilters = [
       { label: "Yes", value: "true", icon: XCircle },
     ],
   },
+
 ];

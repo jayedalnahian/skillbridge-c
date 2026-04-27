@@ -9,6 +9,7 @@ import { DataTableFacetedFilter } from "./data-table-faceted-filter";
 import { useEffect, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { ConfirmModal } from "../modals/confirm-modal";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -30,7 +31,8 @@ interface DataTableToolbarProps<TData> {
   queryKey?: string[];
 }
 
-export function DataTableToolbar<TData>({
+export function 
+DataTableToolbar<TData>({
   table,
   onSearchChange,
   searchValue: initialSearchValue,
@@ -59,8 +61,9 @@ export function DataTableToolbar<TData>({
 
   return (
     <>
-      <div className="flex items-center justify-between gap-2">
-        <div className="flex flex-1 items-center space-x-2">
+      <div className="flex flex-col gap-3">
+        {/* Row 1: Search and Filters */}
+        <div className="flex flex-col lg:flex-row gap-3">
           <Input
             placeholder="Search..."
             value={localSearchValue ?? ""}
@@ -75,71 +78,82 @@ export function DataTableToolbar<TData>({
               setLocalSearchValue(value);
               onSearchChange?.(value);
             }}
-            className="h-8 w-[150px] lg:w-[250px]"
+            className="h-9 w-full lg:w-[280px] lg:shrink-0"
           />
-          <div className="flex items-center gap-2">
-            {filters.map(
-              (filter) =>
-                table.getColumn(filter.columnId) && (
-                  <DataTableFacetedFilter
-                    key={filter.columnId}
-                    column={table.getColumn(filter.columnId)}
-                    title={filter.title}
-                    options={filter.options}
-                  />
-                )
-            )}
-          </div>
-          {selectedIds.length > 0 && onDelete && (
+          {filters.length > 0 && (
+            <ScrollArea className="flex-1 whitespace-nowrap">
+              <div className="flex items-center gap-2 pb-1">
+                {filters.map(
+                  (filter) =>
+                    table.getColumn(filter.columnId) && (
+                      <DataTableFacetedFilter
+                        key={filter.columnId}
+                        column={table.getColumn(filter.columnId)}
+                        title={filter.title}
+                        options={filter.options}
+                      />
+                    )
+                )}
+              </div>
+              <ScrollBar orientation="horizontal" />
+            </ScrollArea>
+          )}
+        </div>
+
+        {/* Row 2: Actions */}
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <Button
+              disabled={selectedIds.length === 0 || !onDelete}
               variant="outline"
               size="sm"
               onClick={() => setIsConfirmOpen(true)}
-              className="h-8 border-red-200 bg-red-50 text-red-600 hover:bg-red-100"
+              className="h-9 border-red-200 bg-red-50 text-red-600 hover:bg-red-100"
             >
               <Trash2 className="mr-2 h-4 w-4" />
               Delete ({selectedIds.length})
             </Button>
-          )}
-          {isFiltered && (
-            <Button
-              variant="ghost"
-              onClick={() => {
-                table.resetColumnFilters();
-                setLocalSearchValue("");
-                onSearchChange?.("");
-              }}
-              className="h-8 px-2 lg:px-3"
-            >
-              Reset
-              <X className="ml-2 h-4 w-4" />
-            </Button>
-          )}
-        </div>
-        <div className="flex items-center gap-2">
-          {queryKey && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                queryClient.invalidateQueries({ queryKey });
-              }}
-              className="h-8"
-            >
-              <RefreshCw className="mr-2 h-4 w-4" />
-              Refresh
-            </Button>
-          )}
-          {onCreate && (
-            <Button
-              size="sm"
-              onClick={onCreate}
-              className="h-8 bg-[#00ADB5] hover:bg-[#008f96] text-white"
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              {createButtonLabel}
-            </Button>
-          )}
+            {isFiltered && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  table.resetColumnFilters();
+                  setLocalSearchValue("");
+                  onSearchChange?.("");
+                }}
+                className="h-9 px-2 lg:px-3"
+              >
+                Reset
+                <X className="ml-2 h-4 w-4" />
+              </Button>
+            )}
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            {queryKey && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  queryClient.invalidateQueries({ queryKey });
+                }}
+                className="h-9"
+              >
+                <RefreshCw className="mr-2 h-4 w-4" />
+                Refresh
+              </Button>
+            )}
+            {onCreate && (
+              <Button
+                size="sm"
+                onClick={onCreate}
+                className="h-9 bg-[#00ADB5] hover:bg-[#008f96] text-white"
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                {createButtonLabel}
+              </Button>
+            )}
+          </div>
         </div>
       </div>
 

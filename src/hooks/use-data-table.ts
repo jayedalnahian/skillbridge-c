@@ -8,8 +8,16 @@ import {
   OnChangeFn,
 } from "@tanstack/react-table";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { useDebounce } from "use-debounce";
-import { IQueryParams } from "../../backendUtils/query.interface";
+import { useDebounce } from "@/hooks/useDebounce";
+
+export interface IQueryParams {
+  page: string;
+  limit: string;
+  searchTerm?: string;
+  sortBy?: string;
+  sortOrder?: string;
+  [key: string]: string | string[] | undefined;
+}
 
 interface UseDataTableProps {
   initialPagination?: PaginationState;
@@ -173,7 +181,10 @@ export function useDataTable({
 
     urlState.columnFilters.forEach((filter) => {
       if (filter.value !== undefined && filter.value !== null && filter.value !== "") {
-        params[filter.id] = filter.value;
+        const filterValue = filter.value as unknown;
+        params[filter.id] = Array.isArray(filterValue)
+          ? filterValue.map((v) => String(v))
+          : String(filterValue);
       }
     });
 

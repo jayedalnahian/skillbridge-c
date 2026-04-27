@@ -40,6 +40,7 @@ export function SmartForm<TData extends Record<string, any>, TMutationData>({
       onChange: schema as any,
     },
     onSubmit: async ({ value }) => {
+      // console.log("[SmartForm] onSubmit called with value:", value)
       mutation.mutate(value, {
         onSuccess: (data) => {
           onSuccess?.(data)
@@ -48,12 +49,22 @@ export function SmartForm<TData extends Record<string, any>, TMutationData>({
     },
   })
 
+  // Debug: Log form errors
+  React.useEffect(() => {
+    const errors = form.state.errors
+    if (errors && Object.keys(errors).length > 0) {
+      // console.log("[SmartForm] Validation errors:", errors)
+    }
+  }, [form.state.errors])
+
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault()
         e.stopPropagation()
-        form.handleSubmit()
+        // console.log("[SmartForm] Form submit event triggered")
+        // console.log("[SmartForm] Form state:", form.state)
+        void form.handleSubmit()
       }}
       className={className}
     >
@@ -122,7 +133,14 @@ export function FormField<TData extends Record<string, any>>({
                 type={type}
                 value={field.state.value}
                 onBlur={field.handleBlur}
-                onChange={(e) => field.handleChange(e.target.value as any)}
+                onChange={(e) => {
+                const value = e.target.value;
+                if (type === "number") {
+                  field.handleChange(value === "" ? "" : Number(value));
+                } else {
+                  field.handleChange(value);
+                }
+              }}
                 className={field.state.meta.errors.length ? "border-destructive focus-visible:ring-destructive" : ""}
               />
             )}

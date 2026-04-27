@@ -87,6 +87,7 @@ export const getCategoryById = async (id: string) => {
 
 export const createCategory = async (payload: ICategoryCreateInput) => {
   try {
+    console.log("Creating category with payload:", payload);
     const result = await httpClient.post("/category", payload);
 
     if (!result.success) {
