@@ -11,21 +11,22 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { FormControl, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 
-interface SmartFormProps<TData extends Record<string, any>, TMutationData> {
+interface SmartFormProps<TData extends Record<string, any>, TMutationData, TMutationInput = TData> {
   schema: z.ZodType<TData>
-  mutation: UseMutationResult<TMutationData, any, TData>
+  mutation: UseMutationResult<TMutationData, any, TMutationInput>
   defaultValues: TData
   onSuccess?: (data: TMutationData) => void
   children: (form: any) => React.ReactNode
   submitLabel?: string
   className?: string
+  transform?: (value: TData) => TMutationInput
 }
 
 /**
  * SmartForm: A high-level wrapper that integrates TanStack Form with TanStack Query.
  * Handles validation, loading states, and submission automatically.
  */
-export function SmartForm<TData extends Record<string, any>, TMutationData>({
+export function SmartForm<TData extends Record<string, any>, TMutationData, TMutationInput = TData>({
   schema,
   mutation,
   defaultValues,
@@ -33,7 +34,8 @@ export function SmartForm<TData extends Record<string, any>, TMutationData>({
   children,
   submitLabel = "Submit",
   className,
-}: SmartFormProps<TData, TMutationData>) {
+  transform,
+}: SmartFormProps<TData, TMutationData, TMutationInput>) {
   const form = useForm({
     defaultValues,
     validators: {
@@ -41,7 +43,15 @@ export function SmartForm<TData extends Record<string, any>, TMutationData>({
     },
     onSubmit: async ({ value }) => {
       console.log("[SmartForm] onSubmit called with value:", value)
-      mutation.mutate(value, {
+      
+      // Strip fields not in the edit form (availability fields handled elsewhere)
+      const { availabilityStartTime, availabilityEndTime, availableDays, ...formData } = value
+      
+      // Apply custom transform if provided, otherwise use stripped formData
+      const mutationData = transform ? transform(value) : formData as unknown as TMutationInput
+      
+      console.log("[SmartForm] Data to mutate:", mutationData)
+      mutation.mutate(mutationData, {
         onSuccess: (data) => {
           console.log("[SmartForm] mutation onSuccess:", data)
           onSuccess?.(data)
@@ -68,13 +78,31 @@ export function SmartForm<TData extends Record<string, any>, TMutationData>({
 
   return (
     <form
-      onSubmit={(e) => {
+      onSubmit={async (e) => {
         e.preventDefault()
         e.stopPropagation()
         console.log("[SmartForm] Form submit event triggered")
         console.log("[SmartForm] Form state values:", form.state.values)
         console.log("[SmartForm] Form state isSubmitting:", form.state.isSubmitting)
-        void form.handleSubmit()
+        console.log("[SmartForm] Form canSubmit:", form.state.canSubmit)
+        console.log("[SmartForm] Form isValid:", form.state.isValid)
+        console.log("[SmartForm] Form errors:", form.state.errors)
+        console.log("[SmartForm] Form errorMap:", form.state.errorMap)
+        
+        // Log field-level errors
+        Object.entries(form.state.fieldMeta).forEach(([field, meta]) => {
+          const fieldMeta = meta as { errors?: string[] }
+          if (fieldMeta?.errors?.length) {
+            console.log(`[SmartForm] Field "${field}" errors:`, fieldMeta.errors)
+          }
+        })
+        
+        try {
+          const result = await form.handleSubmit()
+          console.log("[SmartForm] handleSubmit completed successfully, result:", result)
+        } catch (error) {
+          console.error("[SmartForm] handleSubmit error:", error)
+        }
       }}
       className={className}
     >

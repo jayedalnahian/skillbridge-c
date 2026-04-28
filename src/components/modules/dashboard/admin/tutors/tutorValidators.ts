@@ -44,16 +44,10 @@ export const updateTutorSchema = z.object({
   educationLevel: z.string("Education Level is required").optional(),
   experienceYears: z.number("Experience Years is required").optional(),
   hourlyRate: z.number("Hourly Rate is required").optional(),
-  availableDays: z
-    .array(z.enum(DaysOfWeek), "availableDays must be an array of DaysOfWeek")
-    .min(1, "at least one available day is required")
-    .optional(),
-  availabilityStartTime: z
-    .string("Availability Start Time is required")
-    .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid time format (HH:mm)")
-    .optional(),
-  availabilityEndTime: z
-    .string("Availability End Time is required")
-    .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid time format (HH:mm)")
-    .optional(),
+  categories: z
+    .array(
+      z.uuid("Each specialty must be a valid UUID"),
+      "Specialties must be an array of UUIDs",
+    )
+    .min(1, "At least one specialty is required").optional(),
 });

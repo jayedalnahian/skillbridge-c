@@ -11,7 +11,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { DaysOfWeek } from "./tutorTypes";
 import { cn } from "@/lib/utils";
 import { MultiSelectApiCombobox } from "@/components/shared/multi-select-api-combobox";
 import { getAssignedCategories } from "@/services/tutor.service";
