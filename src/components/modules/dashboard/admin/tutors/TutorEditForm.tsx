@@ -1,9 +1,8 @@
 "use client";
 
+import { useEffect } from "react";
 import { FormField } from "@/components/shared/data-form/data-form";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import {
   Select,
@@ -14,9 +13,15 @@ import {
 } from "@/components/ui/select";
 import { DaysOfWeek } from "./tutorTypes";
 import { cn } from "@/lib/utils";
+import { MultiSelectApiCombobox } from "@/components/shared/multi-select-api-combobox";
+import { getAssignedCategories } from "@/services/tutor.service";
+import { getAllCategories } from "@/services/category.service";
+import { ICategory } from "@/types/category.types";
+import { useQuery } from "@tanstack/react-query";
 
 interface TutorEditFormProps {
   form: any;
+  tutorId: string;
 }
 
 const EDUCATION_LEVELS = [
@@ -27,13 +32,51 @@ const EDUCATION_LEVELS = [
   "Other",
 ] as const;
 
-export function TutorEditForm({ form }: TutorEditFormProps) {
+export function TutorEditForm({ form, tutorId }: TutorEditFormProps) {
   const toggleDay = (day: string, currentValue: string[]) => {
     const days = currentValue || [];
     if (days.includes(day as any)) {
       return days.filter((d) => d !== day);
     }
     return [...days, day];
+  };
+
+  // Fetch assigned categories using TanStack Query
+  const { data: assignedCategoriesData, isLoading: isLoadingCategories } = useQuery({
+    queryKey: ["tutor", tutorId, "categories"],
+    queryFn: async () => {
+      const result = await getAssignedCategories(tutorId);
+      if (result.success && result.data) {
+        return result.data;
+      }
+      return [];
+    },
+    enabled: !!tutorId,
+  });
+
+  const assignedCategories = assignedCategoriesData || [];
+
+  // Sync fetched categories to form state when data loads
+  useEffect(() => {
+    if (assignedCategoriesData && assignedCategoriesData.length > 0) {
+      const categoryIds = assignedCategoriesData.map((cat) => cat.id);
+      console.log("[TutorEditForm] Syncing categories to form:", categoryIds);
+      form.setFieldValue("categories", categoryIds);
+    }
+  }, [assignedCategoriesData]);
+
+  // Debug: Log form state
+  console.log("[TutorEditForm] form.state.values:", form.state.values);
+  console.log("[TutorEditForm] form.state.isSubmitting:", form.state.isSubmitting);
+  console.log("[TutorEditForm] assignedCategories:", assignedCategories);
+
+  // Handle category selection changes
+  const handleCategoriesChange = (selectedCategories: ICategory[]) => {
+    // Extract category IDs for form submission
+    const categoryIds = selectedCategories.map((cat) => cat.id);
+    console.log("[TutorEditForm] handleCategoriesChange - categoryIds:", categoryIds);
+    // Update form with category IDs
+    form.setFieldValue("categories", categoryIds);
   };
 
   return (
@@ -128,103 +171,38 @@ export function TutorEditForm({ form }: TutorEditFormProps) {
         />
       </div>
 
-      {/* Available Days */}
-      <form.Field name="availableDays">
-        {(field: any) => (
-          <FormItem>
-            <FormLabel>Available Days</FormLabel>
-            <FormControl>
-              <div className="flex flex-wrap gap-2" role="group" aria-label="Available days">
-                {Object.values(DaysOfWeek).map((day) => {
-                  const isSelected = (field.state.value || []).includes(day);
-                  return (
-                    <Button
-                      key={day}
-                      type="button"
-                      variant={isSelected ? "default" : "outline"}
-                      size="sm"
-                      aria-pressed={isSelected}
-                      onClick={() =>
-                        field.handleChange(
-                          toggleDay(day, field.state.value || [])
-                        )
-                      }
-                    >
-                      {day.slice(0, 3)}
-                    </Button>
-                  );
-                })}
-              </div>
-            </FormControl>
-            {field.state.meta.errors.length > 0 && (
-              <FormMessage>
-                {field.state.meta.errors[0]?.message}
-              </FormMessage>
-            )}
-          </FormItem>
-        )}
-      </form.Field>
-
-      {/* Availability Times */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <FormField
-          form={form}
-          name="availabilityStartTime"
-          label="Start Time"
-          type="time"
-          placeholder={form.state.values.availabilityStartTime || ""}
-          render={(field: any) => {
-            // Extract time from ISO string or use as-is
-            const value = field.state.value || "";
-            const timeValue = value.includes("T")
-              ? value.split("T")[1].slice(0, 5)
-              : value.slice(0, 5);
-            return (
-              <Input
-                id={field.name}
-                type="time"
-                value={timeValue}
-                onBlur={field.handleBlur}
-                placeholder={form.state.values.availabilityStartTime || ""}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  const time = e.target.value;
-                  // Keep as HH:MM format
-                  field.handleChange(time);
-                }}
-                className={field.state.meta.errors.length ? "border-destructive focus-visible:ring-destructive" : ""}
-              />
-            );
-          }}
-        />
-
-        <FormField
-          form={form}
-          name="availabilityEndTime"
-          label="End Time"
-          type="time"
-          render={(field: any) => {
-            // Extract time from ISO string or use as-is
-            const value = field.state.value || "";
-            const timeValue = value.includes("T")
-              ? value.split("T")[1].slice(0, 5)
-              : value.slice(0, 5);
-            return (
-              <Input
-                id={field.name}
-                type="time"
-                value={timeValue}
-                onBlur={field.handleBlur}
-                placeholder={form.state.values.availabilityEndTime || ""}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  const time = e.target.value;
-                  // Keep as HH:MM format
-                  field.handleChange(time);
-                }}
-                className={field.state.meta.errors.length ? "border-destructive focus-visible:ring-destructive" : ""}
-              />
-            );
-          }}
-        />
+      {/* Assigned Categories */}
+      <div className="grid gap-2">
+        <Label>
+          Assigned Categories{" "}
+          <span className="text-xs text-muted-foreground">
+            (select at least one)
+          </span>
+        </Label>
+        <form.Field name="categories">
+          {(field: any) => (
+            <FormItem>
+              <FormControl>
+                <MultiSelectApiCombobox<ICategory>
+                  fetcher={getAllCategories}
+                  placeholder="Search and select categories..."
+                  onSelectionChange={handleCategoriesChange}
+                  displayKey="name"
+                  valueKey="id"
+                  initialSelectedItems={assignedCategories}
+                  className={field.state.meta.errors.length ? "border-destructive focus-visible:ring-destructive" : ""}
+                  disabled={isLoadingCategories}
+                  key={assignedCategories.length} // Force re-render when data changes
+                />
+              </FormControl>
+              {field.state.meta.errors.length > 0 && (
+                <FormMessage>
+                  {field.state.meta.errors[0]?.message}
+                </FormMessage>
+              )}
+            </FormItem>
+          )}
+        </form.Field>
       </div>
     </div>
   );

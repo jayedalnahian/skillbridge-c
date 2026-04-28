@@ -250,7 +250,7 @@ export default function TutorTable({ initialQueryString }: TutorTableProps) {
               editConfig={{
                 schema: updateTutorSchema,
                 mutation: editMutation as any,
-                children: (form) => <TutorEditForm form={form} />,
+                children: (form, item) => <TutorEditForm form={form} tutorId={item.id} />,
               }}
             />
           )}

@@ -40,20 +40,29 @@ export function SmartForm<TData extends Record<string, any>, TMutationData>({
       onChange: schema as any,
     },
     onSubmit: async ({ value }) => {
-      // console.log("[SmartForm] onSubmit called with value:", value)
+      console.log("[SmartForm] onSubmit called with value:", value)
       mutation.mutate(value, {
         onSuccess: (data) => {
+          console.log("[SmartForm] mutation onSuccess:", data)
           onSuccess?.(data)
+        },
+        onError: (error) => {
+          console.error("[SmartForm] mutation onError:", error)
         },
       })
     },
   })
 
+  // Debug: Log form state
+  React.useEffect(() => {
+    console.log("[SmartForm] Form mounted/updated, isSubmitting:", form.state.isSubmitting)
+  }, [form.state.isSubmitting])
+
   // Debug: Log form errors
   React.useEffect(() => {
     const errors = form.state.errors
     if (errors && Object.keys(errors).length > 0) {
-      // console.log("[SmartForm] Validation errors:", errors)
+      console.log("[SmartForm] Validation errors:", errors)
     }
   }, [form.state.errors])
 
@@ -62,8 +71,9 @@ export function SmartForm<TData extends Record<string, any>, TMutationData>({
       onSubmit={(e) => {
         e.preventDefault()
         e.stopPropagation()
-        // console.log("[SmartForm] Form submit event triggered")
-        // console.log("[SmartForm] Form state:", form.state)
+        console.log("[SmartForm] Form submit event triggered")
+        console.log("[SmartForm] Form state values:", form.state.values)
+        console.log("[SmartForm] Form state isSubmitting:", form.state.isSubmitting)
         void form.handleSubmit()
       }}
       className={className}
@@ -84,6 +94,7 @@ export function SmartForm<TData extends Record<string, any>, TMutationData>({
           type="submit"
           className="w-full"
           disabled={mutation.isPending}
+          onClick={() => console.log("[SmartForm] Submit button clicked")}
         >
           {mutation.isPending && (
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />

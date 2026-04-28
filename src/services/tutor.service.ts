@@ -2,6 +2,7 @@
 
 import { httpClient } from "@/lib/axios/httpClient";
 import { ITutorCreateInput, ITutorQueryParams, ITutorUpdateInput, ITutorWithRelations } from "@/types/tutor.types";
+import { ICategory } from "@/types/category.types";
 
 function buildQueryString(params: ITutorQueryParams): string {
   const query = new URLSearchParams();
@@ -76,6 +77,22 @@ export const getTutorById = async (id: string) => {
     };
   } catch (error: any) {
     console.error("Get tutor error:", error);
+    return {
+      success: false,
+      message: error.message || "An unexpected error occurred",
+    };
+  }
+};
+
+export const getAssignedCategories = async (tutorId: string) => {
+  try {
+    const result = await httpClient.get<ICategory[]>(`/tutor/${tutorId}/categories`);
+    return {
+      success: true,
+      data: result.data,
+    };
+  } catch (error: any) {
+    console.error("Get assigned categories error:", error);
     return {
       success: false,
       message: error.message || "An unexpected error occurred",

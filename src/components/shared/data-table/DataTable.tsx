@@ -67,7 +67,7 @@ interface DataTableProps<TData extends { id: string }, TValue> {
   editConfig?: {
     schema: z.ZodType<any>;
     mutation: UseMutationResult<any, any, any>;
-    children: (form: any) => React.ReactNode;
+    children: (form: any, item: TData) => React.ReactNode;
     onSuccess?: (data: any) => void;
     submitLabel?: string;
   };

@@ -40,6 +40,7 @@ interface MultiSelectApiComboboxProps<T> {
   className?: string
   disabled?: boolean
   maxHeight?: string
+  initialSelectedItems?: T[]
 }
 
 export function MultiSelectApiCombobox<T extends Record<string, any>>({
@@ -51,11 +52,12 @@ export function MultiSelectApiCombobox<T extends Record<string, any>>({
   className,
   disabled = false,
   maxHeight = "300px",
+  initialSelectedItems = [],
 }: MultiSelectApiComboboxProps<T>) {
   const [open, setOpen] = React.useState(false)
   const [searchTerm, setSearchTerm] = React.useState("")
   const [suggestions, setSuggestions] = React.useState<T[]>([])
-  const [selectedItems, setSelectedItems] = React.useState<T[]>([])
+  const [selectedItems, setSelectedItems] = React.useState<T[]>(initialSelectedItems)
   const [isLoading, setIsLoading] = React.useState(false)
 
   // Debounced search effect
@@ -68,6 +70,17 @@ export function MultiSelectApiCombobox<T extends Record<string, any>>({
 
     return () => clearTimeout(timer)
   }, [searchTerm, open, fetcher])
+
+  // Sync selected items when initialSelectedItems changes (for external updates)
+  // Use deep comparison to avoid infinite loops when array reference changes
+  const prevInitialRef = React.useRef(initialSelectedItems)
+  React.useEffect(() => {
+    const hasChanged = JSON.stringify(prevInitialRef.current) !== JSON.stringify(initialSelectedItems)
+    if (hasChanged) {
+      setSelectedItems(initialSelectedItems)
+      prevInitialRef.current = initialSelectedItems
+    }
+  }, [initialSelectedItems])
 
   const fetchSuggestions = async (term: string) => {
     setIsLoading(true)

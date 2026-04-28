@@ -62,6 +62,9 @@ export function DataTableRowActions<TData>({
   const metaOnPermanentDelete = tableMeta?.onPermanentDelete;
   const metaOnRestore = tableMeta?.onRestore;
 
+  console.log("[DataTableRowActions] editConfig:", editConfig);
+  console.log("[DataTableRowActions] tableMeta:", tableMeta);
+
   // Use prop if provided, otherwise fallback to meta
   const unresolvedOnDelete = onPermanentDelete || metaOnPermanentDelete;
   const unresolvedOnPermanentDelete = onPermanentDelete || metaOnPermanentDelete;
@@ -211,18 +214,19 @@ export function DataTableRowActions<TData>({
 
           <div className="overflow-y-auto px-6 py-2">
             {editConfig ? (
-              <SmartForm
-                schema={editConfig.schema}
-                mutation={editConfig.mutation}
-                defaultValues={item}
-                onSuccess={(data) => {
-                  editConfig.onSuccess?.(data);
-                  setIsEditOpen(false);
-                }}
-                submitLabel={editConfig.submitLabel || "Save changes"}
-              >
-                {(form) => editConfig.children(form)}
-              </SmartForm>
+                <SmartForm
+                  schema={editConfig.schema}
+                  mutation={editConfig.mutation}
+                  defaultValues={{ ...item, categories: item.categories || [] }}
+                  onSuccess={(data) => {
+                    console.log("[DataTableRowActions] SmartForm onSuccess:", data);
+                    editConfig.onSuccess?.(data);
+                    setIsEditOpen(false);
+                  }}
+                  submitLabel={editConfig.submitLabel || "Save changes"}
+                >
+                {(form) => editConfig.children(form, item)}
+                </SmartForm>
             ) : (
             <>
               <div className="grid gap-4 py-4">
