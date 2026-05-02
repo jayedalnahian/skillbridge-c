@@ -10,7 +10,7 @@ import { isTokenExpiringSoon } from "./lib/tokenUtils";
 import {
   getNewTokensWithRefreshToken,
   getUserInfo,
-} from "./services/auth.services";
+} from "./services/auth.service";
 
 async function refreshTokenMiddleware(refreshToken: string, sessionToken: string): Promise<boolean> {
   try {

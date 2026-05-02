@@ -59,21 +59,16 @@ export function TutorEditForm({ form, tutorId }: TutorEditFormProps) {
   useEffect(() => {
     if (assignedCategoriesData && assignedCategoriesData.length > 0) {
       const categoryIds = assignedCategoriesData.map((cat) => cat.id);
-      console.log("[TutorEditForm] Syncing categories to form:", categoryIds);
       form.setFieldValue("categories", categoryIds);
     }
   }, [assignedCategoriesData]);
 
-  // Debug: Log form state
-  console.log("[TutorEditForm] form.state.values:", form.state.values);
-  console.log("[TutorEditForm] form.state.isSubmitting:", form.state.isSubmitting);
-  console.log("[TutorEditForm] assignedCategories:", assignedCategories);
+ 
 
   // Handle category selection changes
   const handleCategoriesChange = (selectedCategories: ICategory[]) => {
     // Extract category IDs for form submission
     const categoryIds = selectedCategories.map((cat) => cat.id);
-    console.log("[TutorEditForm] handleCategoriesChange - categoryIds:", categoryIds);
     // Update form with category IDs
     form.setFieldValue("categories", categoryIds);
   };

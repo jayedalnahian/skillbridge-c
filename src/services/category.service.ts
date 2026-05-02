@@ -87,7 +87,7 @@ export const getCategoryById = async (id: string) => {
 
 export const createCategory = async (payload: ICategoryCreateInput) => {
   try {
-    console.log("Creating category with payload:", payload);
+   
     const result = await httpClient.post("/category", payload);
 
     if (!result.success) {
@@ -120,6 +120,7 @@ export const updateCategory = async (
   payload: ICategoryUpdateInput,
 ) => {
   try {
+    console.log("Updating category with payload:", payload);
     const result = await httpClient.patch(`/category/${id}`, payload);
 
     if (!result.success) {

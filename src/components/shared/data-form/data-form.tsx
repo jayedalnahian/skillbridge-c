@@ -42,7 +42,7 @@ export function SmartForm<TData extends Record<string, any>, TMutationData, TMut
       onChange: schema as any,
     },
     onSubmit: async ({ value }) => {
-      console.log("[SmartForm] onSubmit called with value:", value)
+      
       
       // Strip fields not in the edit form (availability fields handled elsewhere)
       const { availabilityStartTime, availabilityEndTime, availableDays, ...formData } = value
@@ -50,44 +50,27 @@ export function SmartForm<TData extends Record<string, any>, TMutationData, TMut
       // Apply custom transform if provided, otherwise use stripped formData
       const mutationData = transform ? transform(value) : formData as unknown as TMutationInput
       
-      console.log("[SmartForm] Data to mutate:", mutationData)
+      
       mutation.mutate(mutationData, {
         onSuccess: (data) => {
-          console.log("[SmartForm] mutation onSuccess:", data)
+          
           onSuccess?.(data)
         },
         onError: (error) => {
-          console.error("[SmartForm] mutation onError:", error)
+          console.error(" mutation onError:", error)
         },
       })
     },
   })
 
-  // Debug: Log form state
-  React.useEffect(() => {
-    console.log("[SmartForm] Form mounted/updated, isSubmitting:", form.state.isSubmitting)
-  }, [form.state.isSubmitting])
 
-  // Debug: Log form errors
-  React.useEffect(() => {
-    const errors = form.state.errors
-    if (errors && Object.keys(errors).length > 0) {
-      console.log("[SmartForm] Validation errors:", errors)
-    }
-  }, [form.state.errors])
 
   return (
     <form
       onSubmit={async (e) => {
         e.preventDefault()
         e.stopPropagation()
-        console.log("[SmartForm] Form submit event triggered")
-        console.log("[SmartForm] Form state values:", form.state.values)
-        console.log("[SmartForm] Form state isSubmitting:", form.state.isSubmitting)
-        console.log("[SmartForm] Form canSubmit:", form.state.canSubmit)
-        console.log("[SmartForm] Form isValid:", form.state.isValid)
-        console.log("[SmartForm] Form errors:", form.state.errors)
-        console.log("[SmartForm] Form errorMap:", form.state.errorMap)
+      
         
         // Log field-level errors
         Object.entries(form.state.fieldMeta).forEach(([field, meta]) => {

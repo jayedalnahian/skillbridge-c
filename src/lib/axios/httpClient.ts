@@ -28,7 +28,7 @@ const axiosInstance = async () => {
     // If we are on the server (Server Actions, Server Components, etc.)
     // We use dynamic imports to hide next/headers from the client bundle
     const { cookies, headers } = await import('next/headers');
-    const { getNewTokensWithRefreshToken } = await import('@/services/auth.services');
+    const { getNewTokensWithRefreshToken } = await import('@/services/auth.service');
 
     const cookieStore = await cookies();
     const requestHeader = await headers();

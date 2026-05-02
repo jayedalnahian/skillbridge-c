@@ -1,6 +1,6 @@
 import DashboardNavbar from "@/components/modules/dashboard/DashboardNavbar";
 import DashboardSidebar from "@/components/modules/dashboard/DashboardSidebar";
-import { getUserInfo } from "@/services/auth.services";
+import { getUserInfo } from "@/services/auth.service";
 import { redirect } from "next/navigation";
 
 export default async function DashboardRoutesLayout({

@@ -44,6 +44,7 @@ export interface IStudent {
   id: string;
   userId: string;
   name: string;
+  email: string;
   profilePhoto?: string | null;
   contactNumber?: string | null;
   description?: string | null;
@@ -94,3 +95,11 @@ export interface User {
 }
 
 export type UserInfo = User;
+
+export interface IStudentUpdatePayload {
+  name?: string;
+  email?: string;
+  profilePhoto?: string;
+  contactNumber?: string;
+  description?: string;
+}

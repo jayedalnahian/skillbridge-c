@@ -58,12 +58,9 @@ export function DataTableRowActions<TData>({
   const tableMeta = table.options.meta as any;
   const editConfig = tableMeta?.editConfig;
   const viewConfig = tableMeta?.viewConfig;
-  const metaOnDelete = tableMeta?.onDelete;
   const metaOnPermanentDelete = tableMeta?.onPermanentDelete;
   const metaOnRestore = tableMeta?.onRestore;
 
-  console.log("[DataTableRowActions] editConfig:", editConfig);
-  console.log("[DataTableRowActions] tableMeta:", tableMeta);
 
   // Use prop if provided, otherwise fallback to meta
   const unresolvedOnDelete = onPermanentDelete || metaOnPermanentDelete;
@@ -219,7 +216,6 @@ export function DataTableRowActions<TData>({
                   mutation={editConfig.mutation}
                   defaultValues={{ ...item, categories: item.categories || [] }}
                   onSuccess={(data) => {
-                    console.log("[DataTableRowActions] SmartForm onSuccess:", data);
                     editConfig.onSuccess?.(data);
                     setIsEditOpen(false);
                   }}
