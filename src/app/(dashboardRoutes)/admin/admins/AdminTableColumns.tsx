@@ -4,16 +4,16 @@ import { DataTableColumnHeader } from "@/components/shared/data-table/data-table
 import { DataTableRowActions } from "@/components/shared/data-table/data-table-row-actions";
 import { IdCell } from "@/components/shared/data-table/IdCell";
 import { Badge } from "@/components/ui/badge";
-import { IStudent } from "@/types/user.types";
+import { IAdmin } from "@/types/user.types";
 import { ColumnDef } from "@tanstack/react-table";
-import { Mail, Phone } from "lucide-react";
+import { Mail, Phone, MapPin } from "lucide-react";
 import { dateFormatter } from "@/lib/dateFormatters";
 
-export const columns: ColumnDef<IStudent>[] = [
+export const columns: ColumnDef<IAdmin>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Student Name" />
+      <DataTableColumnHeader column={column} title="Admin Name" />
     ),
     cell: ({ row }) => (
       <div className="font-semibold text-slate-900 hover:text-[#00ADB5] italic">
@@ -42,7 +42,7 @@ export const columns: ColumnDef<IStudent>[] = [
       <DataTableColumnHeader column={column} title="Contact" />
     ),
     cell: ({ row }) => {
-      const contact = row.getValue("contactNumber") as string | null;
+      const contact = row.getValue("contactNumber") as string;
       return contact ? (
         <div className="flex items-center gap-2 text-slate-600 hover:text-[#00ADB5]">
           <Phone className="h-4 w-4 text-slate-400" />
@@ -54,13 +54,19 @@ export const columns: ColumnDef<IStudent>[] = [
     },
   },
   {
-    accessorKey: "description",
-    header: "Description",
-    cell: ({ row }) => (
-      <div className="max-w-[250px] truncate text-slate-500 hover:text-[#00ADB5]">
-        {row.getValue("description") || "No description provided"}
-      </div>
-    ),
+    accessorKey: "address",
+    header: "Address",
+    cell: ({ row }) => {
+      const address = row.getValue("address") as string;
+      return address ? (
+        <div className="flex items-center gap-2 max-w-[200px] truncate text-slate-500 hover:text-[#00ADB5]">
+          <MapPin className="h-4 w-4 text-slate-400 shrink-0" />
+          <span className="truncate">{address}</span>
+        </div>
+      ) : (
+        <span className="text-slate-400 italic">No address</span>
+      );
+    },
   },
   {
     accessorKey: "id",

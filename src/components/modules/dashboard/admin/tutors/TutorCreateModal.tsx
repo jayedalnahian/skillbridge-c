@@ -20,7 +20,8 @@ import {
 } from "@/components/ui/select";
 import { useState } from "react";
 import { createTutorSchema } from "./tutorValidators";
-import { DaysOfWeek } from "./tutorTypes";
+import { DAYS_OF_WEEK, EDUCATION_LEVELS } from "@/lib/constants";
+import { DaysOfWeek } from "@/types/user.types";
 import { ICategory } from "@/types/category.types";
 import { z } from "zod";
 import { MultiSelectApiCombobox } from "@/components/shared/multi-select-api-combobox";
@@ -36,23 +37,6 @@ interface TutorCreateModalProps {
   createMutation: UseMutationResult<any, Error, CreateTutorInput>;
 }
 
-const DAYS_OF_WEEK: DaysOfWeek[] = [
-  DaysOfWeek.MONDAY,
-  DaysOfWeek.TUESDAY,
-  DaysOfWeek.WEDNESDAY,
-  DaysOfWeek.THURSDAY,
-  DaysOfWeek.FRIDAY,
-  DaysOfWeek.SATURDAY,
-  DaysOfWeek.SUNDAY,
-];
-
-const EDUCATION_LEVELS = [
-  "High School",
-  "Bachelor",
-  "Master",
-  "PhD",
-  "Other",
-];
 
 // Fetcher function for MultiSelectApiCombobox
 const fetchCategories = async (searchTerm: string): Promise<ApiResponse<ICategory>> => {

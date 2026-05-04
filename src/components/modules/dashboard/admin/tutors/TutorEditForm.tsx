@@ -17,28 +17,15 @@ import { getAssignedCategories } from "@/services/tutor.service";
 import { getAllCategories } from "@/services/category.service";
 import { ICategory } from "@/types/category.types";
 import { useQuery } from "@tanstack/react-query";
+import { EDUCATION_LEVELS } from "@/lib/constants";
 
 interface TutorEditFormProps {
   form: any;
   tutorId: string;
 }
 
-const EDUCATION_LEVELS = [
-  "High School",
-  "Bachelor's",
-  "Master's",
-  "PhD",
-  "Other",
-] as const;
 
 export function TutorEditForm({ form, tutorId }: TutorEditFormProps) {
-  const toggleDay = (day: string, currentValue: string[]) => {
-    const days = currentValue || [];
-    if (days.includes(day as any)) {
-      return days.filter((d) => d !== day);
-    }
-    return [...days, day];
-  };
 
   // Fetch assigned categories using TanStack Query
   const { data: assignedCategoriesData, isLoading: isLoadingCategories } = useQuery({

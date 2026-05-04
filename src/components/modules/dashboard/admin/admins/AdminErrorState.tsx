@@ -2,12 +2,12 @@
 
 import { DataErrorState } from "@/components/shared/DataErrorState";
 
-interface TutorErrorStateProps {
+interface AdminErrorStateProps {
   message?: string;
 }
 
-export function TutorErrorState({
+export function AdminErrorState({
   message = "Failed to load data from the backend server",
-}: TutorErrorStateProps) {
-  return <DataErrorState message={message} moduleName="Tutor" />;
+}: AdminErrorStateProps) {
+  return <DataErrorState message={message} moduleName="Admin" />;
 }

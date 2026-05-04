@@ -16,4 +16,25 @@ export const QUERY_KEYS = {
   CATEGORIES: "categories",
   TUTORS: "tutors",
   STUDENTS: "students",
+  ADMINS: "admins",
 } as const;
+
+// Days of week for tutor availability
+export const DAYS_OF_WEEK = [
+  "MONDAY",
+  "TUESDAY",
+  "WEDNESDAY",
+  "THURSDAY",
+  "FRIDAY",
+  "SATURDAY",
+  "SUNDAY",
+] as const;
+
+// Education levels for tutor profile
+export const EDUCATION_LEVELS = [
+  "High School",
+  "Bachelor",
+  "Master",
+  "PhD",
+  "Other",
+] as const;
