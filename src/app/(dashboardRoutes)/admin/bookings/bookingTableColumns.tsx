@@ -38,8 +38,15 @@ export const columns: ColumnDef<ICategory>[] = [
         cell: ({ row }) => {
             const status = row.getValue("status") as string;
 
+            const statusStyles = {
+                PENDING: "bg-amber-100 text-amber-700 hover:bg-amber-200",
+                ACCEPTED: "bg-emerald-100 text-emerald-700 hover:bg-emerald-200",
+                REJECTED: "bg-red-100 text-red-700 hover:bg-red-200",
+                COMPLETED: "bg-blue-100 text-blue-700 hover:bg-blue-200",
+            };
+
             return (
-                <Badge variant={status === "PENDING" ? "default" : status === "ACCEPTED" ? "default" : status === "REJECTED" ? "destructive" : "outline"} className="bg-blue-100 text-blue-700 hover:bg-blue-200">
+                <Badge variant="outline" className={statusStyles[status as keyof typeof statusStyles] || "bg-slate-100 text-slate-700 hover:bg-slate-200"}>
                     {status}
                 </Badge>
             );
@@ -54,8 +61,13 @@ export const columns: ColumnDef<ICategory>[] = [
         cell: ({ row }) => {
             const status = row.getValue("paymentStatus") as string;
 
+            const paymentStyles = {
+                PAID: "bg-emerald-100 text-emerald-700 hover:bg-emerald-200",
+                UNPAID: "bg-red-100 text-red-700 hover:bg-red-200",
+            };
+
             return (
-                <Badge variant={status === "PAID" ? "default" : status === "UNPAID" ? "destructive" : "outline"} className="bg-blue-100 text-blue-700 hover:bg-blue-200">
+                <Badge variant="outline" className={paymentStyles[status as keyof typeof paymentStyles] || "bg-slate-100 text-slate-700 hover:bg-slate-200"}>
                     {status}
                 </Badge>
             );
@@ -69,11 +81,13 @@ export const columns: ColumnDef<ICategory>[] = [
         header: "Deleted",
         cell: ({ row }) => {
             const isDeleted = row.getValue("isDeleted") as boolean;
+
+            const deletedStyles = isDeleted
+                ? "bg-red-100 text-red-700 hover:bg-red-200"
+                : "bg-emerald-100 text-emerald-700 hover:bg-emerald-200";
+
             return (
-                <Badge
-                    variant={isDeleted ? "destructive" : "default"}
-                    className={isDeleted ? "bg-red-100 text-red-700 hover:bg-red-200" : "bg-green-100 text-green-700 hover:bg-green-200"}
-                >
+                <Badge variant="outline" className={deletedStyles}>
                     {isDeleted ? "Yes" : "No"}
                 </Badge>
             );

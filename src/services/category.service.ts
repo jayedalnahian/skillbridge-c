@@ -58,7 +58,7 @@ export const getAllCategories = async (
       data: rawData,
       meta: {
         page: 1,
-        limit: 10,
+        limit: rawData.length,
         total: rawData.length,
         totalPages: 1,
       },
@@ -66,6 +66,40 @@ export const getAllCategories = async (
   } catch (error) {
     console.error("Error fetching categories:", error);
     throw error;
+  }
+};
+
+export const getCategoriesUsedByTutors = async (searchTerm?: string) => {
+  try {
+    const query = searchTerm ? `?searchTerm=${encodeURIComponent(searchTerm)}` : "";
+    const response = await httpClient.get<ICategory[]>(`/category/used-by-tutors${query}`);
+    // Ensure meta is always present for combobox compatibility
+    const result = {
+      success: true as const,
+      message: response.message || "Categories fetched successfully",
+      data: response.data || [],
+      meta: response.meta || {
+        page: 1,
+        limit: response.data?.length || 0,
+        total: response.data?.length || 0,
+        totalPages: 1,
+      },
+    };
+    return result;
+  } catch (error) {
+    console.error("Error fetching categories used by tutors:", error);
+    // Return empty data on error in ApiResponse format
+    return {
+      success: true as const,
+      message: "Error fetching categories",
+      data: [] as ICategory[],
+      meta: {
+        page: 1,
+        limit: 0,
+        total: 0,
+        totalPages: 0,
+      },
+    };
   }
 };
 

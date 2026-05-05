@@ -60,6 +60,20 @@ export function MultiSelectApiCombobox<T extends Record<string, any>>({
   const [selectedItems, setSelectedItems] = React.useState<T[]>(initialSelectedItems)
   const [isLoading, setIsLoading] = React.useState(false)
 
+  // Memoize fetchSuggestions to prevent recreating on every render
+  const fetchSuggestions = React.useCallback(async (term: string) => {
+    setIsLoading(true)
+    try {
+      const response = await fetcher(term)
+      setSuggestions(response.data)
+    } catch (error) {
+      console.error("Error fetching suggestions:", error)
+      setSuggestions([])
+    } finally {
+      setIsLoading(false)
+    }
+  }, [fetcher])
+
   // Debounced search effect
   React.useEffect(() => {
     if (!open) return
@@ -69,7 +83,7 @@ export function MultiSelectApiCombobox<T extends Record<string, any>>({
     }, 400) // 400ms debounce
 
     return () => clearTimeout(timer)
-  }, [searchTerm, open, fetcher])
+  }, [searchTerm, open, fetchSuggestions])
 
   // Sync selected items when initialSelectedItems changes (for external updates)
   // Use deep comparison to avoid infinite loops when array reference changes
@@ -82,18 +96,6 @@ export function MultiSelectApiCombobox<T extends Record<string, any>>({
     }
   }, [initialSelectedItems])
 
-  const fetchSuggestions = async (term: string) => {
-    setIsLoading(true)
-    try {
-      const response = await fetcher(term)
-      setSuggestions(response.data)
-    } catch (error) {
-      console.error("Error fetching suggestions:", error)
-      setSuggestions([])
-    } finally {
-      setIsLoading(false)
-    }
-  }
 
   const toggleSelection = (item: T) => {
     const itemValue = item[valueKey]

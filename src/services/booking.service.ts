@@ -1,18 +1,18 @@
 import { httpClient } from "@/lib/axios/httpClient";
 import { IBooking, IBookingCreateInput, IBookingQueryParams, ICancelBookingInput } from "@/types/booking.types";
 function buildQueryString(params: IBookingQueryParams): string {
-  const query = new URLSearchParams();
+    const query = new URLSearchParams();
 
-  if (params.searchTerm) query.set("searchTerm", params.searchTerm);
-  if (params.page) query.set("page", String(params.page));
-  if (params.limit) query.set("limit", String(params.limit));
-  if (params.sortBy) query.set("sortBy", params.sortBy);
-  if (params.sortOrder) query.set("sortOrder", params.sortOrder);
-  if (params.status) query.set("status", params.status);
-  if (params.paymentStatus) query.set("paymentStatus", params.paymentStatus);
-  if (params.isDeleted !== undefined) query.set("isDeleted", String(params.isDeleted));
+    if (params.searchTerm) query.set("searchTerm", params.searchTerm);
+    if (params.page) query.set("page", String(params.page));
+    if (params.limit) query.set("limit", String(params.limit));
+    if (params.sortBy) query.set("sortBy", params.sortBy);
+    if (params.sortOrder) query.set("sortOrder", params.sortOrder);
+    if (params.status) query.set("status", params.status);
+    if (params.paymentStatus) query.set("paymentStatus", params.paymentStatus);
+    if (params.isDeleted !== undefined) query.set("isDeleted", String(params.isDeleted));
 
-  return query.toString();
+    return query.toString();
 }
 export const getAllBookings = async (
     params?: IBookingQueryParams | string,
@@ -20,43 +20,45 @@ export const getAllBookings = async (
     try {
         let queryString: string;
 
-    if (typeof params === "string") {
-      queryString = params;
-    } else {
-      queryString = params ? buildQueryString(params) : "";
-    }
+        if (typeof params === "string") {
+            queryString = params;
+        } else {
+            queryString = params ? buildQueryString(params) : "";
+        }
 
-    const url = queryString ? `/booking?${queryString}` : "/booking";
+        const url = queryString ? `/booking?${queryString}` : "/booking";
 
-    const response = await httpClient.get<IBooking[]>(url);
+        const response = await httpClient.get<IBooking[] | { data: { data: IBooking[]; meta?: { page: number; limit: number; total: number; totalPages: number; } }; }>(url);
 
-    // Handle both wrapped (ApiResponse) and unwrapped (raw array) responses
-    const isApiResponse = response && typeof response === "object" && "data" in response && Array.isArray(response.data);
+        // Handle both wrapped (ApiResponse) and unwrapped (raw array) responses
+        // Backend returns: { success, message, data: { data: [...], meta: {...} }, error }
+        const isWrappedResponse = response && typeof response === "object" && "data" in response && response.data && typeof response.data === "object" && "data" in response.data && Array.isArray(response.data.data);
 
-    if (isApiResponse) {
-      return {
-        data: response.data || [],
-        meta: response.meta || {
-          page: 1,
-          limit: 10,
-          total: 0,
-          totalPages: 0,
-        },
-      };
-    }
+        if (isWrappedResponse) {
+            const wrappedResponse = response as unknown as { data: { data: IBooking[]; meta?: { page: number; limit: number; total: number; totalPages: number; } } };
+            return {
+                data: wrappedResponse.data.data || [],
+                meta: wrappedResponse.data.meta || {
+                    page: 1,
+                    limit: 10,
+                    total: 0,
+                    totalPages: 0,
+                },
+            };
+        }
 
-    // If response is a raw array (not wrapped in ApiResponse)
-    const rawData = Array.isArray(response) ? response : [];
+        // If response is a raw array (not wrapped in ApiResponse)
+        const rawData = Array.isArray(response) ? response : [];
 
-    return {
-      data: rawData,
-      meta: {
-        page: 1,
-        limit: 10,
-        total: rawData.length,
-        totalPages: 1,
-      },
-    };
+        return {
+            data: rawData,
+            meta: {
+                page: 1,
+                limit: 10,
+                total: rawData.length,
+                totalPages: 1,
+            },
+        };
     } catch (error) {
         console.error("Error fetching bookings:", error);
         throw error;
