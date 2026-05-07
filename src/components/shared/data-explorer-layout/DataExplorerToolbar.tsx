@@ -43,81 +43,80 @@ export function DataExplorerToolbar({
   const queryClient = useQueryClient();
 
   return (
-    <div className="flex flex-col gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-      {/* Row 1: Search and Sort */}
-      <div className="flex flex-col lg:flex-row gap-3">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+    <div className="rounded-lg border border-slate-200 bg-white p-3 shadow-sm">
+      {/* Single row layout with golden ratio: ~62% search, ~38% controls */}
+      <div className="flex flex-col sm:flex-row gap-2">
+        {/* Search: Golden ratio major (~61.8%) */}
+        <div className="relative sm:w-[61.8%]">
+          <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             placeholder={searchPlaceholder}
             value={searchValue}
             onChange={(event) => onSearchChange(event.target.value)}
-            className="h-9 pl-9 w-full"
+            className="h-8 pl-9 pr-8 w-full"
           />
           {searchValue && (
             <Button
               variant="ghost"
               size="sm"
-              className="absolute right-1 top-1/2 h-7 w-7 -translate-y-1/2 p-0"
+              className="absolute right-1 top-1/2 h-6 w-6 -translate-y-1/2 p-0 hover:bg-transparent"
               onClick={() => onSearchChange("")}
             >
-              <X className="h-4 w-4" />
+              <X className="h-3.5 w-3.5" />
             </Button>
           )}
         </div>
-        <Select value={sortValue ?? ""} onValueChange={onSortChange}>
-          <SelectTrigger className="h-9 w-full lg:w-[200px]">
-            <SelectValue placeholder="Sort by..." />
-          </SelectTrigger>
-          <SelectContent>
-            {sortOptions.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
-                {option.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
 
-      {/* Row 2: Actions */}
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="flex flex-wrap items-center gap-2">
-          {isFiltered && onReset && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onReset}
-              className="h-9 px-2 lg:px-3"
-            >
-              Reset
-              <X className="ml-2 h-4 w-4" />
-            </Button>
-          )}
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
-          {queryKey && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                queryClient.invalidateQueries({ queryKey });
-              }}
-              className="h-9"
-            >
-              <RefreshCw className="mr-2 h-4 w-4" />
-              Refresh
-            </Button>
-          )}
-          {onCreate && (
-            <Button
-              size="sm"
-              onClick={onCreate}
-              className="h-9 bg-[#00ADB5] hover:bg-[#008f96] text-white"
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              {createButtonLabel}
-            </Button>
-          )}
+        {/* Controls: Golden ratio minor (~38.2%) */}
+        <div className="flex gap-2 sm:w-[38.2%]">
+          {/* Sort dropdown: takes 60% of minor section */}
+          <Select value={sortValue ?? ""} onValueChange={onSortChange}>
+            <SelectTrigger className="h-8 flex-1 min-w-0">
+              <SelectValue placeholder="Sort by..." />
+            </SelectTrigger>
+            <SelectContent>
+              {sortOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          {/* Action buttons grouped */}
+          <div className="flex gap-1.5">
+            {isFiltered && onReset && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onReset}
+                className="h-8 px-2 text-muted-foreground hover:text-foreground"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            )}
+            {queryKey && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => queryClient.invalidateQueries({ queryKey })}
+                className="h-8 px-2"
+              >
+                <RefreshCw className="h-4 w-4" />
+              </Button>
+            )}
+            {onCreate && (
+              <Button
+                size="sm"
+                onClick={onCreate}
+                className="h-8 px-3 bg-[#00ADB5] hover:bg-[#008f96] text-white whitespace-nowrap"
+              >
+                <Plus className="mr-1.5 h-4 w-4" />
+                <span className="hidden sm:inline">{createButtonLabel}</span>
+                <span className="sm:hidden">New</span>
+              </Button>
+            )}
+          </div>
         </div>
       </div>
     </div>

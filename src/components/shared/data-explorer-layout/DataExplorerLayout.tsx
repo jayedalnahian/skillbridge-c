@@ -59,6 +59,10 @@ interface DataExplorerLayoutProps<TData> {
 
   // Empty state
   emptyMessage?: string;
+
+  // Pagination defaults
+  defaultPage?: number;
+  defaultLimit?: number;
 }
 
 export function DataExplorerLayout<TData>({
@@ -77,6 +81,8 @@ export function DataExplorerLayout<TData>({
   queryKey,
   enableSelection: _enableSelection,
   emptyMessage,
+  defaultPage,
+  defaultLimit,
 }: DataExplorerLayoutProps<TData>) {
 
   const {
@@ -94,6 +100,8 @@ export function DataExplorerLayout<TData>({
     searchParams,
     sortOptions,
     filtersConfig,
+    defaultPage,
+    defaultLimit,
   });
 
   const isFiltered =

@@ -1,13 +1,14 @@
 "use client";
 
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import { Slider } from "@/components/ui/slider";
 import { MultiSelectApiCombobox } from "@/components/shared/multi-select-api-combobox";
 import { getCategoriesUsedByTutors } from "@/services/category.service";
 import { QUERY_KEYS, CACHE_DURATIONS } from "@/lib/constants";
@@ -45,10 +46,30 @@ export function TutorFilters() {
   const selectedDays = searchParams.getAll("availableDays");
   const selectedCategories = searchParams.getAll("tutorCategory.Category.name");
 
-  const [localExperienceGte, setLocalExperienceGte] = useState(experienceYearsGte);
-  const [localExperienceLte, setLocalExperienceLte] = useState(experienceYearsLte);
-  const [localRateGte, setLocalRateGte] = useState(hourlyRateGte);
-  const [localRateLte, setLocalRateLte] = useState(hourlyRateLte);
+  // Slider values as [min, max] arrays
+  const [experienceRange, setExperienceRange] = useState<[number, number]>([
+    experienceYearsGte ? parseInt(experienceYearsGte) || 0 : 0,
+    experienceYearsLte ? parseInt(experienceYearsLte) || 50 : 50,
+  ]);
+  const [rateRange, setRateRange] = useState<[number, number]>([
+    hourlyRateGte ? parseInt(hourlyRateGte) || 0 : 0,
+    hourlyRateLte ? parseInt(hourlyRateLte) || 500 : 500,
+  ]);
+
+  // Sync slider values when URL params change
+  useEffect(() => {
+    setExperienceRange([
+      experienceYearsGte ? parseInt(experienceYearsGte) || 0 : 0,
+      experienceYearsLte ? parseInt(experienceYearsLte) || 50 : 50,
+    ]);
+  }, [experienceYearsGte, experienceYearsLte]);
+
+  useEffect(() => {
+    setRateRange([
+      hourlyRateGte ? parseInt(hourlyRateGte) || 0 : 0,
+      hourlyRateLte ? parseInt(hourlyRateLte) || 500 : 500,
+    ]);
+  }, [hourlyRateGte, hourlyRateLte]);
 
   const updateQueryParams = useCallback(
     (updates: Record<string, string | string[] | null>) => {
@@ -75,19 +96,29 @@ export function TutorFilters() {
     [searchParams, router, pathname]
   );
 
-  // Apply experience years filter
-  const applyExperienceFilter = () => {
+  // Apply slider changes for experience
+  const handleExperienceSliderChange = (values: number[]) => {
+    const [min, max] = values as [number, number];
+    setExperienceRange([min, max]);
+    // Apply immediately on slider change
+    const minStr = min === 0 ? "" : min.toString();
+    const maxStr = max === 50 ? "" : max.toString();
     updateQueryParams({
-      "experienceYears[gte]": localExperienceGte || null,
-      "experienceYears[lte]": localExperienceLte || null,
+      "experienceYears[gte]": minStr || null,
+      "experienceYears[lte]": maxStr || null,
     });
   };
 
-  // Apply hourly rate filter
-  const applyRateFilter = () => {
+  // Apply slider changes for hourly rate
+  const handleRateSliderChange = (values: number[]) => {
+    const [min, max] = values as [number, number];
+    setRateRange([min, max]);
+    // Apply immediately on slider change
+    const minStr = min === 0 ? "" : min.toString();
+    const maxStr = max === 500 ? "" : max.toString();
     updateQueryParams({
-      "hourlyRate[gte]": localRateGte || null,
-      "hourlyRate[lte]": localRateLte || null,
+      "hourlyRate[gte]": minStr || null,
+      "hourlyRate[lte]": maxStr || null,
     });
   };
 
@@ -117,10 +148,8 @@ export function TutorFilters() {
 
   // Reset all filters
   const resetAllFilters = () => {
-    setLocalExperienceGte("");
-    setLocalExperienceLte("");
-    setLocalRateGte("");
-    setLocalRateLte("");
+    setExperienceRange([0, 50]);
+    setRateRange([0, 500]);
     updateQueryParams({
       "experienceYears[gte]": null,
       "experienceYears[lte]": null,
@@ -150,76 +179,77 @@ export function TutorFilters() {
 
   return (
     <div className="space-y-6">
-      {/* Header with active count */}
+      {/* Header with active count and reset button */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <SlidersHorizontal className="h-4 w-4 text-muted-foreground" />
           <span className="text-sm font-medium">Filters</span>
+          {activeFilterCount > 0 && (
+            <Badge variant="secondary" className="text-xs">
+              {activeFilterCount} active
+            </Badge>
+          )}
         </div>
         {activeFilterCount > 0 && (
-          <Badge variant="secondary" className="text-xs">
-            {activeFilterCount} active
-          </Badge>
+          <Button
+            variant="default"
+            size="sm"
+            onClick={resetAllFilters}
+            className="h-8 px-3 bg-red-500 hover:bg-red-600 text-white border-0 shadow-sm"
+          >
+            <X className="mr-1.5 h-4 w-4" />
+            Reset
+          </Button>
         )}
       </div>
 
       <Separator />
 
-      {/* Experience Years Range */}
+      {/* Experience Years Range Slider */}
       <div className="space-y-3">
-        <Label className="text-sm font-medium">Experience (Years)</Label>
-        <div className="flex items-center gap-2">
-          <Input
-            type="number"
-            placeholder="Min"
-            value={localExperienceGte}
-            onChange={(e) => setLocalExperienceGte(e.target.value)}
-            onBlur={applyExperienceFilter}
-            onKeyDown={(e) => e.key === "Enter" && applyExperienceFilter()}
-            className="h-8"
-            min={0}
-          />
-          <span className="text-muted-foreground">-</span>
-          <Input
-            type="number"
-            placeholder="Max"
-            value={localExperienceLte}
-            onChange={(e) => setLocalExperienceLte(e.target.value)}
-            onBlur={applyExperienceFilter}
-            onKeyDown={(e) => e.key === "Enter" && applyExperienceFilter()}
-            className="h-8"
-            min={0}
-          />
+        <div className="flex items-center justify-between">
+          <Label className="text-sm font-medium">Experience (Years)</Label>
+          <span className="text-xs text-muted-foreground">
+            {experienceRange[0]} - {experienceRange[1]} {experienceRange[1] === 50 ? "+" : ""} years
+          </span>
+        </div>
+        <Slider
+          value={experienceRange}
+          onValueChange={handleExperienceSliderChange}
+          min={0}
+          max={50}
+          step={1}
+          className="w-full"
+        />
+        <div className="flex justify-between text-xs text-muted-foreground">
+          <span>0</span>
+          <span>25</span>
+          <span>50+</span>
         </div>
       </div>
 
       <Separator />
 
-      {/* Hourly Rate Range */}
+      {/* Hourly Rate Range Slider */}
       <div className="space-y-3">
-        <Label className="text-sm font-medium">Hourly Rate ($)</Label>
-        <div className="flex items-center gap-2">
-          <Input
-            type="number"
-            placeholder="Min"
-            value={localRateGte}
-            onChange={(e) => setLocalRateGte(e.target.value)}
-            onBlur={applyRateFilter}
-            onKeyDown={(e) => e.key === "Enter" && applyRateFilter()}
-            className="h-8"
-            min={0}
-          />
-          <span className="text-muted-foreground">-</span>
-          <Input
-            type="number"
-            placeholder="Max"
-            value={localRateLte}
-            onChange={(e) => setLocalRateLte(e.target.value)}
-            onBlur={applyRateFilter}
-            onKeyDown={(e) => e.key === "Enter" && applyRateFilter()}
-            className="h-8"
-            min={0}
-          />
+        <div className="flex items-center justify-between">
+          <Label className="text-sm font-medium">Hourly Rate ($)</Label>
+          <span className="text-xs text-muted-foreground">
+            ${rateRange[0]} - ${rateRange[1]}{rateRange[1] === 500 ? "+" : ""}
+          </span>
+        </div>
+        <Slider
+          value={rateRange}
+          onValueChange={handleRateSliderChange}
+          min={0}
+          max={500}
+          step={10}
+          className="w-full"
+        />
+        <div className="flex justify-between text-xs text-muted-foreground">
+          <span>$0</span>
+          <span>$250</span>
+          <span>$500+</span>
         </div>
       </div>
 
@@ -304,8 +334,8 @@ export function TutorFilters() {
         )}
       </div>
 
-      {/* Reset Button */}
-      {activeFilterCount > 0 && (
+      {/* Reset Button - Moved to top */}
+      {false && activeFilterCount > 0 && (
         <>
           <Separator />
           <Button

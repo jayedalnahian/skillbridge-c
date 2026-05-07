@@ -13,6 +13,7 @@ export interface ITutor {
   status: string;
   experienceYears: number;
   educationLevel: string;
+  avgRating: number;
   hourlyRate: number;
   designation: string;
   isDeleted: boolean;

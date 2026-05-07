@@ -84,8 +84,7 @@ export function TutorCard({ tutor }: TutorCardProps) {
 
           <div className="flex items-center gap-1 pt-2">
             <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-            <span className="font-medium">4.8</span>
-            <span className="text-sm text-muted-foreground">(24 reviews)</span>
+            <span className="font-medium">{tutor.avgRating}</span>
           </div>
 
           <Link href={`/all-tutors/${tutor.id}`} className="block">

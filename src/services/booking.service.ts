@@ -86,6 +86,7 @@ export const createBooking = async (
     payload: IBookingCreateInput,
 ) => {
     try {
+        console.log("booking payload : ", payload)
         const result = await httpClient.post(`/booking/${tutorId}`, payload);
 
         if (!result.success) {
@@ -193,6 +194,35 @@ export const hardDeleteBooking = async (id: string) => {
         };
     } catch (error: any) {
         console.error("Delete booking error:", error);
+        return {
+            success: false,
+            message:
+                error?.response?.data?.message ||
+                error.message ||
+                "An unexpected error occurred",
+        };
+    }
+};
+
+export const verifyPayment = async (sessionId: string) => {
+    try {
+        const result = await httpClient.post("/payment/verify-payment", { sessionId });
+
+        if (!result.success) {
+            return {
+                success: false,
+                message: result.message || "Failed to verify payment",
+                error: result,
+            };
+        }
+
+        return {
+            success: true,
+            data: result.data,
+            message: result.message || "Payment verified successfully",
+        };
+    } catch (error: any) {
+        console.error("Verify payment error:", error);
         return {
             success: false,
             message:

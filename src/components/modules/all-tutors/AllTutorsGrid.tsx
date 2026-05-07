@@ -52,7 +52,7 @@ export function AllTutorsGrid({ initialQueryString }: AllTutorsGridProps) {
     total: 0,
     totalPages: 0,
     page: 1,
-    limit: 10,
+    limit: 12,
   };
 
   const isTableLoading = isLoading || isFetching;
@@ -78,6 +78,7 @@ export function AllTutorsGrid({ initialQueryString }: AllTutorsGridProps) {
         searchPlaceholder="Search by name, designation, or subject..."
         queryKey={[QUERY_KEYS.TUTORS]}
         emptyMessage="No tutors found matching your criteria."
+        defaultLimit={12}
       />
     </div>
   );

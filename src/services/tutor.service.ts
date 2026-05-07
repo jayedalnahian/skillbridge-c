@@ -70,7 +70,7 @@ export const getAllTutors = async (params?: ITutorQueryParams | string) => {
 
 export const getTutorById = async (id: string) => {
   try {
-    const result = await httpClient.get(`/tutor/${id}`);
+    const result = await httpClient.get<ITutorWithRelations>(`/tutor/${id}`);
     return {
       success: true,
       data: result.data,
