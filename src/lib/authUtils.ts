@@ -1,5 +1,11 @@
 export type UserRole = "ADMIN" | "TUTOR" | "STUDENT";
 
+export const UserRole = {
+  ADMIN: "ADMIN" as const,
+  TUTOR: "TUTOR" as const,
+  STUDENT: "STUDENT" as const,
+};
+
 export const authRoutes = [ "/login", "/register", "/forgot-password", "/reset-password", "/verify-email" ];
 
 export const isAuthRoute = (pathname : string) => {

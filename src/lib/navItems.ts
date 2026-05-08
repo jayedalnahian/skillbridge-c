@@ -92,16 +92,7 @@ export const adminNavItems: NavSection[] = [
                 href: "/admin/categories",
                 icon: "BookOpen",
             },
-            {
-                title: "Payments",
-                href: "/admin/payments",
-                icon: "CreditCard",
-            },
-            {
-                title: "Reviews",
-                href: "/admin/reviews",
-                icon: "Star",
-            }
+            
         ],
     },
 ];

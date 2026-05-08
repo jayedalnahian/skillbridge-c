@@ -3,7 +3,7 @@
 import { httpClient } from "@/lib/axios/httpClient";
 import { IAdmin } from "@/types/user.types";
 import { PaginationMeta } from "@/types/api.types";
-import { IAdminCreatePayload, IAdminListResponse, IAdminQueryParams, IAdminUpdatePayload } from "@/types/admin.types";
+import { IAdminCreatePayload, IAdminDashboardData, IAdminListResponse, IAdminQueryParams, IAdminUpdatePayload } from "@/types/admin.types";
 
 
 
@@ -250,6 +250,38 @@ export const hardDeleteAdmin = async (
     };
   } catch (error: any) {
     console.error("Hard delete admin error:", error);
+    return {
+      success: false,
+      message:
+        error?.response?.data?.message ||
+        error.message ||
+        "An unexpected error occurred",
+    };
+  }
+};
+
+/**
+ * Get admin dashboard analytics data
+ */
+export const getDashboardData = async (): Promise<ServiceResponse<IAdminDashboardData>> => {
+  try {
+    const result = await httpClient.get<IAdminDashboardData>("/admin/dashboard");
+
+    if (!result.success) {
+      return {
+        success: false,
+        message: result.message || "Failed to fetch dashboard data",
+        error: result,
+      };
+    }
+
+    return {
+      success: true,
+      data: result.data,
+      message: result.message || "Dashboard data fetched successfully",
+    };
+  } catch (error: any) {
+    console.error("Get dashboard data error:", error);
     return {
       success: false,
       message:
