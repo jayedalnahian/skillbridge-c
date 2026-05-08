@@ -1,7 +1,7 @@
 "use server";
 
 import { httpClient } from "@/lib/axios/httpClient";
-import { ITutorCreateInput, ITutorQueryParams, ITutorUpdateInput, ITutorWithRelations } from "@/types/tutor.types";
+import { ITutorCreateInput, ITutorDashboardData, ITutorQueryParams, ITutorUpdateInput, ITutorWithRelations } from "@/types/tutor.types";
 import { ICategory } from "@/types/category.types";
 
 function buildQueryString(params: ITutorQueryParams): string {
@@ -233,5 +233,41 @@ export const restoreTutor = async (id: string) => {
   }
 };
 
+interface ServiceResponse<T> {
+  success: boolean;
+  data?: T;
+  message?: string;
+  error?: unknown;
+}
 
+/**
+ * Get tutor dashboard analytics data
+ */
+export const getDashboardData = async (): Promise<ServiceResponse<ITutorDashboardData>> => {
+  try {
+    const result = await httpClient.get<ITutorDashboardData>("/tutor/dashboard");
 
+    if (!result.success) {
+      return {
+        success: false,
+        message: result.message || "Failed to fetch dashboard data",
+        error: result,
+      };
+    }
+
+    return {
+      success: true,
+      data: result.data,
+      message: result.message || "Dashboard data fetched successfully",
+    };
+  } catch (error: any) {
+    console.error("Get dashboard data error:", error);
+    return {
+      success: false,
+      message:
+        error?.response?.data?.message ||
+        error.message ||
+        "An unexpected error occurred",
+    };
+  }
+};
