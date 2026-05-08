@@ -1,6 +1,7 @@
 import { httpClient } from "@/lib/axios/httpClient";
 import { IStudent, IStudentUpdatePayload } from "@/types/user.types";
 import { PaginationMeta } from "@/types/api.types";
+import { IStudentDashboardData } from "@/types/student.types";
 
 export interface IStudentQueryParams {
   searchTerm?: string;
@@ -373,3 +374,35 @@ function getDefaultPaginationMeta(): PaginationMeta {
     totalPages: 0,
   };
 }
+
+/**
+ * Get student dashboard analytics data
+ */
+export const getDashboardData = async (): Promise<ServiceResponse<IStudentDashboardData>> => {
+  try {
+    const result = await httpClient.get<IStudentDashboardData>("/student/dashboard");
+
+    if (!result.success) {
+      return {
+        success: false,
+        message: result.message || "Failed to fetch dashboard data",
+        error: result,
+      };
+    }
+
+    return {
+      success: true,
+      data: result.data,
+      message: result.message || "Dashboard data fetched successfully",
+    };
+  } catch (error: any) {
+    console.error("Get dashboard data error:", error);
+    return {
+      success: false,
+      message:
+        error?.response?.data?.message ||
+        error.message ||
+        "An unexpected error occurred",
+    };
+  }
+};
