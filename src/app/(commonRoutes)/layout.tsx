@@ -11,9 +11,6 @@ export default function CommonRoutesLayout({
       <main className="flex-1 w-full">
         {children}
       </main>
-      <footer className="bg-card border-t border-border p-4 text-center text-muted-foreground">
-        Footer
-      </footer>
     </div>
   );
 }

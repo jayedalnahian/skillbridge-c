@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/dialog";
 import { SmartForm, FormField } from "@/components/shared/data-form/data-form";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
 import {
   Select,
   SelectContent,
@@ -20,7 +19,7 @@ import {
 } from "@/components/ui/select";
 import { useState } from "react";
 import { createTutorSchema } from "./tutorValidators";
-import { DAYS_OF_WEEK, EDUCATION_LEVELS } from "@/lib/constants";
+import { EDUCATION_LEVELS } from "@/lib/constants";
 import { DaysOfWeek } from "@/types/user.types";
 import { ICategory } from "@/types/category.types";
 import { z } from "zod";
@@ -28,6 +27,7 @@ import { MultiSelectApiCombobox } from "@/components/shared/multi-select-api-com
 import { getAllCategories } from "@/services/category.service";
 import type { ApiResponse } from "@/components/shared/multi-select-api-combobox";
 import { UniversalDateTimePicker } from "@/components/shared/date-time-picker/universal-datetime-picker";
+import { DaysOfWeekSelector } from "@/components/shared/days-of-week-selector/days-of-week-selector";
 
 type CreateTutorInput = z.infer<typeof createTutorSchema>;
 
@@ -193,40 +193,20 @@ export function TutorCreateModal({
               </div>
 
               {/* Available Days */}
-              <div className="grid gap-2">
-                <Label>
-                  Available Days *{" "}
-                  <span className="text-xs text-muted-foreground">
-                    (select at least one)
-                  </span>
-                </Label>
-                <form.Field name="tutor.availableDays">
-                  {(field: any) => (
-                    <>
-                      <div className="flex flex-wrap gap-2">
-                        {DAYS_OF_WEEK.map((day) => (
-                          <Badge
-                            key={day}
-                            variant={availableDays.includes(day) ? "default" : "outline"}
-                            className={`cursor-pointer ${availableDays.includes(day)
-                                ? "bg-[#00ADB5] hover:bg-[#008f96]"
-                                : "hover:bg-gray-100"
-                              }`}
-                            onClick={() => {
-                              toggleDay(day);
-                              const newDays = availableDays.includes(day)
-                                ? availableDays.filter((d) => d !== day)
-                                : [...availableDays, day];
-                              field.handleChange(newDays);
-                            }}
-                          >
-                            {day.slice(0, 3)}
-                          </Badge>
-                        ))}
-                      </div>
-                      {field.state.meta.errors?.length > 0 && (
-                        <p className="text-sm text-destructive">
-                          {field.state.meta.errors
+              <form.Field name="tutor.availableDays">
+                {(field: any) => (
+                  <DaysOfWeekSelector
+                    label="Available Days"
+                    value={availableDays}
+                    onChange={(newDays) => {
+                      setAvailableDays(newDays);
+                      field.handleChange(newDays);
+                    }}
+                    helperText="select at least one"
+                    required
+                    error={
+                      field.state.meta.errors?.length > 0
+                        ? field.state.meta.errors
                             .map((err: unknown) => {
                               if (typeof err === "string") return err;
                               if (err && typeof err === "object" && "message" in err) {
@@ -234,13 +214,12 @@ export function TutorCreateModal({
                               }
                               return String(err);
                             })
-                            .join(", ")}
-                        </p>
-                      )}
-                    </>
-                  )}
-                </form.Field>
-              </div>
+                            .join(", ")
+                        : undefined
+                    }
+                  />
+                )}
+              </form.Field>
 
               {/* Availability Time */}
               <div className="grid grid-cols-2 gap-4">

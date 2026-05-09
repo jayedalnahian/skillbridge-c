@@ -7,8 +7,8 @@ export interface ITutor {
   email: string;
   profilePhoto?: string | null;
   contactNumber: string;
-  availabilityStartTime: string | Date;
-  availabilityEndTime: string | Date;
+  availabilityStartTime: string; // HH:mm format
+  availabilityEndTime: string;   // HH:mm format
   availableDays: DaysOfWeek[];
   status: string;
   experienceYears: number;

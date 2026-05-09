@@ -84,6 +84,22 @@ export const getTutorById = async (id: string) => {
   }
 };
 
+export const getCurrentTutor = async () => {
+  try {
+    const result = await httpClient.get<ITutorWithRelations>("/tutor/me");
+    return {
+      success: true,
+      data: result.data,
+    };
+  } catch (error: any) {
+    console.error("Get current tutor error:", error);
+    return {
+      success: false,
+      message: error.message || "An unexpected error occurred",
+    };
+  }
+};
+
 export const getAssignedCategories = async (tutorId: string) => {
   try {
     const result = await httpClient.get<ICategory[]>(`/tutor/${tutorId}/categories`);

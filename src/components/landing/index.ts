@@ -1,0 +1,9 @@
+export { Hero } from "./Hero";
+export { HowItWorks } from "./HowItWorks";
+export { PopularSubjects } from "./PopularSubjects";
+export { FeaturedTutors } from "./FeaturedTutors";
+export { Testimonials } from "./Testimonials";
+export { About } from "./About";
+export { Contact } from "./Contact";
+export { QNA } from "./QNA";
+export { CallToAction } from "./CallToAction";

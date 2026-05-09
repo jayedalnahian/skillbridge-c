@@ -35,8 +35,8 @@ export const tutorNavItems : NavSection[] = [
         title: "Tutor Dashboard",
         items : [
             {
-                title: "Availability",
-                href: "/tutor/availability",
+                title: "Profile Management",
+                href: "/tutor/profile-management",
                 icon: "FileSignature",
             },
             {

@@ -67,10 +67,11 @@ interface NavbarProps {
 
 const PUBLIC_NAV_LINKS = [
   { label: "Home", href: "/" },
-  { label: "Find Tutors", href: "/all-tutors" },
-  { label: "How it Works", href: "/how-it-works" },
-  { label: "Contact", href: "/contact" },
-  { label: "About Us", href: "/about" },
+  { label: "Find Tutors", href: "/#tutors" },
+  { label: "How it Works", href: "/#how-it-works" },
+  { label: "FAQ", href: "/#faq" },
+  { label: "Contact", href: "/#contact" },
+  { label: "About Us", href: "/#about" },
 ] as const;
 
 // Role-specific quick links
@@ -131,13 +132,29 @@ export function Navbar({
   // ---- Get role-specific links ----
   const roleLinks = auth.role ? ROLE_LINKS[auth.role] : [];
 
+  // ---- Handle smooth scroll for hash links ----
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string, isMobile = false) => {
+    const hash = href.split("#")[1];
+    if (hash) {
+      e.preventDefault();
+      const element = document.getElementById(hash);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else if (href.startsWith("/")) {
+        // Navigate to home page with hash
+        window.location.href = href;
+      }
+    }
+    if (isMobile) setMobileOpen(false);
+  };
+
   // ---- Shared link renderer ----
   const renderNavLinks = (mobile = false) =>
     PUBLIC_NAV_LINKS.map((link) => (
       <Link
         key={link.href}
         href={link.href}
-        onClick={mobile ? () => setMobileOpen(false) : undefined}
+        onClick={(e) => handleNavClick(e, link.href, mobile)}
         className={cn(
           "text-sm font-medium transition-colors",
           mobile ? "block px-3 py-2.5 rounded-md" : "relative px-1 py-2",
