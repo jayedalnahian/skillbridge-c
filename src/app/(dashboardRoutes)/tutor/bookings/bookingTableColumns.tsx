@@ -16,18 +16,11 @@ export const columns: ColumnDef<IBooking>[] = [
     cell: ({ row }) => <IdCell id={row.getValue("id")} />,
   },
   {
-    accessorKey: "studentId",
+    accessorKey: "studentName",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Student ID" />
+      <DataTableColumnHeader column={column} title="Student Name" />
     ),
-    cell: ({ row }) => <IdCell id={row.getValue("studentId")} />,
-  },
-  {
-    accessorKey: "tutorId",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Tutor ID" />
-    ),
-    cell: ({ row }) => <IdCell id={row.getValue("tutorId")} />,
+    cell: ({ row }) => <span className="capitalize">{row.getValue("studentName")}</span>,
   },
   {
     accessorKey: "status",

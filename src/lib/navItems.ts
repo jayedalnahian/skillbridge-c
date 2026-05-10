@@ -49,11 +49,6 @@ export const tutorNavItems : NavSection[] = [
                 href: "/tutor/reviews",
                 icon: "Star",
             },
-            {
-                title: "Payments",
-                href: "/tutor/payments",
-                icon: "CreditCard",
-            }
         ]
     }
 ]

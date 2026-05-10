@@ -18,6 +18,7 @@ export const QUERY_KEYS = {
   STUDENTS: "students",
   ADMINS: "admins",
   BOOKINGS: "bookings",
+  REVIEWS: "reviews",
 } as const;
 
 // Days of week for tutor availability

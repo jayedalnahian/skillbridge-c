@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTutorById, getAssignedCategories } from "@/services/tutor.service";
-import { getReviewsByTutor } from "@/services/review.service";
+import { getAllReviews } from "@/services/review.service";
 import { TutorDetail } from "./TutorDetail";
 
 
@@ -27,7 +27,7 @@ export default async function TutorDetailPage({ params }: TutorDetailPageProps) 
   const [tutorResult, categoriesResult, reviewsResult] = await Promise.all([
     getTutorById(id),
     getAssignedCategories(id),
-    getReviewsByTutor(id),
+    getAllReviews(`tutorId=${id}`),
   ]);
 
   if (!tutorResult.success || !tutorResult.data) {
@@ -36,7 +36,7 @@ export default async function TutorDetailPage({ params }: TutorDetailPageProps) 
 
   const tutor = tutorResult.data;
   const categories = categoriesResult.success ? categoriesResult.data ?? [] : [];
-  const reviews = reviewsResult.success ? reviewsResult.data : [];
+  const reviews = reviewsResult.data ?? [];
 
   return (
     <TutorDetail
