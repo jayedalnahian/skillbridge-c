@@ -67,7 +67,7 @@ interface NavbarProps {
 
 const PUBLIC_NAV_LINKS = [
   { label: "Home", href: "/" },
-  { label: "Find Tutors", href: "/#tutors" },
+  { label: "Find Tutors", href: "/all-tutors" },
   { label: "How it Works", href: "/#how-it-works" },
   { label: "FAQ", href: "/#faq" },
   { label: "Contact", href: "/#contact" },

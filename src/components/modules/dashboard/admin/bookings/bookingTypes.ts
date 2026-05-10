@@ -1,5 +1,5 @@
 import { UseMutationResult } from "@tanstack/react-query";
-import { IBooking, IBookingCreateInput, ICancelBookingInput } from "@/types/booking.types";
+import { IBooking, IBookingCreateInput, IChangeBookingStatusInput } from "@/types/booking.types";
 
 export interface BookingTableProps {
   initialQueryString: string;
@@ -15,7 +15,7 @@ export interface BookingDetailsViewProps {
 
 export interface UseBookingMutationsReturn {
   createMutation: UseMutationResult<unknown, Error, { tutorId: string; payload: IBookingCreateInput }>;
-  cancelMutation: UseMutationResult<unknown, Error, { id: string; payload: ICancelBookingInput }>;
+  changeStatusMutation: UseMutationResult<unknown, Error, { id: string; payload: IChangeBookingStatusInput }>;
   completeMutation: UseMutationResult<unknown, Error, string>;
   hardDeleteMutation: UseMutationResult<unknown, Error, string>;
 }

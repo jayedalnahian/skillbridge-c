@@ -1,5 +1,5 @@
 import { httpClient } from "@/lib/axios/httpClient";
-import { IBooking, IBookingCreateInput, IBookingQueryParams, ICancelBookingInput } from "@/types/booking.types";
+import { IBooking, IBookingCreateInput, IBookingQueryParams, IChangeBookingStatusInput } from "@/types/booking.types";
 function buildQueryString(params: IBookingQueryParams): string {
     const query = new URLSearchParams();
 
@@ -114,17 +114,17 @@ export const createBooking = async (
     }
 };
 
-export const cancelBooking = async (
+export const changeBookingStatus = async (
     id: string,
-    payload: ICancelBookingInput,
+    payload: IChangeBookingStatusInput,
 ) => {
     try {
-        const result = await httpClient.patch(`/cancle-booking/${id}`, payload);
+        const result = await httpClient.patch(`/booking/change-status/${id}`, payload);
 
         if (!result.success) {
             return {
                 success: false,
-                message: result.message || "Failed to cancel booking",
+                message: result.message || "Failed to change booking status",
                 error: result,
             };
         }
@@ -132,39 +132,10 @@ export const cancelBooking = async (
         return {
             success: true,
             data: result.data,
-            message: result.message || "Booking cancelled successfully",
+            message: result.message || "Booking status changed successfully",
         };
     } catch (error: any) {
-        console.error("Cancel booking error:", error);
-        return {
-            success: false,
-            message:
-                error?.response?.data?.message ||
-                error.message ||
-                "An unexpected error occurred",
-        };
-    }
-};
-
-export const completeBooking = async (id: string) => {
-    try {
-        const result = await httpClient.patch(`/complete-booking/${id}`, {});
-
-        if (!result.success) {
-            return {
-                success: false,
-                message: result.message || "Failed to complete booking",
-                error: result,
-            };
-        }
-
-        return {
-            success: true,
-            data: result.data,
-            message: result.message || "Booking completed successfully",
-        };
-    } catch (error: any) {
-        console.error("Complete booking error:", error);
+        console.error("Change booking status error:", error);
         return {
             success: false,
             message:
@@ -177,7 +148,7 @@ export const completeBooking = async (id: string) => {
 
 export const hardDeleteBooking = async (id: string) => {
     try {
-        const result = await httpClient.delete(`/hard-delete-booking/${id}`);
+        const result = await httpClient.delete(`/booking/hard-delete-booking/${id}`);
 
         if (!result.success) {
             return {

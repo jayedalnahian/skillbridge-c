@@ -26,6 +26,8 @@ export interface IBookingCreateInput {
   endDateTime: string | Date;
 }
 
-export interface ICancelBookingInput {
-  cancelReason: string;
+export interface IChangeBookingStatusInput {
+  status: "PENDING" | "ACCEPTED" | "REJECTED" | "COMPLETED";
+  cancelReason?: string;
 }
+

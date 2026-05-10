@@ -76,12 +76,11 @@ export function BookingModal({ isOpen, onClose, tutor }: BookingModalProps) {
   // Filter time slots based on tutor availability
   const availableTimeSlots = useMemo(() => {
     if (!tutor.availabilityStartTime || !tutor.availabilityEndTime) return timeSlots;
-    
-    const startTime = new Date(tutor.availabilityStartTime);
-    const endTime = new Date(tutor.availabilityEndTime);
-    const startHour = startTime.getUTCHours();
-    const endHour = endTime.getUTCHours();
-    
+
+    // Parse HH:mm format strings directly
+    const [startHour] = tutor.availabilityStartTime.split(":").map(Number);
+    const [endHour] = tutor.availabilityEndTime.split(":").map(Number);
+
     return timeSlots.filter(time => {
       const hour = parseInt(time.split(":")[0]);
       return hour >= startHour && hour < endHour;
@@ -97,10 +96,8 @@ export function BookingModal({ isOpen, onClose, tutor }: BookingModalProps) {
     setIsSubmitting(true);
 
     try {
-      // Create start and end datetime in UTC
-      // The tutor availability is stored in UTC, so we need to create the booking
-      // datetime in UTC to match. Using UTC ensures the selected time (e.g., "10:00")
-      // becomes "10:00:00Z" instead of being converted from local timezone.
+      // Create start and end datetime for booking
+      // Booking times are stored as ISO datetime strings
       const [hours, minutes] = selectedTime.split(":").map(Number);
       const startDateTime = new Date(Date.UTC(
         selectedDate.getFullYear(),

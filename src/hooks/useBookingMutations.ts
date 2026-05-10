@@ -4,27 +4,25 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
   createBooking,
-  cancelBooking,
-  completeBooking,
   hardDeleteBooking,
+  changeBookingStatus,
 } from "@/services/booking.service";
 import { QUERY_KEYS } from "@/lib/constants";
-import { IBookingCreateInput, ICancelBookingInput } from "@/types/booking.types";
+import { IBookingCreateInput, IChangeBookingStatusInput } from "@/types/booking.types";
 
 interface CreateBookingMutationInput {
   tutorId: string;
   payload: IBookingCreateInput;
 }
 
-interface CancelBookingMutationInput {
+interface ChangeBookingStatusMutationInput {
   id: string;
-  payload: ICancelBookingInput;
+  payload: IChangeBookingStatusInput;
 }
 
 export interface UseBookingMutationsReturn {
   createMutation: ReturnType<typeof useMutation<unknown, Error, CreateBookingMutationInput>>;
-  cancelMutation: ReturnType<typeof useMutation<unknown, Error, CancelBookingMutationInput>>;
-  completeMutation: ReturnType<typeof useMutation<unknown, Error, string>>;
+  changeStatusMutation: ReturnType<typeof useMutation<unknown, Error, ChangeBookingStatusMutationInput>>;
   hardDeleteMutation: ReturnType<typeof useMutation<unknown, Error, string>>;
 }
 
@@ -48,39 +46,21 @@ export function useBookingMutations(): UseBookingMutationsReturn {
       toast.error(message);
     },
   });
-
-  const cancelMutation = useMutation({
-    mutationFn: async ({ id, payload }: CancelBookingMutationInput) => {
-      const result = await cancelBooking(id, payload);
+  const changeStatusMutation = useMutation({
+    mutationFn: async ({ id, payload }: ChangeBookingStatusMutationInput) => {
+      const result = await changeBookingStatus(id, payload);
       if (!result.success) {
-        throw new Error(result.message || "Failed to cancel booking");
+        throw new Error(result.message || "Failed to change booking status");
       }
       return result.data;
     },
     onSuccess: () => {
-      toast.success("Booking cancelled successfully");
+      toast.success("Booking status updated successfully");
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.BOOKINGS] });
     },
     onError: (error) => {
-      const message = error instanceof Error ? error.message : "Failed to cancel booking";
-      toast.error(message);
-    },
-  });
-
-  const completeMutation = useMutation({
-    mutationFn: async (id: string) => {
-      const result = await completeBooking(id);
-      if (!result.success) {
-        throw new Error(result.message || "Failed to complete booking");
-      }
-      return result.data;
-    },
-    onSuccess: () => {
-      toast.success("Booking completed successfully");
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.BOOKINGS] });
-    },
-    onError: (error) => {
-      const message = error instanceof Error ? error.message : "Failed to complete booking";
+      const message =
+        error instanceof Error ? error.message : "Failed to change booking status";
       toast.error(message);
     },
   });
@@ -105,8 +85,7 @@ export function useBookingMutations(): UseBookingMutationsReturn {
 
   return {
     createMutation,
-    cancelMutation,
-    completeMutation,
+    changeStatusMutation,
     hardDeleteMutation,
   };
 }

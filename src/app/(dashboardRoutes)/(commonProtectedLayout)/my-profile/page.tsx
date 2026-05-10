@@ -49,9 +49,13 @@ const getStatusBadgeStyle = (status: string) => {
     : "bg-red-100 text-red-800 border-red-200";
 };
 
-// Format time from Date
-const formatTime = (date: string | Date) => {
-  return format(new Date(date), "h:mm a");
+// Format time from HH:mm string to 12-hour format (e.g., "10:19 PM")
+const formatTime = (time: string) => {
+  // Parse "HH:mm" format
+  const [hours, minutes] = time.split(":").map(Number);
+  const period = hours >= 12 ? "PM" : "AM";
+  const displayHours = hours % 12 || 12;
+  return `${displayHours}:${minutes.toString().padStart(2, "0")} ${period}`;
 };
 
 // Info row component

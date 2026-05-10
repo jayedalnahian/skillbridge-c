@@ -1,3 +1,4 @@
+import { Footer } from "@/components/layout/Footer";
 import NavbarWrapper from "@/components/navbar/NavbarWrapper";
 
 export default function CommonRoutesLayout({
@@ -11,6 +12,7 @@ export default function CommonRoutesLayout({
       <main className="flex-1 w-full">
         {children}
       </main>
+       <Footer />
     </div>
   );
 }

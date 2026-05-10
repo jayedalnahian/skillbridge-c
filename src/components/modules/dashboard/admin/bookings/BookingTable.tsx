@@ -15,7 +15,7 @@ import { useQuery } from "@tanstack/react-query";
 import { ColumnFiltersState } from "@tanstack/react-table";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useMemo } from "react";
-import { columns } from "@/app/(dashboardRoutes)/admin/bookings/bookingTableColumns";
+import { columns as defaultColumns } from "@/app/(dashboardRoutes)/admin/bookings/bookingTableColumns";
 import { CACHE_DURATIONS, QUERY_KEYS } from "@/lib/constants";
 import { BookingDetailsView } from "./BookingDetailsView";
 import { BookingErrorState } from "./BookingErrorState";
@@ -23,7 +23,10 @@ import { useBookingMutations } from "@/hooks/useBookingMutations";
 import { bookingFilters, BOOKING_TABLE_CONFIG } from "./bookingConfig";
 import { BookingTableProps } from "./bookingTypes";
 
-export default function BookingTable({ initialQueryString }: BookingTableProps) {
+export default function BookingTable({
+  initialQueryString,
+  columns = defaultColumns,
+}: BookingTableProps & { columns?: any }) {
   const searchParams = useSearchParams();
 
   // Table state management
@@ -95,7 +98,9 @@ export default function BookingTable({ initialQueryString }: BookingTableProps) 
       updateParams(
         (params) => {
           const isDeletedFilter = nextFilters.find((f) => f.id === "isDeleted");
-          const paymentStatusFilter = nextFilters.find((f) => f.id === "paymentStatus");
+          const paymentStatusFilter = nextFilters.find(
+            (f) => f.id === "paymentStatus",
+          );
           const statusFilter = nextFilters.find((f) => f.id === "status");
 
           if (isDeletedFilter) {

@@ -2,14 +2,14 @@ import { getCurrentTutor } from "@/services/tutor.service";
 import { getUserInfo } from "@/services/auth.service";
 import { redirect } from "next/navigation";
 import { UserRole } from "@/lib/authUtils";
-import { ProfileManagementClient } from "./ProfileManagementClient";
+import { ProfileManagementClient } from "../../../../components/modules/dashboard/tutor/profile-management/ProfileManagementClient";
 
 
 /**
  * Tutor Profile Management Page
  *
  * Server component that fetches current tutor data and renders the client form.
- * Features:
+ * Features:  
  * - Profile information editing (name, email, contact, photo)
  * - Professional information editing (designation, education, experience)
  * - Availability management (days, start time, end time)

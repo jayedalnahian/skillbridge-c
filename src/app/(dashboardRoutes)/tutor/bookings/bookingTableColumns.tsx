@@ -1,13 +1,13 @@
 "use client";
 
 import { DataTableColumnHeader } from "@/components/shared/data-table/data-table-column-header";
-import { DataTableRowActions } from "@/components/shared/data-table/data-table-row-actions";
 import { IdCell } from "@/components/shared/data-table/IdCell";
 import { Badge } from "@/components/ui/badge";
-import { ICategory } from "@/types/category.types";
+import { IBooking } from "@/types/booking.types";
 import { ColumnDef } from "@tanstack/react-table";
+import { BookingRowActions } from "./BookingRowActions";
 
-export const columns: ColumnDef<ICategory>[] = [
+export const columns: ColumnDef<IBooking>[] = [
   {
     accessorKey: "id",
     header: ({ column }) => (
@@ -92,8 +92,8 @@ export const columns: ColumnDef<ICategory>[] = [
       const isDeleted = row.getValue("isDeleted") as boolean;
 
       const deletedStyles = isDeleted
-        ? "bg-red-100 text-red-700 hover:bg-red-200"
-        : "bg-emerald-100 text-emerald-700 hover:bg-emerald-200";
+                ? "bg-red-100 text-red-700 hover:bg-red-200"
+                : "bg-emerald-100 text-emerald-700 hover:bg-emerald-200";
 
       return (
         <Badge variant="outline" className={deletedStyles}>
@@ -112,13 +112,13 @@ export const columns: ColumnDef<ICategory>[] = [
     ),
     cell: ({ row }) => (
       <div className="font-semibold text-slate-900 hover:text-[#00ADB5]">
-        ${row.getValue("price")}$
+        ${Number(row.getValue("price")).toFixed(2)}
       </div>
     ),
   },
   {
     id: "actions",
     header: "Actions",
-    cell: ({ row, table }) => <DataTableRowActions row={row} table={table} />,
+    cell: ({ row, table }) => <BookingRowActions row={row} table={table as any} />,
   },
 ];
