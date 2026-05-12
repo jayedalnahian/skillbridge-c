@@ -29,5 +29,6 @@ export interface IBookingCreateInput {
 export interface IChangeBookingStatusInput {
   status: "PENDING" | "ACCEPTED" | "REJECTED" | "COMPLETED";
   cancelReason?: string;
+  
 }
 

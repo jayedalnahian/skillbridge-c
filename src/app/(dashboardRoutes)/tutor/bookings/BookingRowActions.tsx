@@ -35,24 +35,26 @@ const rejectSchema = z.object({
   cancelReason: z.string().min(1, "Reason is required"),
 });
 
+const acceptSchema = z.object({
+  meetingLink: z.string().url("Must be a valid URL").min(1, "Meeting link is required"),
+});
+
 interface BookingRowActionsProps {
   row: Row<IBooking>;
   table: Table<IBooking>;
 }
 
 export function BookingRowActions({ row }: BookingRowActionsProps) {
+  const [isAcceptOpen, setIsAcceptOpen] = useState(false);
   const [isRejectOpen, setIsRejectOpen] = useState(false);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   
-  const { changeStatusMutation, hardDeleteMutation } = useBookingMutations();
+  const { changeStatusMutation, hardDeleteMutation, confirmMutation } = useBookingMutations();
   const booking = row.original;
 
   const handleAccept = () => {
-    changeStatusMutation.mutate({
-      id: booking.id,
-      payload: { status: "ACCEPTED" },
-    });
+    setIsAcceptOpen(true);
   };
 
   const handleReject = (data: { cancelReason: string }) => {
@@ -91,7 +93,7 @@ export function BookingRowActions({ row }: BookingRowActionsProps) {
           {booking.status === "PENDING" && (
             <>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleAccept} className="text-green-600">
+              <DropdownMenuItem onClick={() => setIsAcceptOpen(true)} className="text-green-600">
                 <Check className="mr-2 h-4 w-4" />
                 Accept Booking
               </DropdownMenuItem>
@@ -111,6 +113,40 @@ export function BookingRowActions({ row }: BookingRowActionsProps) {
             <DialogTitle>Booking Details</DialogTitle>
           </DialogHeader>
           <BookingDetailsView item={booking as any} />
+        </DialogContent>
+      </Dialog>
+
+      {/* Accept Modal with SmartForm */}
+      <Dialog open={isAcceptOpen} onOpenChange={setIsAcceptOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Accept Booking</DialogTitle>
+            <DialogDescription>
+              Provide a meeting link (Google Meet, Zoom, etc.) for this session.
+            </DialogDescription>
+          </DialogHeader>
+          <SmartForm
+            schema={acceptSchema}
+            mutation={confirmMutation as any}
+            defaultValues={{ meetingLink: "" }}
+            transform={(value) => ({
+              id: booking.id,
+              payload: {
+                meetingLink: value.meetingLink,
+              },
+            })}
+            onSuccess={() => setIsAcceptOpen(false)}
+            submitLabel="Confirm & Accept"
+          >
+            {(form) => (
+              <FormField
+                form={form}
+                name="meetingLink"
+                label="Meeting Link"
+                placeholder="https://meet.google.com/..."
+              />
+            )}
+          </SmartForm>
         </DialogContent>
       </Dialog>
 

@@ -203,3 +203,32 @@ export const verifyPayment = async (sessionId: string) => {
         };
     }
 };
+
+export const confirmBooking = async (id: string, payload: { meetingLink: string }) => {
+    try {
+        const result = await httpClient.patch(`/booking/confirm-booking/${id}`, payload);
+
+        if (!result.success) {
+            return {
+                success: false,
+                message: result.message || "Failed to confirm booking",
+                error: result,
+            };
+        }
+
+        return {
+            success: true,
+            data: result.data,
+            message: result.message || "Booking confirmed successfully",
+        };
+    } catch (error: any) {
+        console.error("Confirm booking error:", error);
+        return {
+            success: false,
+            message:
+                error?.response?.data?.message ||
+                error.message ||
+                "An unexpected error occurred",
+        };
+    }
+};

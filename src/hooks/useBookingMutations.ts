@@ -6,9 +6,10 @@ import {
   createBooking,
   hardDeleteBooking,
   changeBookingStatus,
+  confirmBooking,
 } from "@/services/booking.service";
 import { QUERY_KEYS } from "@/lib/constants";
-import { IBookingCreateInput, IChangeBookingStatusInput } from "@/types/booking.types";
+import { IBooking, IBookingCreateInput, IChangeBookingStatusInput } from "@/types/booking.types";
 
 interface CreateBookingMutationInput {
   tutorId: string;
@@ -21,21 +22,22 @@ interface ChangeBookingStatusMutationInput {
 }
 
 export interface UseBookingMutationsReturn {
-  createMutation: ReturnType<typeof useMutation<unknown, Error, CreateBookingMutationInput>>;
-  changeStatusMutation: ReturnType<typeof useMutation<unknown, Error, ChangeBookingStatusMutationInput>>;
-  hardDeleteMutation: ReturnType<typeof useMutation<unknown, Error, string>>;
+  createMutation: ReturnType<typeof useMutation<IBooking, Error, CreateBookingMutationInput>>;
+  changeStatusMutation: ReturnType<typeof useMutation<IBooking, Error, ChangeBookingStatusMutationInput>>;
+  hardDeleteMutation: ReturnType<typeof useMutation<IBooking, Error, string>>;
+  confirmMutation: ReturnType<typeof useMutation<IBooking, Error, { id: string, payload: { meetingLink: string } }>>;
 }
 
 export function useBookingMutations(): UseBookingMutationsReturn {
   const queryClient = useQueryClient();
 
-  const createMutation = useMutation({
+  const createMutation = useMutation<IBooking, Error, CreateBookingMutationInput>({
     mutationFn: async ({ tutorId, payload }: CreateBookingMutationInput) => {
       const result = await createBooking(tutorId, payload);
       if (!result.success) {
         throw new Error(result.message || "Failed to create booking");
       }
-      return result.data;
+      return result.data as IBooking;
     },
     onSuccess: () => {
       toast.success("Booking created successfully");
@@ -46,13 +48,17 @@ export function useBookingMutations(): UseBookingMutationsReturn {
       toast.error(message);
     },
   });
-  const changeStatusMutation = useMutation({
+  const changeStatusMutation = useMutation<
+    IBooking,
+    Error,
+    ChangeBookingStatusMutationInput
+  >({
     mutationFn: async ({ id, payload }: ChangeBookingStatusMutationInput) => {
       const result = await changeBookingStatus(id, payload);
       if (!result.success) {
         throw new Error(result.message || "Failed to change booking status");
       }
-      return result.data;
+      return result.data as IBooking;
     },
     onSuccess: () => {
       toast.success("Booking status updated successfully");
@@ -65,13 +71,13 @@ export function useBookingMutations(): UseBookingMutationsReturn {
     },
   });
 
-  const hardDeleteMutation = useMutation({
+  const hardDeleteMutation = useMutation<IBooking, Error, string>({
     mutationFn: async (id: string) => {
       const result = await hardDeleteBooking(id);
       if (!result.success) {
         throw new Error(result.message || "Failed to delete booking");
       }
-      return result.data;
+      return result.data as IBooking;
     },
     onSuccess: () => {
       toast.success("Booking deleted successfully");
@@ -83,9 +89,38 @@ export function useBookingMutations(): UseBookingMutationsReturn {
     },
   });
 
+  const confirmMutation = useMutation<
+    IBooking,
+    Error,
+    { id: string; payload: { meetingLink: string } }
+  >({
+    mutationFn: async ({
+      id,
+      payload,
+    }: {
+      id: string;
+      payload: { meetingLink: string };
+    }) => {
+      const result = await confirmBooking(id, payload);
+      if (!result.success) {
+        throw new Error(result.message || "Failed to confirm booking");
+      }
+      return result.data as IBooking;
+    },
+    onSuccess: () => {
+      toast.success("Booking confirmed successfully");
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.BOOKINGS] });
+    },
+    onError: (error) => {
+      const message = error instanceof Error ? error.message : "Failed to confirm booking";
+      toast.error(message);
+    },
+  });
+
   return {
     createMutation,
     changeStatusMutation,
     hardDeleteMutation,
+    confirmMutation,
   };
 }
