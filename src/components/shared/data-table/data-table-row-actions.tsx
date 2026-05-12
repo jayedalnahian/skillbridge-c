@@ -110,7 +110,7 @@ export function DataTableRowActions<TData>({
               <DropdownMenuItem
                 onClick={() => setIsRestoreOpen(true)}
                 disabled={!isDeleted}
-                className="text-green-600 focus:text-green-600 data-[disabled]:opacity-50 data-[disabled]:cursor-not-allowed"
+                className="text-green-600 focus:text-green-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
               >
                 <RotateCcw className="mr-2 h-4 w-4" />
                 Restore
