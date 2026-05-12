@@ -1,5 +1,6 @@
 import { httpClient } from "@/lib/axios/httpClient";
 import { IBooking, IBookingCreateInput, IBookingQueryParams, IChangeBookingStatusInput } from "@/types/booking.types";
+import { IReviewCreateInput } from "@/types/review.types";
 function buildQueryString(params: IBookingQueryParams): string {
     const query = new URLSearchParams();
 
@@ -232,3 +233,39 @@ export const confirmBooking = async (id: string, payload: { meetingLink: string 
         };
     }
 };
+
+export const completeBooking = async (
+  id: string,
+  payload: IReviewCreateInput,
+) => {
+  try {
+    const result = await httpClient.patch(
+      `/booking/complete-booking/${id}`,
+      payload,
+    );
+
+    if (!result.success) {
+      return {
+        success: false,
+        message: result.message || "Failed to complete booking",
+        error: result,
+      };
+    }
+
+    return {
+      success: true,
+      data: result.data,
+      message: result.message || "Booking completed successfully",
+    };
+  } catch (error: any) {
+    console.error("Complete booking error:", error);
+    return {
+      success: false,
+      message:
+        error?.response?.data?.message ||
+        error.message ||
+        "An unexpected error occurred",
+    };
+  }
+};
+

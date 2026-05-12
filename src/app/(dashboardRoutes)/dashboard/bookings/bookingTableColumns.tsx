@@ -1,11 +1,11 @@
 "use client";
 
 import { DataTableColumnHeader } from "@/components/shared/data-table/data-table-column-header";
-import { DataTableRowActions } from "@/components/shared/data-table/data-table-row-actions";
 import { IdCell } from "@/components/shared/data-table/IdCell";
 import { Badge } from "@/components/ui/badge";
 import { IBooking } from "@/types/booking.types";
 import { ColumnDef } from "@tanstack/react-table";
+import { BookingRowActions } from "./BookingRowActions";
 
 export const columns: ColumnDef<IBooking>[] = [
   {
@@ -14,20 +14,6 @@ export const columns: ColumnDef<IBooking>[] = [
       <DataTableColumnHeader column={column} title="ID" />
     ),
     cell: ({ row }) => <IdCell id={row.getValue("id")} />,
-  },
-  {
-    accessorKey: "studentId",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Student ID" />
-    ),
-    cell: ({ row }) => <IdCell id={row.getValue("studentId")} />,
-  },
-  {
-    accessorKey: "tutorId",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Tutor ID" />
-    ),
-    cell: ({ row }) => <IdCell id={row.getValue("tutorId")} />,
   },
   {
     accessorKey: "status",
@@ -112,13 +98,22 @@ export const columns: ColumnDef<IBooking>[] = [
     ),
     cell: ({ row }) => (
       <div className="font-semibold text-slate-900 hover:text-[#00ADB5]">
-        ${row.getValue("price")}$
+        ${Number(row.getValue("price")).toFixed(2)}
+      </div>
+    ),
+  },
+  {
+    accessorKey: "payment.transactionId",
+    header: "Transaction ID",
+    cell: ({ row }) => (
+      <div className="text-xs font-mono text-slate-500">
+        {row.original.payment?.transactionId || "N/A"}
       </div>
     ),
   },
   {
     id: "actions",
     header: "Actions",
-    cell: ({ row, table }) => <DataTableRowActions row={row} table={table} />,
+    cell: ({ row, table }) => <BookingRowActions row={row} table={table}/>,
   },
 ];

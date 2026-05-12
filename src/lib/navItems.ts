@@ -101,16 +101,6 @@ export const studentNavItems: NavSection[] = [
                 href: "/dashboard/bookings",
                 icon: "FileText",
             },
-            {
-                title: "Reviews",
-                href: "/dashboard/reviews",
-                icon: "Award",
-            },
-            {
-                title: "Payments",
-                href: "/dashboard/payments",
-                icon: "Wallet",
-            }
         ]
     },
 ];

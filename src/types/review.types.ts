@@ -21,7 +21,7 @@ export interface IReviewCreateInput {
   tutorId: string;
   bookingId: string;
   rating: number;
-  comment: string;
+  comment?: string;
 }
 
 export interface IReviewUpdateInput {

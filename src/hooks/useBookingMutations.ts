@@ -7,9 +7,11 @@ import {
   hardDeleteBooking,
   changeBookingStatus,
   confirmBooking,
+  completeBooking,
 } from "@/services/booking.service";
 import { QUERY_KEYS } from "@/lib/constants";
 import { IBooking, IBookingCreateInput, IChangeBookingStatusInput } from "@/types/booking.types";
+import { IReviewCreateInput } from "@/types/review.types";
 
 interface CreateBookingMutationInput {
   tutorId: string;
@@ -26,6 +28,8 @@ export interface UseBookingMutationsReturn {
   changeStatusMutation: ReturnType<typeof useMutation<IBooking, Error, ChangeBookingStatusMutationInput>>;
   hardDeleteMutation: ReturnType<typeof useMutation<IBooking, Error, string>>;
   confirmMutation: ReturnType<typeof useMutation<IBooking, Error, { id: string, payload: { meetingLink: string } }>>;
+  completeMutation: ReturnType<typeof useMutation<IBooking, Error, { id: string, payload: IReviewCreateInput }>>;
+
 }
 
 export function useBookingMutations(): UseBookingMutationsReturn {
@@ -117,10 +121,31 @@ export function useBookingMutations(): UseBookingMutationsReturn {
     },
   });
 
+
+
+  const completeMutation = useMutation<IBooking, Error, { id: string, payload: IReviewCreateInput }>({
+    mutationFn: async ({ id, payload }: { id: string, payload: IReviewCreateInput }) => {
+      const response = await completeBooking(id, payload);
+      if (!response.success) {
+        throw new Error(response.message || "Failed to complete booking");
+      }
+      return response.data as IBooking;
+    },
+    onSuccess: () => {
+      toast.success("Booking completed successfully");
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.BOOKINGS] });
+    },
+    onError: (error) => {
+      const message = error instanceof Error ? error.message : "Failed to complete booking";
+      toast.error(message);
+    },
+  });
+
   return {
     createMutation,
     changeStatusMutation,
     hardDeleteMutation,
     confirmMutation,
+    completeMutation
   };
 }

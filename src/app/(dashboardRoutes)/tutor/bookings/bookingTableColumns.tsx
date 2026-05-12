@@ -16,11 +16,11 @@ export const columns: ColumnDef<IBooking>[] = [
     cell: ({ row }) => <IdCell id={row.getValue("id")} />,
   },
   {
-    accessorKey: "studentName",
+    accessorKey: "Student.name",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Student Name" />
     ),
-    cell: ({ row }) => <span className="capitalize">{row.getValue("studentName")}</span>,
+    cell: ({ row }) => <span className="capitalize">{row.original.Student?.name || "N/A"}</span>,
   },
   {
     accessorKey: "status",
@@ -106,6 +106,15 @@ export const columns: ColumnDef<IBooking>[] = [
     cell: ({ row }) => (
       <div className="font-semibold text-slate-900 hover:text-[#00ADB5]">
         ${Number(row.getValue("price")).toFixed(2)}
+      </div>
+    ),
+  },
+  {
+    accessorKey: "payment.transactionId",
+    header: "Transaction ID",
+    cell: ({ row }) => (
+      <div className="text-xs font-mono text-slate-500">
+        {row.original.payment?.transactionId || "N/A"}
       </div>
     ),
   },
