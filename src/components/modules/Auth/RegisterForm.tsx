@@ -1,6 +1,7 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { registerAction } from "@/app/(commonRoutes)/(authRoutes)/register/_action";
+import { signInWithGoogle } from "@/lib/authClient";
 import AppField from "@/components/shared/form/AppField";
 import AppSubmitButton from "@/components/shared/form/AppSubmitButton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -26,6 +27,7 @@ const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isGooglePending, setIsGooglePending] = useState(false);
 
   const { mutateAsync, isPending } = useMutation({
     mutationFn: (payload: IRegisterPayload) => registerAction(payload),
@@ -54,17 +56,7 @@ const RegisterForm = () => {
     },
   });
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      form.setFieldValue("image", file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewImage(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+
 
   const triggerFileInput = () => {
     fileInputRef.current?.click();
@@ -81,7 +73,7 @@ const RegisterForm = () => {
 
   return (
     <Card className="w-full max-w-md mx-auto shadow-md">
-      <CardHeader className="text-center">
+      <CardHeader className="text-center mb-4">
         <CardTitle className="text-2xl font-bold">Create Account</CardTitle>
         <CardDescription>
           Join SkillBridge and start learning with expert tutors
@@ -100,44 +92,6 @@ const RegisterForm = () => {
           }}
           className="space-y-4"
         >
-          {/* Profile Image Upload */}
-          <div className="flex flex-col items-center gap-3 mb-6">
-            <form.Field name="name">
-              {(field) => (
-                <Avatar
-                  className="h-24 w-24 cursor-pointer border-2 border-dashed border-primary/50 hover:border-primary transition-colors"
-                  onClick={triggerFileInput}
-                >
-                  <AvatarImage src={previewImage || ""} />
-                  <AvatarFallback className="bg-primary/10 text-primary">
-                    {previewImage ? (
-                      <Camera className="h-8 w-8" />
-                    ) : field.state.value ? (
-                      getInitials(field.state.value)
-                    ) : (
-                      <User className="h-8 w-8" />
-                    )}
-                  </AvatarFallback>
-                </Avatar>
-              )}
-            </form.Field>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={handleImageChange}
-            />
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              onClick={triggerFileInput}
-            >
-              <Camera className="h-4 w-4 mr-2" />
-              {previewImage ? "Change Photo" : "Add Profile Photo"}
-            </Button>
-          </div>
 
           <form.Field
             name="name"
@@ -230,9 +184,17 @@ const RegisterForm = () => {
         <Button
           variant="outline"
           className="w-full"
-          onClick={() => {
-            const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-            window.location.href = `${baseUrl}/auth/login/google`;
+          disabled={isPending || isGooglePending}
+          onClick={async () => {
+            setIsGooglePending(true);
+            setServerError(null);
+            try {
+              await signInWithGoogle("/dashboard");
+            } catch (error: any) {
+              console.error("Google sign-in error:", error);
+              setServerError(error?.message || "Google sign-in failed. Please try again.");
+              setIsGooglePending(false);
+            }
           }}
         >
           <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">

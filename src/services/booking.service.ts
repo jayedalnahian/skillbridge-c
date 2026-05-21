@@ -87,7 +87,7 @@ export const createBooking = async (
     payload: IBookingCreateInput,
 ) => {
     try {
-        console.log("booking payload : ", payload)
+        // console.log("booking payload : ", payload)
         const result = await httpClient.post(`/booking/${tutorId}`, payload);
 
         if (!result.success) {

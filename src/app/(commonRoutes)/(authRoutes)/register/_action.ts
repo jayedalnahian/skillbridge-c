@@ -22,6 +22,8 @@ export const registerAction = async (
     };
   }
 
+  let redirectTarget: string | null = null;
+
   try {
     // Create FormData for file upload
     const formData = new FormData();
@@ -51,14 +53,14 @@ export const registerAction = async (
     await setTokenInCookies("better-auth.session_token", token, 24 * 60 * 60);
 
     if (needPasswordChange) {
-      redirect(`/reset-password?email=${email}`);
+      redirectTarget = `/reset-password?email=${email}`;
     } else if (!emailVerified) {
-      redirect(`/verify-email?email=${email}`);
+      redirectTarget = `/verify-email?email=${email}`;
     } else {
-      redirect(getDefaultDashboardRoute(role as UserRole));
+      redirectTarget = getDefaultDashboardRoute(role as UserRole);
     }
   } catch (error: any) {
-    // console.log(error, "error");
+    // Re-throw NEXT_REDIRECT immediately without logging
     if (
       error &&
       typeof error === "object" &&
@@ -71,7 +73,18 @@ export const registerAction = async (
 
     return {
       success: false,
-      message: `Registration failed: ${error.message}`,
+      message: `Registration failed: ${error?.response?.data?.message || error.message || "Unknown error"}`,
     };
   }
+
+  // Perform redirect outside try/catch to avoid NEXT_REDIRECT being caught
+  if (redirectTarget) {
+    redirect(redirectTarget);
+  }
+
+  // Fallback (should never reach here)
+  return {
+    success: false,
+    message: "Unexpected error occurred",
+  };
 };

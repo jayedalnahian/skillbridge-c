@@ -76,13 +76,13 @@ export function SmartForm<TData extends Record<string, any>, TMutationData, TMut
         Object.entries(form.state.fieldMeta).forEach(([field, meta]) => {
           const fieldMeta = meta as { errors?: string[] }
           if (fieldMeta?.errors?.length) {
-            console.log(`[SmartForm] Field "${field}" errors:`, fieldMeta.errors)
+            // console.log(`[SmartForm] Field "${field}" errors:`, fieldMeta.errors)
           }
         })
         
         try {
           const result = await form.handleSubmit()
-          console.log("[SmartForm] handleSubmit completed successfully, result:", result)
+          // console.log("[SmartForm] handleSubmit completed successfully, result:", result)
         } catch (error) {
           console.error("[SmartForm] handleSubmit error:", error)
         }

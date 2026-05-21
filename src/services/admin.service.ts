@@ -52,20 +52,20 @@ export const getAllAdmins = async (
     }
 
     const url = queryString ? `/admin?${queryString}` : "/admin";
-    console.log("[DEBUG admin.service] URL:", url);
+    // console.log("[DEBUG admin.service] URL:", url);
 
     const response = await httpClient.get<{ data: IAdmin[]; meta: PaginationMeta }>(url);
-    console.log("[DEBUG admin.service] Raw response:", JSON.stringify(response, null, 2));
+    // console.log("[DEBUG admin.service] Raw response:", JSON.stringify(response, null, 2));
 
     // The backend returns ApiResponse<{ data: IAdmin[]; meta: PaginationMeta }>
     // So response.data is { data: [...], meta: {...} }
     const innerData = response.data;
-    console.log("[DEBUG admin.service] innerData:", innerData);
-    console.log("[DEBUG admin.service] innerData type:", typeof innerData);
-    console.log("[DEBUG admin.service] innerData is array?:", Array.isArray(innerData));
+    // console.log("[DEBUG admin.service] innerData:", innerData);
+    // console.log("[DEBUG admin.service] innerData type:", typeof innerData);
+    // console.log("[DEBUG admin.service] innerData is array?:", Array.isArray(innerData));
     if (innerData && typeof innerData === "object") {
-      console.log("[DEBUG admin.service] innerData.data:", (innerData as any).data);
-      console.log("[DEBUG admin.service] innerData.data is array?:", Array.isArray((innerData as any).data));
+      // console.log("[DEBUG admin.service] innerData.data:", (innerData as any).data);
+      // console.log("[DEBUG admin.service] innerData.data is array?:", Array.isArray((innerData as any).data));
     }
 
     if (innerData && typeof innerData === "object" && Array.isArray((innerData as any).data)) {
@@ -76,7 +76,7 @@ export const getAllAdmins = async (
     }
 
     // Fallback: if response structure is unexpected
-    console.log("[DEBUG admin.service] FALLBACK - returning empty");
+    // console.log("[DEBUG admin.service] FALLBACK - returning empty");
     return {
       data: [],
       meta: getDefaultPaginationMeta(),

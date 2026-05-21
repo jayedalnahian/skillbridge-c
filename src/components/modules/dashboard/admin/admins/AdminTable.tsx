@@ -61,9 +61,9 @@ export default function AdminTable({ initialQueryString }: AdminTableProps) {
   const { data, isLoading, isFetching, error } = useQuery({
     queryKey: [QUERY_KEYS.ADMINS, queryString],
     queryFn: async () => {
-      console.log("[DEBUG AdminTable] queryString:", queryString);
+      // console.log("[DEBUG AdminTable] queryString:", queryString);
       const result = await getAllAdmins(queryString);
-      console.log("[DEBUG AdminTable] getAllAdmins result:", result);
+      // console.log("[DEBUG AdminTable] getAllAdmins result:", result);
       return result;
     },
     staleTime: CACHE_DURATIONS.ONE_HOUR,
@@ -73,9 +73,9 @@ export default function AdminTable({ initialQueryString }: AdminTableProps) {
     refetchOnReconnect: false,
   });
 
-  console.log("[DEBUG AdminTable] data:", data);
-  console.log("[DEBUG AdminTable] isLoading:", isLoading);
-  console.log("[DEBUG AdminTable] error:", error);
+  // console.log("[DEBUG AdminTable] data:", data);
+  // console.log("[DEBUG AdminTable] isLoading:", isLoading);
+  // console.log("[DEBUG AdminTable] error:", error);
 
   // Column filters from URL
   const columnFiltersStateFromUrl = useMemo<ColumnFiltersState>(() => {

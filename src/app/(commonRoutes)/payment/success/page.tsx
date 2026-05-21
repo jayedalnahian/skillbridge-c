@@ -2,7 +2,15 @@
 
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { CheckCircle, Loader2, Calendar, Clock, DollarSign, ArrowRight, BookOpen } from "lucide-react";
+import {
+  CheckCircle,
+  Loader2,
+  Calendar,
+  Clock,
+  DollarSign,
+  ArrowRight,
+  BookOpen,
+} from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -23,7 +31,9 @@ function PaymentSuccessContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
-  const [paymentDetails, setPaymentDetails] = useState<PaymentDetails | null>(null);
+  const [paymentDetails, setPaymentDetails] = useState<PaymentDetails | null>(
+    null,
+  );
   const [error, setError] = useState<string | null>(null);
 
   const sessionId = searchParams.get("session_id");
@@ -40,14 +50,17 @@ function PaymentSuccessContent() {
       // If we have a session_id, verify the payment with the backend
       // This updates the payment status in the database
       if (sessionId) {
-        console.log("[PaymentSuccess] Verifying payment:", sessionId);
+        // // console.log("[PaymentSuccess] Verifying payment:", sessionId);
         const result = await verifyPayment(sessionId);
-        console.log("[PaymentSuccess] Verification result:", result);
+        // console.log("[PaymentSuccess] Verification result:", result);
 
         if (result.success) {
           toast.success("Payment verified and confirmed!");
         } else {
-          console.warn("[PaymentSuccess] Verification warning:", result.message);
+          console.warn(
+            "[PaymentSuccess] Verification warning:",
+            result.message,
+          );
           // Still show success page, but warn that verification had issues
           toast.info("Payment may still be processing");
         }
@@ -117,7 +130,7 @@ function PaymentSuccessContent() {
               <h2 className="text-sm font-medium text-slate-500 uppercase tracking-wide mb-4">
                 Payment Details
               </h2>
-              
+
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-slate-600">
@@ -125,7 +138,10 @@ function PaymentSuccessContent() {
                     <span>Amount Paid</span>
                   </div>
                   <span className="font-semibold text-slate-900">
-                    ${paymentDetails?.amount ? (paymentDetails.amount / 100).toFixed(2) : "--"}
+                    $
+                    {paymentDetails?.amount
+                      ? (paymentDetails.amount / 100).toFixed(2)
+                      : "--"}
                   </span>
                 </div>
 
@@ -210,14 +226,16 @@ function PaymentSuccessContent() {
 
 export default function PaymentSuccessPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <div className="text-center">
-          <Loader2 className="h-12 w-12 animate-spin text-[#00ADB5] mx-auto mb-4" />
-          <p className="text-slate-600">Loading...</p>
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-slate-50">
+          <div className="text-center">
+            <Loader2 className="h-12 w-12 animate-spin text-[#00ADB5] mx-auto mb-4" />
+            <p className="text-slate-600">Loading...</p>
+          </div>
         </div>
-      </div>
-    }>
+      }
+    >
       <PaymentSuccessContent />
     </Suspense>
   );

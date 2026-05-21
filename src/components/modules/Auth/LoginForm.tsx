@@ -1,6 +1,7 @@
 "use client"
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { loginAction } from "@/app/(commonRoutes)/(authRoutes)/login/_action";
+import { signInWithGoogle } from "@/lib/authClient";
 import AppField from "@/components/shared/form/AppField";
 import AppSubmitButton from "@/components/shared/form/AppSubmitButton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -146,11 +147,22 @@ const LoginForm = ({ redirectPath }: LoginFormProps) => {
           </div>
         </div>
 
-        <Button variant="outline" className="w-full" onClick={() => {
-            const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-            //TODO redirect path after login in frontend
-            window.location.href = `${baseUrl}/auth/login/google`;
-        }}>
+        <Button
+          variant="outline"
+          className="w-full"
+          disabled={isPending}
+          onClick={async () => {
+            setIsPending(true);
+            setServerError(null);
+            try {
+              await signInWithGoogle(redirectPath || "/dashboard");
+            } catch (error: any) {
+              console.error("Google sign-in error:", error);
+              setServerError(error?.message || "Google sign-in failed. Please try again.");
+              setIsPending(false);
+            }
+          }}
+        >
           <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
             <path
               fill="currentColor"

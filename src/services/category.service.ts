@@ -154,7 +154,7 @@ export const updateCategory = async (
   payload: ICategoryUpdateInput,
 ) => {
   try {
-    console.log("Updating category with payload:", payload);
+    // console.log("Updating category with payload:", payload);
     const result = await httpClient.patch(`/category/${id}`, payload);
 
     if (!result.success) {

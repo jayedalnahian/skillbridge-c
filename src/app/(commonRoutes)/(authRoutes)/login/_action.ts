@@ -69,10 +69,10 @@ export const loginAction = async (
     if (error?.response?.data?.message === "Email not verified") {
       redirectTarget = `/verify-email?email=${payload.email}`;
     } else {
-      console.error("Login error:", error);
+      // console.error("Login error:", error);
       return {
         success: false,
-        message: `Login failed: ${error.message}`,
+        message: `Login failed: ${error?.response?.data?.message}`,
       };
     }
   }
