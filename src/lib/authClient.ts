@@ -1,7 +1,10 @@
 import { createAuthClient } from "better-auth/react"; // make sure to import from better-auth/react
 
-
-const baseApiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+// Only evaluate environment variables at client-side runtime, not at build time
+// Use dynamic fallback to prevent undefined errors during build
+const baseApiUrl = typeof window !== "undefined" 
+  ? process.env.NEXT_PUBLIC_API_BASE_URL || "" 
+  : "";
 
 
 export const authClient = createAuthClient({
