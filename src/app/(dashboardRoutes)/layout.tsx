@@ -3,6 +3,8 @@ import DashboardSidebar from "@/components/modules/dashboard/DashboardSidebar";
 import { getUserInfo } from "@/services/auth.service";
 import { redirect } from "next/navigation";
 
+export const dynamic = "force-dynamic";
+
 export default async function DashboardRoutesLayout({
   children,
 }: Readonly<{

@@ -14,6 +14,7 @@ export async function getNewTokensWithRefreshToken(refreshToken: string, session
     try {
         const res = await fetch(`${BASE_API_URL}/auth/refresh-token`, {
             method: "POST",
+            cache: "no-store",
             headers:{
                 "Content-Type": "application/json",
                 Cookie: `refreshToken=${refreshToken}; better-auth.session_token=${sessionToken}`
@@ -59,6 +60,7 @@ export async function getUserInfo() {
 
         const res = await fetch(`${BASE_API_URL}/auth/me`, {
             method: "GET",
+            cache: "no-store",
             headers: {
                 "Content-Type": "application/json",
                 Cookie: `accessToken=${accessToken}; better-auth.session_token=${sessionToken}`

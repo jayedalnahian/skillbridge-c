@@ -155,7 +155,9 @@ const LoginForm = ({ redirectPath }: LoginFormProps) => {
             setIsPending(true);
             setServerError(null);
             try {
-              await signInWithGoogle(redirectPath || "/dashboard");
+               const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+            //TODO redirect path after login in frontend
+            window.location.href = `${baseUrl}/auth/login/google`;
             } catch (error: any) {
               console.error("Google sign-in error:", error);
               setServerError(error?.message || "Google sign-in failed. Please try again.");
