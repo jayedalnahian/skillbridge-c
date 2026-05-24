@@ -1,3 +1,6 @@
+"use server";
+
+
 import { httpClient } from "@/lib/axios/httpClient";
 import { IStudent, IStudentUpdatePayload } from "@/types/user.types";
 import { PaginationMeta } from "@/types/api.types";

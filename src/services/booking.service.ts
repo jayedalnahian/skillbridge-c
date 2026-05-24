@@ -1,3 +1,6 @@
+"use server";
+
+
 import { httpClient } from "@/lib/axios/httpClient";
 import { IBooking, IBookingCreateInput, IBookingQueryParams, IChangeBookingStatusInput } from "@/types/booking.types";
 import { IReviewCreateInput } from "@/types/review.types";
