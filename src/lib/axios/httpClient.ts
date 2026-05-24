@@ -21,7 +21,7 @@ const axiosInstance = async () => {
             withCredentials: true,
             headers: {
                 'Content-Type': 'application/json',
-            }
+            },
         });
     }
 
@@ -57,9 +57,10 @@ const axiosInstance = async () => {
     const instance = axios.create({
         baseURL : API_BASE_URL,
         timeout : 30000,
+        withCredentials: true,
         headers:{
             'Content-Type' : 'application/json',
-            Cookie : cookieHeader
+            Cookie : cookieHeader,
         }
     })
 
@@ -77,6 +78,7 @@ const httpGet = async <TData>(endpoint: string, options?: ApiRequestOptions) : P
         const response = await instance.get<ApiResponse<TData>>(endpoint, {
             params: options?.params,
             headers: options?.headers,
+            withCredentials: true,
         });
         return response.data;
     } catch (error) {       
@@ -91,6 +93,7 @@ const httpPost = async <TData>(endpoint: string, data: unknown, options?: ApiReq
         const response = await instance.post<ApiResponse<TData>>(endpoint, data, {
             params: options?.params,
             headers: options?.headers,
+            withCredentials: true,
         });
         return response.data;
     } catch (error) {
@@ -105,6 +108,7 @@ const httpPut = async <TData>(endpoint: string, data: unknown, options?: ApiRequ
         const response = await instance.put<ApiResponse<TData>>(endpoint, data, {
             params: options?.params,
             headers: options?.headers,
+            withCredentials: true,
         });
         return response.data;
     } catch (error) {
@@ -119,6 +123,7 @@ const httpPatch = async <TData>(endpoint: string, data: unknown, options?: ApiRe
         const response = await instance.patch<ApiResponse<TData>>(endpoint, data, {
             params: options?.params,
             headers: options?.headers,
+            withCredentials: true,
         });
         return response.data;
     }
@@ -134,6 +139,7 @@ const httpDelete =  async <TData>(endpoint: string, options?: ApiRequestOptions)
         const response = await instance.delete<ApiResponse<TData>>(endpoint, {
             params: options?.params,
             headers: options?.headers,
+            withCredentials: true,
         });
         return response.data;
     } catch (error) {

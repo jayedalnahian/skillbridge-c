@@ -34,13 +34,4 @@ export const authClient = createAuthClient({
   ],
 });
 
-export const signInWithGoogle = async (redirectPath: string = "/dashboard") => {
-  // Redirect to backend's success endpoint so JWT tokens (accessToken/refreshToken) are set properly
-  const callbackURL = `${baseApiUrl}/auth/google/success?redirect=${encodeURIComponent(redirectPath)}`;
-
-  return await authClient.signIn.social({
-    provider: "google",
-    callbackURL,
-  });
-};
 

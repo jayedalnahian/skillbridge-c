@@ -1,7 +1,6 @@
 "use client"
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { loginAction } from "@/app/(commonRoutes)/(authRoutes)/login/_action";
-import { signInWithGoogle } from "@/lib/authClient";
 import AppField from "@/components/shared/form/AppField";
 import AppSubmitButton from "@/components/shared/form/AppSubmitButton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -14,36 +13,36 @@ import Link from "next/link";
 import { useState } from "react";
 
 interface LoginFormProps {
-    redirectPath ?: string;
+  redirectPath?: string;
 }
 
 const LoginForm = ({ redirectPath }: LoginFormProps) => {
-    // const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
 
-    const [serverError, setServerError] = useState<string | null>(null);
-    const [showPassword, setShowPassword] = useState(false);
-    const [isPending, setIsPending] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [isPending, setIsPending] = useState(false);
 
-    const form = useForm({
-        defaultValues : {
-            email : "",
-            password : "",
-        },
+  const form = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
 
-        onSubmit : async ({value}) => {
-            setServerError(null);
-            setIsPending(true);
-            
-            const result = await loginAction(value, redirectPath) as any;
-            
-            setIsPending(false);
-            
-            if(!result.success){
-                setServerError(result.message || "Login failed");
-            }
-            // On success, redirect is handled by server action - no code needed here
-        }
-    })
+    onSubmit: async ({ value }) => {
+      setServerError(null);
+      setIsPending(true);
+
+      const result = await loginAction(value, redirectPath) as any;
+
+      setIsPending(false);
+
+      if (!result.success) {
+        setServerError(result.message || "Login failed");
+      }
+      // On success, redirect is handled by server action - no code needed here
+    }
+  })
   return (
     <Card className="w-full max-w-md mx-auto shadow-md">
       <CardHeader className="text-center">
@@ -94,7 +93,7 @@ const LoginForm = ({ redirectPath }: LoginFormProps) => {
                 className="cursor-pointer"
                 append={
                   <Button
-                  type="button"
+                    type="button"
                     onClick={() => setShowPassword((value) => !value)}
                     variant="ghost"
                     size="icon"
@@ -155,9 +154,9 @@ const LoginForm = ({ redirectPath }: LoginFormProps) => {
             setIsPending(true);
             setServerError(null);
             try {
-               const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-            //TODO redirect path after login in frontend
-            window.location.href = `${baseUrl}/auth/login/google`;
+              const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+              //TODO redirect path after login in frontend
+              window.location.href = `${baseUrl}/auth/login/google`;
             } catch (error: any) {
               console.error("Google sign-in error:", error);
               setServerError(error?.message || "Google sign-in failed. Please try again.");
@@ -189,13 +188,13 @@ const LoginForm = ({ redirectPath }: LoginFormProps) => {
 
       <CardFooter className="justify-center border-t pt-4">
         <p className="text-sm text-muted-foreground">
-              Don&apos;t have an account?{" "}
-            <Link
-                href="/register"
-                className="text-primary font-medium hover:underline underline-offset-4"
-            >
-                Sign Up for an account
-            </Link>
+          Don&apos;t have an account?{" "}
+          <Link
+            href="/register"
+            className="text-primary font-medium hover:underline underline-offset-4"
+          >
+            Sign Up for an account
+          </Link>
         </p>
       </CardFooter>
     </Card>

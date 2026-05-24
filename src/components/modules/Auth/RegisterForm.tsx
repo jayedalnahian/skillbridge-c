@@ -1,7 +1,6 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { registerAction } from "@/app/(commonRoutes)/(authRoutes)/register/_action";
-import { signInWithGoogle } from "@/lib/authClient";
 import AppField from "@/components/shared/form/AppField";
 import AppSubmitButton from "@/components/shared/form/AppSubmitButton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -189,7 +188,9 @@ const RegisterForm = () => {
             setIsGooglePending(true);
             setServerError(null);
             try {
-              await signInWithGoogle("/dashboard");
+              const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+              //TODO redirect path after login in frontend
+              window.location.href = `${baseUrl}/auth/login/google`;
             } catch (error: any) {
               console.error("Google sign-in error:", error);
               setServerError(error?.message || "Google sign-in failed. Please try again.");
