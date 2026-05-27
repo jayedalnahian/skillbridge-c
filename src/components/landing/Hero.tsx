@@ -61,21 +61,13 @@ export function Hero() {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <Button
-                asChild
+              <Button 
                 size="lg"
-                className="bg-[#00ADB5] hover:bg-[#00ADB5]/90 text-[#222831] font-semibold px-8 py-6 text-base transition-all hover:scale-105"
-              >
-                <Link href="/tutors">Find a Tutor</Link>
+                className="bg-[#00ADB5] h-12 w-full hover:bg-[#00ADB5]/90 text-[#222831] font-bold">
+                
+                <Link href="/all-tutors">Explore Subjects</Link>
               </Button>
-              <Button
-                asChild
-                variant="outline"
-                size="lg"
-                className="border-[#00ADB5] text-[#EEEEEE] hover:bg-[#00ADB5]/10 hover:text-[#00ADB5] px-8 py-6 text-base transition-all"
-              >
-                <Link href="/register">Become a Tutor</Link>
-              </Button>
+      
             </div>
 
             {/* Social Proof Stats */}

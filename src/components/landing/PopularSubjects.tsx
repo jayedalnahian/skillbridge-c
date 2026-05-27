@@ -20,7 +20,7 @@ const subjects = [
     description: "Python, JavaScript, React, Node.js & more",
     tutorCount: 120,
     color: "#00ADB5",
-    href: "/tutors?category=programming",
+    href: "/all-tutors",
   },
   {
     icon: Palette,
@@ -28,7 +28,7 @@ const subjects = [
     description: "UI/UX, Graphic Design, Illustration",
     tutorCount: 85,
     color: "#FF6B6B",
-    href: "/tutors?category=design",
+    href: "/all-tutors",
   },
   {
     icon: BarChart3,
@@ -36,7 +36,7 @@ const subjects = [
     description: "Marketing, Finance, Management",
     tutorCount: 64,
     color: "#4ECDC4",
-    href: "/tutors?category=business",
+    href: "/all-tutors",
   },
   {
     icon: Languages,
@@ -44,7 +44,7 @@ const subjects = [
     description: "English, Spanish, French, Mandarin",
     tutorCount: 95,
     color: "#FFE66D",
-    href: "/tutors?category=languages",
+    href: "/all-tutors",
   },
   {
     icon: Music,
@@ -52,7 +52,7 @@ const subjects = [
     description: "Piano, Guitar, Singing, Theory",
     tutorCount: 48,
     color: "#95E1D3",
-    href: "/tutors?category=music",
+    href: "/all-tutors",
   },
   {
     icon: Calculator,
@@ -60,7 +60,7 @@ const subjects = [
     description: "Algebra, Calculus, Statistics",
     tutorCount: 72,
     color: "#F7DC6F",
-    href: "/tutors?category=mathematics",
+    href: "/all-tutors",
   },
   {
     icon: Camera,
@@ -68,7 +68,7 @@ const subjects = [
     description: "Digital, Portrait, Editing",
     tutorCount: 38,
     color: "#BB8FCE",
-    href: "/tutors?category=photography",
+    href: "/all-tutors",
   },
   {
     icon: PenTool,
@@ -76,7 +76,7 @@ const subjects = [
     description: "Creative, Academic, Copywriting",
     tutorCount: 56,
     color: "#85C1E9",
-    href: "/tutors?category=writing",
+    href: "/all-tutors",
   },
 ];
 
