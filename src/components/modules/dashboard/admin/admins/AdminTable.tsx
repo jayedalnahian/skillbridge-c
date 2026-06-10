@@ -25,7 +25,6 @@ import { useAdminMutations } from "@/hooks/useAdminMutation";
 import { updateAdminSchema } from "./adminValidators";
 import { ADMIN_TABLE_CONFIG, adminFilters } from "./adminConfig";
 
-
 interface AdminTableProps {
   initialQueryString?: string;
 }
@@ -61,9 +60,9 @@ export default function AdminTable({ initialQueryString }: AdminTableProps) {
   const { data, isLoading, isFetching, error } = useQuery({
     queryKey: [QUERY_KEYS.ADMINS, queryString],
     queryFn: async () => {
-      // console.log("[DEBUG AdminTable] queryString:", queryString);
+      // "".log("[DEBUG AdminTable] queryString:", queryString);
       const result = await getAllAdmins(queryString);
-      // console.log("[DEBUG AdminTable] getAllAdmins result:", result);
+      // "".log("[DEBUG AdminTable] getAllAdmins result:", result);
       return result;
     },
     staleTime: CACHE_DURATIONS.ONE_HOUR,
@@ -73,9 +72,9 @@ export default function AdminTable({ initialQueryString }: AdminTableProps) {
     refetchOnReconnect: false,
   });
 
-  // console.log("[DEBUG AdminTable] data:", data);
-  // console.log("[DEBUG AdminTable] isLoading:", isLoading);
-  // console.log("[DEBUG AdminTable] error:", error);
+  // "".log("[DEBUG AdminTable] data:", data);
+  // "".log("[DEBUG AdminTable] isLoading:", isLoading);
+  // "".log("[DEBUG AdminTable] error:", error);
 
   // Column filters from URL
   const columnFiltersStateFromUrl = useMemo<ColumnFiltersState>(() => {
@@ -120,7 +119,8 @@ export default function AdminTable({ initialQueryString }: AdminTableProps) {
   );
 
   // Mutations
-  const { editMutation, createMutation, permanentDeleteMutation } = useAdminMutations();
+  const { editMutation, createMutation, permanentDeleteMutation } =
+    useAdminMutations();
 
   // Event handlers
   const handleCreateClick = useCallback(() => {
@@ -166,7 +166,14 @@ export default function AdminTable({ initialQueryString }: AdminTableProps) {
         </CardHeader>
         <CardContent className="p-6">
           {(() => {
-            console.log("[DEBUG AdminTable] Rendering - error:", error, "data?.data:", data?.data, "data?.meta:", data?.meta);
+            "".log(
+              "[DEBUG AdminTable] Rendering - error:",
+              error,
+              "data?.data:",
+              data?.data,
+              "data?.meta:",
+              data?.meta,
+            );
             return null;
           })()}
           {error ? (
@@ -205,7 +212,9 @@ export default function AdminTable({ initialQueryString }: AdminTableProps) {
               editConfig={{
                 schema: updateAdminSchema,
                 mutation: editMutation as any,
-                children: (form, item) => <AdminEditForm form={form} adminId={item.id} />,
+                children: (form, item) => (
+                  <AdminEditForm form={form} adminId={item.id} />
+                ),
               }}
             />
           )}

@@ -4,7 +4,6 @@ import { registerAction } from "@/app/(commonRoutes)/(authRoutes)/register/_acti
 import AppField from "@/components/shared/form/AppField";
 import AppSubmitButton from "@/components/shared/form/AppSubmitButton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -17,7 +16,7 @@ import {
 import { IRegisterPayload, registerZodSchema } from "@/zod/register.validation";
 import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
-import { Camera, Eye, EyeOff, User } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { useRef, useState } from "react";
 
@@ -37,7 +36,6 @@ const RegisterForm = () => {
       name: "",
       email: "",
       password: "",
-      image: undefined as File | undefined,
     },
     onSubmit: async ({ value }) => {
       setServerError(null);
@@ -49,17 +47,12 @@ const RegisterForm = () => {
           return;
         }
       } catch (error: any) {
-        // console.log(`Registration failed: ${error.message}`);
+        console.log(`Registration failed: ${error.message}`);
         setServerError(`Registration failed: ${error.message}`);
       }
     },
   });
 
-
-
-  const triggerFileInput = () => {
-    fileInputRef.current?.click();
-  };
 
   const getInitials = (name: string) => {
     return name

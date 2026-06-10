@@ -50,9 +50,9 @@ function PaymentSuccessContent() {
       // If we have a session_id, verify the payment with the backend
       // This updates the payment status in the database
       if (sessionId) {
-        // // console.log("[PaymentSuccess] Verifying payment:", sessionId);
+        // // "".log("[PaymentSuccess] Verifying payment:", sessionId);
         const result = await verifyPayment(sessionId);
-        // console.log("[PaymentSuccess] Verification result:", result);
+        // "".log("[PaymentSuccess] Verification result:", result);
 
         if (result.success) {
           toast.success("Payment verified and confirmed!");

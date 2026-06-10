@@ -79,7 +79,7 @@ export const loginAction = async (
 
   // Perform redirect outside try/catch to avoid NEXT_REDIRECT being caught
   if (redirectTarget) {
-    // console.log("Redirecting to:", redirectTarget);
+    // "".log("Redirecting to:", redirectTarget);
     redirect(redirectTarget);
   }
 

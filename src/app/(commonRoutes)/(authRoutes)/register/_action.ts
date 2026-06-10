@@ -25,24 +25,9 @@ export const registerAction = async (
   let redirectTarget: string | null = null;
 
   try {
-    // Create FormData for file upload
-    const formData = new FormData();
-    formData.append("name", parsedPayload.data.name);
-    formData.append("email", parsedPayload.data.email);
-    formData.append("password", parsedPayload.data.password);
-
-    if (parsedPayload.data.image) {
-      formData.append("file", parsedPayload.data.image);
-    }
-
     const response = await httpClient.post<ILoginResponse>(
       "/auth/register",
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      },
+      parsedPayload.data
     );
 
     const { accessToken, refreshToken, token, user } = response.data;

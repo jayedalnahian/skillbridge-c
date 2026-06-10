@@ -1,7 +1,13 @@
 "use server";
 
 import { httpClient } from "@/lib/axios/httpClient";
-import { ITutorCreateInput, ITutorDashboardData, ITutorQueryParams, ITutorUpdateInput, ITutorWithRelations } from "@/types/tutor.types";
+import {
+  ITutorCreateInput,
+  ITutorDashboardData,
+  ITutorQueryParams,
+  ITutorUpdateInput,
+  ITutorWithRelations,
+} from "@/types/tutor.types";
 import { ICategory } from "@/types/category.types";
 
 function buildQueryString(params: ITutorQueryParams): string {
@@ -32,14 +38,22 @@ export const getAllTutors = async (params?: ITutorQueryParams | string) => {
 
     const url = queryString ? `/tutor?${queryString}` : "/tutor";
 
-    const response = await httpClient.get<{ data: ITutorWithRelations[]; meta: { page: number; limit: number; total: number; totalPages: number } }>(url);
+    const response = await httpClient.get<{
+      data: ITutorWithRelations[];
+      meta: { page: number; limit: number; total: number; totalPages: number };
+    }>(url);
 
     // Server returns { success, message, data: { data: [...], meta: {...} } }
     // So response.data is the QueryBuilder result containing data and meta
     if (response && typeof response === "object" && "data" in response) {
       const result = response.data;
       // result should be { data: [...], meta: {...} }
-      if (result && typeof result === "object" && "data" in result && Array.isArray(result.data)) {
+      if (
+        result &&
+        typeof result === "object" &&
+        "data" in result &&
+        Array.isArray(result.data)
+      ) {
         return {
           data: result.data,
           meta: result.meta || {
@@ -102,7 +116,9 @@ export const getCurrentTutor = async () => {
 
 export const getAssignedCategories = async (tutorId: string) => {
   try {
-    const result = await httpClient.get<ICategory[]>(`/tutor/${tutorId}/categories`);
+    const result = await httpClient.get<ICategory[]>(
+      `/tutor/${tutorId}/categories`,
+    );
     return {
       success: true,
       data: result.data,
@@ -117,7 +133,7 @@ export const getAssignedCategories = async (tutorId: string) => {
 };
 
 export const createTutor = async (payload: ITutorCreateInput) => {
-  // console.log("createTutor payload:", payload);
+  // "".log("createTutor payload:", payload);
   try {
     const result = await httpClient.post("/tutor", payload);
 
@@ -138,7 +154,10 @@ export const createTutor = async (payload: ITutorCreateInput) => {
     console.error("Create tutor error:", error);
     return {
       success: false,
-      message: error?.response?.data?.message || error.message || "An unexpected error occurred",
+      message:
+        error?.response?.data?.message ||
+        error.message ||
+        "An unexpected error occurred",
     };
   }
 };
@@ -164,15 +183,17 @@ export const updateTutor = async (id: string, payload: ITutorUpdateInput) => {
     console.error("Update tutor error:", error);
     return {
       success: false,
-      message: error?.response?.data?.message || error.message || "An unexpected error occurred",
+      message:
+        error?.response?.data?.message ||
+        error.message ||
+        "An unexpected error occurred",
     };
   }
 };
 
 export const bulkSoftDeleteTutors = async (ids: string[]) => {
   try {
-
-    // console.log("bulkSoftDelete for " , ids)
+    // "".log("bulkSoftDelete for " , ids)
     const result = await httpClient.post("/tutor/bulk-delete", { ids });
 
     if (!result.success) {
@@ -192,7 +213,10 @@ export const bulkSoftDeleteTutors = async (ids: string[]) => {
     console.error("Delete tutor error:", error);
     return {
       success: false,
-      message: error?.response?.data?.message || error.message || "An unexpected error occurred",
+      message:
+        error?.response?.data?.message ||
+        error.message ||
+        "An unexpected error occurred",
     };
   }
 };
@@ -200,7 +224,7 @@ export const bulkSoftDeleteTutors = async (ids: string[]) => {
 export const hardDeleteTutor = async (id: string) => {
   try {
     const result = await httpClient.delete(`/tutor/permanent/${id}`);
-    
+
     if (!result.success) {
       return {
         success: false,
@@ -218,7 +242,10 @@ export const hardDeleteTutor = async (id: string) => {
     console.error("Permanently delete tutor error:", error);
     return {
       success: false,
-      message: error?.response?.data?.message || error.message || "An unexpected error occurred",
+      message:
+        error?.response?.data?.message ||
+        error.message ||
+        "An unexpected error occurred",
     };
   }
 };
@@ -244,7 +271,10 @@ export const restoreTutor = async (id: string) => {
     console.error("Restore tutor error:", error);
     return {
       success: false,
-      message: error?.response?.data?.message || error.message || "An unexpected error occurred",
+      message:
+        error?.response?.data?.message ||
+        error.message ||
+        "An unexpected error occurred",
     };
   }
 };
@@ -259,9 +289,12 @@ interface ServiceResponse<T> {
 /**
  * Get tutor dashboard analytics data
  */
-export const getDashboardData = async (): Promise<ServiceResponse<ITutorDashboardData>> => {
+export const getDashboardData = async (): Promise<
+  ServiceResponse<ITutorDashboardData>
+> => {
   try {
-    const result = await httpClient.get<ITutorDashboardData>("/tutor/dashboard");
+    const result =
+      await httpClient.get<ITutorDashboardData>("/tutor/dashboard");
 
     if (!result.success) {
       return {

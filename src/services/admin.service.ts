@@ -3,9 +3,13 @@
 import { httpClient } from "@/lib/axios/httpClient";
 import { IAdmin } from "@/types/user.types";
 import { PaginationMeta } from "@/types/api.types";
-import { IAdminCreatePayload, IAdminDashboardData, IAdminListResponse, IAdminQueryParams, IAdminUpdatePayload } from "@/types/admin.types";
-
-
+import {
+  IAdminCreatePayload,
+  IAdminDashboardData,
+  IAdminListResponse,
+  IAdminQueryParams,
+  IAdminUpdatePayload,
+} from "@/types/admin.types";
 
 interface ServiceResponse<T> {
   success: boolean;
@@ -52,23 +56,30 @@ export const getAllAdmins = async (
     }
 
     const url = queryString ? `/admin?${queryString}` : "/admin";
-    // console.log("[DEBUG admin.service] URL:", url);
+    // "".log("[DEBUG admin.service] URL:", url);
 
-    const response = await httpClient.get<{ data: IAdmin[]; meta: PaginationMeta }>(url);
-    // console.log("[DEBUG admin.service] Raw response:", JSON.stringify(response, null, 2));
+    const response = await httpClient.get<{
+      data: IAdmin[];
+      meta: PaginationMeta;
+    }>(url);
+    // "".log("[DEBUG admin.service] Raw response:", JSON.stringify(response, null, 2));
 
     // The backend returns ApiResponse<{ data: IAdmin[]; meta: PaginationMeta }>
     // So response.data is { data: [...], meta: {...} }
     const innerData = response.data;
-    // console.log("[DEBUG admin.service] innerData:", innerData);
-    // console.log("[DEBUG admin.service] innerData type:", typeof innerData);
-    // console.log("[DEBUG admin.service] innerData is array?:", Array.isArray(innerData));
+    // "".log("[DEBUG admin.service] innerData:", innerData);
+    // "".log("[DEBUG admin.service] innerData type:", typeof innerData);
+    // "".log("[DEBUG admin.service] innerData is array?:", Array.isArray(innerData));
     if (innerData && typeof innerData === "object") {
-      // console.log("[DEBUG admin.service] innerData.data:", (innerData as any).data);
-      // console.log("[DEBUG admin.service] innerData.data is array?:", Array.isArray((innerData as any).data));
+      // "".log("[DEBUG admin.service] innerData.data:", (innerData as any).data);
+      // "".log("[DEBUG admin.service] innerData.data is array?:", Array.isArray((innerData as any).data));
     }
 
-    if (innerData && typeof innerData === "object" && Array.isArray((innerData as any).data)) {
+    if (
+      innerData &&
+      typeof innerData === "object" &&
+      Array.isArray((innerData as any).data)
+    ) {
       return {
         data: (innerData as any).data,
         meta: (innerData as any).meta || getDefaultPaginationMeta(),
@@ -76,7 +87,7 @@ export const getAllAdmins = async (
     }
 
     // Fallback: if response structure is unexpected
-    // console.log("[DEBUG admin.service] FALLBACK - returning empty");
+    // "".log("[DEBUG admin.service] FALLBACK - returning empty");
     return {
       data: [],
       meta: getDefaultPaginationMeta(),
@@ -263,9 +274,12 @@ export const hardDeleteAdmin = async (
 /**
  * Get admin dashboard analytics data
  */
-export const getDashboardData = async (): Promise<ServiceResponse<IAdminDashboardData>> => {
+export const getDashboardData = async (): Promise<
+  ServiceResponse<IAdminDashboardData>
+> => {
   try {
-    const result = await httpClient.get<IAdminDashboardData>("/admin/dashboard");
+    const result =
+      await httpClient.get<IAdminDashboardData>("/admin/dashboard");
 
     if (!result.success) {
       return {
