@@ -158,15 +158,11 @@ export function Navbar({
         className={cn(
           "text-sm font-medium transition-colors",
           mobile ? "block px-3 py-2.5 rounded-md" : "relative px-1 py-2",
-          isActive(link.href)
-            ? "text-primary"
-            : "text-muted-foreground hover:text-foreground",
+          
           // Desktop active underline
           !mobile &&
-          isActive(link.href) &&
-          "after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:rounded-full after:bg-primary",
           // Mobile active bg
-          mobile && isActive(link.href) && "bg-primary/10",
+          mobile && isActive(link.href) && "bg-[#13A0A8]/10",
         )}
       >
         {link.label}
@@ -178,7 +174,7 @@ export function Navbar({
       className={cn(
         "sticky top-0 z-50 w-full transition-all duration-300",
         scrolled
-          ? "border-b bg-background/70 backdrop-blur-xl shadow-sm supports-backdrop-filter:bg-background/60"
+          ? "border-b backdrop-blur-xl shadow-sm supports-backdrop-filter:bg-[#13A0A8]/60"
           : "bg-transparent",
       )}
     >
@@ -188,7 +184,7 @@ export function Navbar({
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground transition-transform group-hover:scale-105">
             <GraduationCap className="h-5 w-5" />
           </div>
-          <span className="text-lg font-bold tracking-tight">{brandName}</span>
+          <span className="text-lg text-primary    font-bold tracking-tight">{brandName}</span>
         </Link>
 
         {/* ---- Desktop Nav ---- */}
@@ -209,7 +205,7 @@ export function Navbar({
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col items-start mr-1 text-[11px] leading-tight">
-                      <span className="font-semibold text-foreground truncate max-w-[80px]">
+                      <span className="font-semibold text-primary truncate max-w-[80px]">
                         {auth.name?.split(" ")[0]}
                       </span>
                       <ChevronDown className="h-3 w-3 text-muted-foreground" />
@@ -302,24 +298,24 @@ export function Navbar({
             </Button>
           </SheetTrigger>
 
-          <SheetContent side="right" className="w-[300px] p-0">
+          <SheetContent side="right" className="w-[300px] p-0 bg-[#05585d] border-[#00ADB5]">
             <SheetHeader className="px-6 pt-6 pb-4">
-              <SheetTitle className="flex items-center gap-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+              <SheetTitle className="flex items-center gap-2 text-white">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/20 text-white">
                   <GraduationCap className="h-4 w-4" />
                 </div>
                 {brandName}
               </SheetTitle>
             </SheetHeader>
 
-            <Separator />
+            <Separator className="bg-white/20" />
 
             {/* Mobile Nav Links */}
             <nav className="flex flex-col gap-1 px-4 py-4">
               {renderNavLinks(true)}
             </nav>
 
-            <Separator />
+            <Separator className="bg-white/20" />
 
             {/* Mobile Auth Actions */}
             <div className="px-4 py-4 space-y-3">
@@ -327,17 +323,17 @@ export function Navbar({
                 <>
                   {/* User info */}
                   <div className="flex items-center gap-3 px-2 py-2">
-                    <Avatar className="h-10 w-10 border-2 border-primary/20">
-                      <AvatarFallback className="bg-primary/10 text-primary text-sm font-semibold">
+                    <Avatar className="h-10 w-10 border-2 border-white/30">
+                      <AvatarFallback className="bg-white/20 text-white text-sm font-semibold">
                         {initials}
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium truncate">
+                      <p className="text-sm font-medium text-white truncate">
                         {auth.name ?? "User"}
                       </p>
                       {auth.email && (
-                        <p className="text-xs text-muted-foreground truncate">
+                        <p className="text-xs text-white/70 truncate">
                           {auth.email}
                         </p>
                       )}
@@ -347,7 +343,7 @@ export function Navbar({
                   <Button
                     asChild
                     variant="outline"
-                    className="w-full justify-start"
+                    className="w-full justify-start bg-white/10 border-white/30 text-white hover:bg-white/20 hover:text-white"
                     onClick={() => setMobileOpen(false)}
                   >
                     <Link href={dashboardRoute}>
@@ -362,7 +358,7 @@ export function Navbar({
                       key={link.href}
                       asChild
                       variant="outline"
-                      className="w-full justify-start"
+                      className="w-full justify-start bg-white/10 border-white/30 text-white hover:bg-white/20 hover:text-white"
                       onClick={() => setMobileOpen(false)}
                     >
                       <Link href={link.href}>
@@ -375,7 +371,7 @@ export function Navbar({
                   <Button
                     asChild
                     variant="outline"
-                    className="w-full justify-start"
+                    className="w-full justify-start bg-white/10 border-white/30 text-white hover:bg-white/20 hover:text-white"
                     onClick={() => setMobileOpen(false)}
                   >
                     <Link href="/change-password">
@@ -386,7 +382,7 @@ export function Navbar({
                   <Button
                     asChild
                     variant="outline"
-                    className="w-full justify-start"
+                    className="w-full justify-start bg-white/10 border-white/30 text-white hover:bg-white/20 hover:text-white"
                     onClick={() => setMobileOpen(false)}
                   >
                     <Link href="/contact">
@@ -417,14 +413,14 @@ export function Navbar({
                   <Button
                     asChild
                     variant="outline"
-                    className="w-full"
+                    className="w-full bg-white/10 border-white/30 text-white hover:bg-white/20 hover:text-white"
                     onClick={() => setMobileOpen(false)}
                   >
                     <Link href="/login">Login</Link>
                   </Button>
                   <Button
                     asChild
-                    className="w-full"
+                    className="w-full bg-white text-[#00ADB5] hover:bg-white/90 hover:text-[#00ADB5]"
                     onClick={() => setMobileOpen(false)}
                   >
                     <Link href="/register">Get Started</Link>
