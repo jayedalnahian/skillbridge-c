@@ -245,7 +245,7 @@ export function TutorDetail({ tutor, categories, reviews }: TutorDetailProps) {
           {/* Right Column - Sidebar */}
           <div className="space-y-6">
             {/* Contact & Booking Card */}
-            <Card className="border-0 shadow-lg sticky top-6">
+            <Card className="border-0 shadow-lg bg-white sticky top-6">
               <CardHeader className="pb-4">
                 <CardTitle className="text-lg">Contact & Schedule</CardTitle>
               </CardHeader>

@@ -166,14 +166,14 @@ export default function AdminTable({ initialQueryString }: AdminTableProps) {
         </CardHeader>
         <CardContent className="p-6">
           {(() => {
-            "".log(
-              "[DEBUG AdminTable] Rendering - error:",
-              error,
-              "data?.data:",
-              data?.data,
-              "data?.meta:",
-              data?.meta,
-            );
+            // console.log(
+            //   "[DEBUG AdminTable] Rendering - error:",
+            //   error,
+            //   "data?.data:",
+            //   data?.data,
+            //   "data?.meta:",
+            //   data?.meta,
+            // );
             return null;
           })()}
           {error ? (
