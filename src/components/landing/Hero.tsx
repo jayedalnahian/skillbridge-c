@@ -42,15 +42,6 @@ export function Hero() {
             </p>
 
             <div className="flex flex-col items-center gap-3 sm:flex-row lg:items-start">
-
-              <Button
-                asChild
-                variant="outline"
-                size="lg"
-                className="h-14 w-full rounded-full border-primary/40 bg-background/80 px-8 text-base font-semibold text-foreground shadow-sm transition-all duration-300 hover:scale-[1.03] hover:border-primary hover:bg-primary/10 sm:w-auto"
-              >
-                <Link href="/how-it-works">How it works</Link>
-              </Button>
               <Button
                 asChild
                 size="lg"
@@ -60,6 +51,14 @@ export function Hero() {
                   Explore tutors
                   <ArrowRight className="h-5 w-5" />
                 </Link>
+              </Button>
+              <Button
+                asChild
+                variant="outline"
+                size="lg"
+                className="h-14 w-full rounded-full border-primary/40 bg-background/80 px-8 text-base font-semibold text-foreground shadow-sm transition-all duration-300 hover:scale-[1.03] hover:border-primary hover:bg-primary/10 sm:w-auto"
+              >
+                <Link href="/how-it-works">How it works</Link>
               </Button>
             </div>
 
@@ -83,12 +82,12 @@ export function Hero() {
             initial={{ opacity: 0, x: 24 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
-            className="relative mx-auto hidden h-[360px] w-full max-w-[500px] lg:block"
+            className="relative mx-auto hidden h-[320px] w-full max-w-[460px] lg:block"
           >
             <motion.div
               animate={{ y: [0, -8, 0], rotate: [0, -1, 0] }}
               transition={{ duration: 5, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
-              className="absolute left-0 top-4 w-80 rounded-2xl border border-border/70 bg-card/80 p-6 shadow-xl backdrop-blur"
+              className="absolute left-0 top-4 w-72 rounded-2xl border border-border/70 bg-card/80 p-5 shadow-xl backdrop-blur"
             >
               <div className="mb-4 flex items-center gap-3">
                 <Avatar>
@@ -117,7 +116,7 @@ export function Hero() {
             <motion.div
               animate={{ y: [0, 10, 0], x: [0, 3, 0] }}
               transition={{ duration: 5.5, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
-              className="absolute right-0 top-28 w-72 rounded-2xl border border-primary/20 bg-background/80 p-5 shadow-xl backdrop-blur"
+              className="absolute right-0 top-28 w-64 rounded-2xl border border-primary/20 bg-background/80 p-4 shadow-xl backdrop-blur"
             >
               <div className="mb-3 flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
@@ -133,7 +132,7 @@ export function Hero() {
             <motion.div
               animate={{ y: [0, -6, 0], scale: [1, 1.02, 1] }}
               transition={{ duration: 4.8, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
-              className="absolute bottom-4 left-10 w-64 rounded-2xl border border-border/70 bg-card/70 p-5 shadow-lg backdrop-blur"
+              className="absolute bottom-4 left-10 w-56 rounded-2xl border border-border/70 bg-card/70 p-4 shadow-lg backdrop-blur"
             >
               <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-foreground">
                 <BookOpen className="h-4 w-4 text-primary" />
