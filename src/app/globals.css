@@ -102,38 +102,37 @@
 }
 
 .dark {
-  /* Light theme values - SkillBridge is now light-first */
-  --background: 0 0% 100%;
-  --foreground: 220 13% 15%;
-  --card: 210 40% 98%;
-  --card-foreground: 220 13% 15%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 220 13% 15%;
+  --background: 222 47% 11%;
+  --foreground: 210 40% 96%;
+  --card: 222 47% 11%;
+  --card-foreground: 210 40% 96%;
+  --popover: 222 47% 11%;
+  --popover-foreground: 210 40% 96%;
   --primary: 182 100% 35%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 210 40% 96%;
-  --secondary-foreground: 220 13% 15%;
-  --muted: 210 40% 96%;
-  --muted-foreground: 215 16% 47%;
+  --secondary: 217 33% 17%;
+  --secondary-foreground: 210 40% 96%;
+  --muted: 217 33% 17%;
+  --muted-foreground: 215 20% 65%;
   --accent: 182 100% 25%;
   --accent-foreground: 0 0% 100%;
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
-  --border: 214 32% 91%;
-  --input: 214 32% 91%;
+  --border: 217 33% 17%;
+  --input: 217 33% 17%;
   --ring: 182 100% 35%;
   --chart-1: 182 100% 35%;
   --chart-2: 210 40% 40%;
   --chart-3: 210 40% 50%;
   --chart-4: 182 80% 45%;
   --chart-5: 210 40% 60%;
-  --sidebar: 0 0% 100%;
-  --sidebar-foreground: 220 13% 15%;
+  --sidebar: 222 47% 11%;
+  --sidebar-foreground: 210 40% 96%;
   --sidebar-primary: 182 100% 35%;
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 210 40% 96%;
-  --sidebar-accent-foreground: 220 13% 15%;
-  --sidebar-border: 214 32% 91%;
+  --sidebar-accent: 217 33% 17%;
+  --sidebar-accent-foreground: 210 40% 96%;
+  --sidebar-border: 217 33% 17%;
   --sidebar-ring: 182 100% 35%;
 }
 

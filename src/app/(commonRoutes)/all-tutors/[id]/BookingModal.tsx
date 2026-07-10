@@ -204,7 +204,6 @@ export function BookingModal({ isOpen, onClose, tutor }: BookingModalProps) {
                         if (!availableDays.includes(date.getDay())) return true;
                         return false;
                       }}
-                      initialFocus
                     />
                   </PopoverContent>
                 </Popover>

@@ -496,7 +496,6 @@ export const UniversalDateTimePicker = forwardRef<
                   mode="single"
                   selected={dateValue}
                   onSelect={handleDateSelect}
-                  initialFocus
                 />
               </div>
             )}

@@ -12,7 +12,7 @@ const getErrorMessage = (error : unknown) : string => {
             return error.message;
         }
     }
-
+    
     return String(error);
 }
 

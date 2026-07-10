@@ -108,7 +108,6 @@ export function DateTimePicker({
               mode="single"
               selected={value}
               onSelect={handleDateSelect}
-              initialFocus
             />
           </PopoverContent>
         </Popover>
@@ -180,7 +179,6 @@ export function DatePicker({
               onChange?.(date)
               setOpen(false)
             }}
-            initialFocus
           />
         </PopoverContent>
       </Popover>

@@ -35,6 +35,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
+import { ModeToggle } from "@/components/mode-toggle";
 
 import { getDefaultDashboardRoute, type UserRole } from "@/lib/authUtils";
 
@@ -194,6 +195,7 @@ export function Navbar({
 
         {/* ---- Desktop Actions ---- */}
         <div className="hidden md:flex items-center gap-3">
+          <ModeToggle />
           {auth.isLoggedIn ? (
             <div className="flex items-center gap-3">
               <DropdownMenu>
@@ -319,6 +321,9 @@ export function Navbar({
 
             {/* Mobile Auth Actions */}
             <div className="px-4 py-4 space-y-3">
+              <div className="flex justify-end">
+                <ModeToggle />
+              </div>
               {auth.isLoggedIn ? (
                 <>
                   {/* User info */}
