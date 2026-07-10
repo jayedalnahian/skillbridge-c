@@ -23,6 +23,24 @@ const LoginForm = ({ redirectPath }: LoginFormProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const [isPending, setIsPending] = useState(false);
 
+  const demoAccounts = [
+    {
+      label: "Admin Login",
+      email: "jnahian752@icloud.com",
+      password: "Pass@123",
+    },
+    {
+      label: "Tutor Login",
+      email: "nahianoffice365@gmail.com",
+      password: "Pass@123",
+    },
+    {
+      label: "Student Login",
+      email: "jnahian752@gmail.com",
+      password: "NewPass@123",
+    },
+  ];
+
   const form = useForm({
     defaultValues: {
       email: "",
@@ -109,7 +127,26 @@ const LoginForm = ({ redirectPath }: LoginFormProps) => {
             )}
           </form.Field>
 
-          <div className="text-right mt-2">
+          <div className="flex flex-wrap items-center justify-between gap-2 text-right mt-2">
+            <div className="flex flex-wrap gap-2">
+              {demoAccounts.map((account) => (
+                <Button
+                  key={account.label}
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="h-8 px-3 text-xs"
+                  onClick={() => {
+                    form.setFieldValue("email", account.email);
+                    form.setFieldValue("password", account.password);
+                    setServerError(null);
+                  }}
+                >
+                  {account.label}
+                </Button>
+              ))}
+            </div>
+
             <Link
               href="/forgot-password"
               className="text-sm text-primary hover:underline underline-offset-4"
@@ -128,7 +165,11 @@ const LoginForm = ({ redirectPath }: LoginFormProps) => {
             selector={(s) => [s.canSubmit, s.isSubmitting] as const}
           >
             {([canSubmit, isSubmitting]) => (
-              <AppSubmitButton isPending={isSubmitting || isPending} pendingLabel="Logging In...." disabled={!canSubmit}>
+              <AppSubmitButton
+                isPending={isSubmitting || isPending}
+                pendingLabel="Logging In...."
+                disabled={!canSubmit}
+              >
                 Log In
               </AppSubmitButton>
             )}

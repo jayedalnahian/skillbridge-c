@@ -67,6 +67,9 @@ const AdminDashboardPage = () => {
       }
       return response.data;
     },
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    retry: false,
   });
 
   if (isLoading) {
