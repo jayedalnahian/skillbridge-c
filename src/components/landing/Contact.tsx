@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Mail, MapPin, Phone, Clock, ArrowRight } from "lucide-react";
+import { Mail, MapPin, Phone, Send } from "lucide-react";
 
 const contactInfo = [
   {
@@ -21,95 +21,122 @@ const contactInfo = [
     icon: MapPin,
     label: "Address",
     value: "123 Learning Street, Tech City, TC 12345",
-    href: "#",
   },
   {
-    icon: Clock,
+    icon: Mail,
     label: "Hours",
     value: "Mon-Fri: 9AM - 6PM EST",
-    href: "#",
   },
 ];
 
 export function Contact() {
   return (
-    <section id="contact" className="py-20 lg:py-28 bg-[#222831]">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16">
-          {/* Left - Info */}
-          <div>
-            <span className="inline-block px-4 py-1.5 rounded-full bg-[#00ADB5]/10 text-[#00ADB5] text-sm font-medium mb-4">
+    <section className="relative overflow-hidden bg-background text-foreground py-20 lg:py-28">
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,_rgba(0,173,181,0.15),_transparent_40%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(57,62,70,0.18),_transparent_45%)]" />
+      </div>
+
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid gap-12 lg:grid-cols-[1fr_1.2fr] lg:gap-16">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+          >
+            <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-sm font-medium text-primary mb-4">
               Get in Touch
             </span>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#EEEEEE] mb-6">
+            <h2 className="mb-6 text-3xl font-bold text-foreground sm:text-4xl lg:text-5xl">
               Contact Us
             </h2>
-            <p className="text-lg text-[#EEEEEE]/70 mb-8 leading-relaxed">
-              Have questions? We would love to hear from you. Send us a message 
+            <p className="mb-8 text-lg leading-relaxed text-muted-foreground">
+              Have questions? We would love to hear from you. Send us a message
               and we will respond as soon as possible.
             </p>
 
-            {/* Contact Cards */}
-            <div className="grid sm:grid-cols-2 gap-4">
+            <div className="space-y-4">
               {contactInfo.map((item) => (
-                <Link
+                <div
                   key={item.label}
-                  href={item.href}
-                  className="flex items-start gap-4 p-4 rounded-xl bg-[#393E46]/30 border border-[#393E46] hover:border-[#00ADB5]/50 transition-all duration-300 group"
+                  className="flex items-center gap-4"
                 >
-                  <div className="w-10 h-10 rounded-lg bg-[#00ADB5]/10 flex items-center justify-center flex-shrink-0 group-hover:bg-[#00ADB5]/20 transition-colors">
-                    <item.icon className="h-5 w-5 text-[#00ADB5]" />
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+                    <item.icon className="h-5 w-5 text-primary" />
                   </div>
                   <div>
-                    <div className="text-sm text-[#EEEEEE]/50 mb-1">
+                    <div className="text-sm text-muted-foreground">
                       {item.label}
                     </div>
-                    <div className="text-sm text-[#EEEEEE] font-medium">
+                    <div className="text-sm font-medium text-foreground">
                       {item.value}
                     </div>
                   </div>
-                </Link>
+                </div>
               ))}
             </div>
-          </div>
+          </motion.div>
 
-          {/* Right - Quick Links */}
-          <div className="p-8 rounded-2xl bg-[#393E46]/30 border border-[#393E46]">
-            <h3 className="text-xl font-semibold text-[#EEEEEE] mb-6">
-              Quick Help
-            </h3>
-            <div className="space-y-4">
-              {[
-                { label: "Browse all tutors", href: "/all-tutors" },
-                { label: "How to book a session", href: "/#how-it-works" },
-                { label: "Become a tutor", href: "/register" },
-                { label: "FAQ & Help Center", href: "/contact" },
-              ].map((link) => (
-                <Link
-                  key={link.label}
-                  href={link.href}
-                  className="flex items-center justify-between p-4 rounded-xl bg-[#222831]/50 hover:bg-[#222831] transition-colors group"
-                >
-                  <span className="text-[#EEEEEE]/80 group-hover:text-[#EEEEEE]">
-                    {link.label}
-                  </span>
-                  <ArrowRight className="h-4 w-4 text-[#00ADB5] opacity-0 group-hover:opacity-100 transition-opacity" />
-                </Link>
-              ))}
-            </div>
-
-            <div className="mt-8 pt-6 border-t border-[#393E46]">
-              <p className="text-sm text-[#EEEEEE]/60 mb-4">
-                Ready to start learning?
-              </p>
-              <Link href="/all-tutors">
-                <Button className="w-full bg-[#00ADB5] hover:bg-[#00ADB5]/90 text-[#222831] font-semibold">
-                  Find a Tutor Now
-                  <ArrowRight className="h-4 w-4 ml-2" />
-                </Button>
-              </Link>
-            </div>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.5, ease: "easeOut", delay: 0.15 }}
+          >
+            <form className="space-y-5 rounded-2xl border border-border bg-card/50 p-8 backdrop-blur-sm">
+              <div className="grid gap-5 sm:grid-cols-2">
+                <div>
+                  <label htmlFor="name" className="mb-1.5 block text-sm font-medium text-foreground">
+                    Name
+                  </label>
+                  <input
+                    id="name"
+                    type="text"
+                    placeholder="Your name"
+                    className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-foreground">
+                    Email
+                  </label>
+                  <input
+                    id="email"
+                    type="email"
+                    placeholder="your@email.com"
+                    className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  />
+                </div>
+              </div>
+              <div>
+                <label htmlFor="subject" className="mb-1.5 block text-sm font-medium text-foreground">
+                  Subject
+                </label>
+                <input
+                  id="subject"
+                  type="text"
+                  placeholder="How can we help?"
+                  className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                />
+              </div>
+              <div>
+                <label htmlFor="message" className="mb-1.5 block text-sm font-medium text-foreground">
+                  Message
+                </label>
+                <textarea
+                  id="message"
+                  rows={4}
+                  placeholder="Tell us more about your inquiry..."
+                  className="w-full resize-none rounded-lg border border-border bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                />
+              </div>
+              <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
+                Send Message
+                <Send className="ml-2 h-4 w-4" />
+              </Button>
+            </form>
+          </motion.div>
         </div>
       </div>
     </section>

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Star, BadgeCheck, Clock, ArrowRight } from "lucide-react";
 
@@ -61,101 +62,114 @@ const featuredTutors = [
 
 export function FeaturedTutors() {
   return (
-    <section id="tutors" className="py-20 lg:py-28 bg-[#222831]">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between mb-16">
-          <div className="max-w-2xl mb-8 lg:mb-0">
-            <span className="inline-block px-4 py-1.5 rounded-full bg-[#00ADB5]/10 text-[#00ADB5] text-sm font-medium mb-4">
+    <section className="relative overflow-hidden bg-background text-foreground py-20 lg:py-28">
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(0,173,181,0.2),_transparent_45%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,_rgba(57,62,70,0.18),_transparent_40%)]" />
+        <div className="absolute inset-0 opacity-[0.03] [background-image:linear-gradient(rgba(0,173,181,0.25)_1px,transparent_1px),linear-gradient(90deg,rgba(0,173,181,0.25)_1px,transparent_1px)] [background-size:24px_24px]" />
+      </div>
+
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          className="mb-12 flex flex-col lg:flex-row lg:items-end lg:justify-between"
+        >
+          <div className="mb-8 max-w-2xl lg:mb-0">
+            <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-sm font-medium text-primary mb-4">
               Top Rated
             </span>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#EEEEEE] mb-4">
+            <h2 className="mb-4 text-3xl font-bold text-foreground sm:text-4xl lg:text-5xl">
               Featured Tutors
             </h2>
-            <p className="text-lg text-[#EEEEEE]/70">
+            <p className="text-lg text-muted-foreground">
               Learn from the best. Our top-rated tutors are verified experts with proven track records.
             </p>
           </div>
-          <Link href="/all-tutors">
-            <Button
-              variant="outline"
-              className="border-[#00ADB5] text-[#EEEEEE] hover:bg-[#00ADB5]/10"
-            >
+          <Button
+            asChild
+            variant="outline"
+            className="border-primary/40 text-foreground hover:bg-primary/10"
+          >
+            <Link href="/all-tutors">
               View all tutors
-              <ArrowRight className="h-4 w-4 ml-2" />
-            </Button>
-          </Link>
-        </div>
-
-        {/* Tutors Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {featuredTutors.map((tutor) => (
-            <Link
-              key={tutor.id}
-              href={`/all-tutors/${tutor.id}`}
-              className="group p-6 rounded-2xl bg-[#393E46]/30 border border-[#393E46] hover:border-[#00ADB5]/50 transition-all duration-300 hover:bg-[#393E46]/50"
-            >
-              {/* Header with Avatar */}
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <div className="h-12 w-12 rounded-full bg-gradient-to-br from-[#00ADB5] to-[#00ADB5]/50 flex items-center justify-center text-[#222831] font-bold">
-                    {tutor.avatar}
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-1">
-                      <h3 className="font-semibold text-[#EEEEEE]">
-                        {tutor.name}
-                      </h3>
-                      {tutor.isVerified && (
-                        <BadgeCheck className="h-4 w-4 text-[#00ADB5] fill-[#00ADB5]" />
-                      )}
-                    </div>
-                    <p className="text-sm text-[#EEEEEE]/60">{tutor.subject}</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Rating */}
-              <div className="flex items-center gap-2 mb-3">
-                <div className="flex items-center gap-1">
-                  <Star className="h-4 w-4 text-[#00ADB5] fill-[#00ADB5]" />
-                  <span className="text-sm font-medium text-[#EEEEEE]">
-                    {tutor.rating}
-                  </span>
-                </div>
-                <span className="text-sm text-[#EEEEEE]/50">
-                  ({tutor.reviews} reviews)
-                </span>
-              </div>
-
-              {/* Bio */}
-              <p className="text-sm text-[#EEEEEE]/70 mb-4 line-clamp-2">
-                {tutor.bio}
-              </p>
-
-              {/* Tags */}
-              <div className="flex flex-wrap gap-2 mb-4">
-                {tutor.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="px-2 py-1 text-xs rounded-md bg-[#00ADB5]/10 text-[#00ADB5]"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-
-              {/* Footer */}
-              <div className="flex items-center justify-between pt-4 border-t border-[#393E46]">
-                <div className="flex items-center gap-1 text-sm text-[#EEEEEE]/60">
-                  <Clock className="h-4 w-4 text-[#00ADB5]" />
-                  {tutor.experience}
-                </div>
-                <div className="text-[#00ADB5] font-semibold">
-                  ${tutor.hourlyRate}/hr
-                </div>
-              </div>
+              <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
+          </Button>
+        </motion.div>
+
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          {featuredTutors.map((tutor, index) => (
+            <motion.div
+              key={tutor.id}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.4, delay: index * 0.1, ease: "easeOut" }}
+            >
+              <Link
+                href={`/all-tutors/${tutor.id}`}
+                className="group block rounded-2xl border border-border bg-card/50 p-6 transition-all duration-300 hover:border-primary/50 hover:bg-card/80"
+              >
+                <div className="mb-4 flex items-start justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary/50 font-bold text-background">
+                      {tutor.avatar}
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-1">
+                        <h3 className="font-semibold text-foreground">
+                          {tutor.name}
+                        </h3>
+                        {tutor.isVerified && (
+                          <BadgeCheck className="h-4 w-4 fill-primary text-primary" />
+                        )}
+                      </div>
+                      <p className="text-sm text-muted-foreground">{tutor.subject}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mb-3 flex items-center gap-2">
+                  <div className="flex items-center gap-1">
+                    <Star className="h-4 w-4 fill-primary text-primary" />
+                    <span className="text-sm font-medium text-foreground">
+                      {tutor.rating}
+                    </span>
+                  </div>
+                  <span className="text-sm text-muted-foreground">
+                    ({tutor.reviews} reviews)
+                  </span>
+                </div>
+
+                <p className="mb-4 line-clamp-2 text-sm text-muted-foreground">
+                  {tutor.bio}
+                </p>
+
+                <div className="mb-4 flex flex-wrap gap-2">
+                  {tutor.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="rounded-md bg-primary/10 px-2 py-1 text-xs text-primary"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+
+                <div className="flex items-center justify-between border-t border-border pt-4">
+                  <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                    <Clock className="h-4 w-4 text-primary" />
+                    {tutor.experience}
+                  </div>
+                  <div className="font-semibold text-primary">
+                    ${tutor.hourlyRate}/hr
+                  </div>
+                </div>
+              </Link>
+            </motion.div>
           ))}
         </div>
       </div>

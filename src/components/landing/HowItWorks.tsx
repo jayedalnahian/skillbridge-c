@@ -102,13 +102,13 @@ export function HowItWorks() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,_rgba(57,62,70,0.2),_transparent_40%)]" />
       </div>
 
-      <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.5 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
-          className="mb-16 max-w-xl lg:mb-24 mx-auto"
+          className="mb-16 max-w-xl lg:mb-24"
         >
           <span className="mb-4 block text-sm font-medium uppercase tracking-[0.2em] text-primary">
             The path

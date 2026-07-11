@@ -1,12 +1,14 @@
 "use client";
 
+import Link from "next/link";
+import { motion } from "framer-motion";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { HelpCircle } from "lucide-react";
+import { HelpCircle, ArrowRight } from "lucide-react";
 
 const faqs = [
   {
@@ -53,69 +55,85 @@ const faqs = [
 
 export function QNA() {
   return (
-    <section id="faq" className="py-20 lg:py-28 bg-[#1a1f26]">
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="text-center mb-12">
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#00ADB5]/10 text-[#00ADB5] text-sm font-medium mb-4">
+    <section className="relative overflow-hidden bg-background text-foreground py-20 lg:py-28">
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(0,173,181,0.12),_transparent_40%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,_rgba(57,62,70,0.18),_transparent_45%)]" />
+      </div>
+
+      <div className="relative z-10 mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          className="mb-12 text-center"
+        >
+          <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-sm font-medium text-primary">
             <HelpCircle className="h-4 w-4" />
             Got Questions?
           </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#EEEEEE] mb-4">
+          <h2 className="mb-4 mt-6 text-3xl font-bold text-foreground sm:text-4xl lg:text-5xl">
             Frequently Asked Questions
           </h2>
-          <p className="text-lg text-[#EEEEEE]/70 max-w-2xl mx-auto">
-            Everything you need to know about SkillBridge. Can't find what you're looking for? 
+          <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
+            Everything you need to know about SkillBridge. Can&apos;t find what you&apos;re looking for?
             Feel free to contact us directly.
           </p>
-        </div>
+        </motion.div>
 
-        {/* Accordion */}
-        <Accordion type="single" collapsible className="w-full">
-          {faqs.map((faq, index) => (
-            <AccordionItem
-              key={index}
-              value={`item-${index}`}
-              className="border-[#393E46] bg-[#393E46]/30 rounded-xl mb-3 px-6 data-[state=open]:bg-[#393E46]/50 transition-colors"
-            >
-              <AccordionTrigger className="text-[#EEEEEE] hover:text-[#00ADB5] hover:no-underline text-left py-5">
-                <span className="pr-4">{faq.question}</span>
-              </AccordionTrigger>
-              <AccordionContent className="text-[#EEEEEE]/70 leading-relaxed">
-                {faq.answer}
-              </AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+        >
+          <Accordion type="single" collapsible className="w-full">
+            {faqs.map((faq, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.3, delay: index * 0.05, ease: "easeOut" }}
+              >
+                <AccordionItem
+                  value={`item-${index}`}
+                  className="mb-3 rounded-xl border border-border bg-card/50 px-6 transition-colors data-[state=open]:bg-card/80"
+                >
+                  <AccordionTrigger className="py-5 text-left text-foreground hover:text-primary hover:no-underline">
+                    <span className="pr-4">{faq.question}</span>
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground leading-relaxed">
+                    {faq.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              </motion.div>
+            ))}
+          </Accordion>
+        </motion.div>
 
-        {/* Contact CTA */}
-        <div className="mt-12 text-center p-8 rounded-2xl bg-[#393E46]/30 border border-[#393E46]">
-          <h3 className="text-xl font-semibold text-[#EEEEEE] mb-2">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{ duration: 0.5, ease: "easeOut", delay: 0.3 }}
+          className="mt-12 rounded-2xl border border-border bg-card/50 p-8 text-center"
+        >
+          <h3 className="mb-2 text-xl font-semibold text-foreground">
             Still have questions?
           </h3>
-          <p className="text-[#EEEEEE]/60 mb-4">
-            Can't find the answer you're looking for? Our support team is here to help.
+          <p className="mb-4 text-muted-foreground">
+            Can&apos;t find the answer you&apos;re looking for? Our support team is here to help.
           </p>
-          <a
+          <Link
             href="/#contact"
-            className="inline-flex items-center gap-2 text-[#00ADB5] hover:text-[#00ADB5]/80 font-medium transition-colors"
+            className="inline-flex items-center gap-2 font-medium text-primary transition-colors hover:text-primary/80"
           >
             Contact Support
-            <svg
-              className="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M17 8l4 4m0 0l-4 4m4-4H3"
-              />
-            </svg>
-          </a>
-        </div>
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </motion.div>
       </div>
     </section>
   );

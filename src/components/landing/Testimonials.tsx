@@ -1,6 +1,8 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { Star, Quote } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 const testimonials = [
   {
@@ -65,91 +67,185 @@ const testimonials = [
   },
 ];
 
+function CountUp({ value, suffix = "" }: { value: string; suffix?: string }) {
+  const [displayValue, setDisplayValue] = useState(value);
+  const ref = useRef<HTMLDivElement>(null);
+  const numericValue = parseInt(value.replace(/[^0-9]/g, ""));
+  const hasDecimal = value.includes(".");
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          let start = 0;
+          const duration = 2000;
+          const step = 16;
+          const totalSteps = duration / step;
+          const increment = numericValue / totalSteps;
+
+          const timer = setInterval(() => {
+            start += increment;
+            if (start >= numericValue) {
+              setDisplayValue(hasDecimal ? "4.9" : value);
+              clearInterval(timer);
+            } else {
+              setDisplayValue(hasDecimal ? (start / 1000).toFixed(1) : Math.floor(start).toString());
+            }
+          }, step);
+
+          observer.disconnect();
+          return () => clearInterval(timer);
+        }
+      },
+      { threshold: 0.5 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [numericValue, value, hasDecimal]);
+
+  return <div ref={ref}>{displayValue}{suffix}</div>;
+}
+
 export function Testimonials() {
   return (
-    <section id="testimonials" className="py-20 lg:py-28 bg-[#1a1f26]">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="text-center mb-16">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-[#00ADB5]/10 text-[#00ADB5] text-sm font-medium mb-4">
+    <section className="relative overflow-hidden bg-background text-foreground py-20 lg:py-28">
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,_rgba(0,173,181,0.18),_transparent_45%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(57,62,70,0.2),_transparent_40%)]" />
+      </div>
+
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          className="mb-16 text-center"
+        >
+          <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-sm font-medium text-primary">
             Success Stories
           </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#EEEEEE] mb-4">
+          <h2 className="mb-4 mt-6 text-3xl font-bold text-foreground sm:text-4xl lg:text-5xl">
             What Our Students Say
           </h2>
-          <p className="text-lg text-[#EEEEEE]/70 max-w-2xl mx-auto">
+          <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
             Join thousands of satisfied learners who have achieved their goals with SkillBridge.
           </p>
-        </div>
+        </motion.div>
 
-        {/* Testimonials Grid - Masonry-like layout */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {testimonials.map((testimonial, index) => (
-            <div
-              key={testimonial.id}
-              className={`p-6 rounded-2xl bg-[#393E46]/30 border border-[#393E46] hover:border-[#00ADB5]/30 transition-all duration-300 ${
-                index === 0 || index === 3 ? "lg:row-span-1" : ""
-              }`}
-            >
-              {/* Quote Icon */}
-              <div className="mb-4">
-                <Quote className="h-8 w-8 text-[#00ADB5]/30" />
-              </div>
-
-              {/* Rating */}
-              <div className="flex items-center gap-1 mb-4">
-                {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className="h-4 w-4 text-[#00ADB5] fill-[#00ADB5]"
-                  />
-                ))}
-              </div>
-
-              {/* Content */}
-              <p className="text-[#EEEEEE]/80 leading-relaxed mb-6">
-                "{testimonial.content}"
-              </p>
-
-              {/* Author */}
-              <div className="flex items-center gap-3 pt-4 border-t border-[#393E46]">
-                <div className="h-10 w-10 rounded-full bg-gradient-to-br from-[#00ADB5] to-[#393E46] flex items-center justify-center text-[#EEEEEE] font-semibold text-sm">
-                  {testimonial.avatar}
-                </div>
-                <div>
-                  <div className="font-medium text-[#EEEEEE]">
-                    {testimonial.name}
+        <div className="relative overflow-hidden">
+          <motion.div
+            className="flex gap-6 pb-8"
+            animate={{ x: ["0%", "-33.33%"] }}
+            transition={{ duration: 50, ease: "linear", repeat: Infinity }}
+          >
+            {[...testimonials, ...testimonials, ...testimonials].map((t, i) => (
+              <div
+                key={`${t.id}-${i}`}
+                className="min-w-[380px] max-w-[420px] shrink-0"
+              >
+                <div className="relative rounded-2xl border border-border/60 bg-card/40 p-8 backdrop-blur-sm">
+                  <Quote className="absolute right-6 top-6 h-16 w-16 text-primary/10" />
+                  <div className="mb-4 flex items-center gap-1">
+                    {Array.from({ length: t.rating }).map((_, i) => (
+                      <Star key={i} className="h-4 w-4 fill-primary text-primary" />
+                    ))}
                   </div>
-                  <div className="text-sm text-[#EEEEEE]/50">
-                    {testimonial.role}
+                  <p className="mb-6 text-base leading-relaxed text-foreground/80">
+                    &ldquo;{t.content}&rdquo;
+                  </p>
+                  <div className="flex items-center gap-3 border-t border-border pt-4">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-primary to-muted-foreground text-sm font-semibold text-background">
+                      {t.avatar}
+                    </div>
+                    <div>
+                      <div className="font-medium text-foreground">
+                        {t.name}
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        {t.role}
+                      </div>
+                    </div>
+                    <div className="ml-auto">
+                      <span className="rounded-md bg-primary/10 px-2 py-1 text-xs text-primary">
+                        {t.subject}
+                      </span>
+                    </div>
                   </div>
                 </div>
-                <div className="ml-auto">
-                  <span className="px-2 py-1 text-xs rounded-md bg-[#00ADB5]/10 text-[#00ADB5]">
-                    {testimonial.subject}
-                  </span>
+              </div>
+            ))}
+          </motion.div>
+
+          <motion.div
+            className="flex gap-6"
+            animate={{ x: ["-33.33%", "0%"] }}
+            transition={{ duration: 50, ease: "linear", repeat: Infinity }}
+          >
+            {[...testimonials, ...testimonials, ...testimonials].map((t, i) => (
+              <div
+                key={`${t.id}-r-${i}`}
+                className="min-w-[380px] max-w-[420px] shrink-0"
+              >
+                <div className="relative rounded-2xl border border-border/60 bg-card/40 p-8 backdrop-blur-sm">
+                  <Quote className="absolute right-6 top-6 h-16 w-16 text-primary/10" />
+                  <div className="mb-4 flex items-center gap-1">
+                    {Array.from({ length: t.rating }).map((_, i) => (
+                      <Star key={i} className="h-4 w-4 fill-primary text-primary" />
+                    ))}
+                  </div>
+                  <p className="mb-6 text-base leading-relaxed text-foreground/80">
+                    &ldquo;{t.content}&rdquo;
+                  </p>
+                  <div className="flex items-center gap-3 border-t border-border pt-4">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-primary to-muted-foreground text-sm font-semibold text-background">
+                      {t.avatar}
+                    </div>
+                    <div>
+                      <div className="font-medium text-foreground">
+                        {t.name}
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        {t.role}
+                      </div>
+                    </div>
+                    <div className="ml-auto">
+                      <span className="rounded-md bg-primary/10 px-2 py-1 text-xs text-primary">
+                        {t.subject}
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </motion.div>
         </div>
 
-        {/* Stats Row */}
-        <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{ duration: 0.5, ease: "easeOut", delay: 0.3 }}
+          className="mt-16 grid grid-cols-2 gap-8 md:grid-cols-4"
+        >
           {[
-            { value: "15,000+", label: "Happy Students" },
-            { value: "98%", label: "Satisfaction Rate" },
-            { value: "4.9/5", label: "Average Rating" },
-            { value: "50,000+", label: "Sessions Completed" },
+            { value: "15000", label: "Happy Students", suffix: "+" },
+            { value: "98", label: "Satisfaction Rate", suffix: "%" },
+            { value: "4.9", label: "Average Rating", suffix: "/5" },
+            { value: "50000", label: "Sessions Completed", suffix: "+" },
           ].map((stat) => (
             <div key={stat.label} className="text-center">
-              <div className="text-3xl lg:text-4xl font-bold text-[#00ADB5] mb-1">
-                {stat.value}
+              <div className="text-3xl font-bold text-primary lg:text-4xl">
+                <CountUp value={stat.value} suffix={stat.suffix} />
               </div>
-              <div className="text-sm text-[#EEEEEE]/60">{stat.label}</div>
+              <div className="mt-1 text-sm text-muted-foreground">{stat.label}</div>
             </div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

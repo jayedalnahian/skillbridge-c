@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { motion } from "framer-motion";
 import {
   Code,
   Palette,
@@ -10,14 +11,12 @@ import {
   Calculator,
   Camera,
   PenTool,
-  ArrowRight,
 } from "lucide-react";
 
 const subjects = [
   {
     icon: Code,
     name: "Programming",
-    description: "Python, JavaScript, React, Node.js & more",
     tutorCount: 120,
     color: "#00ADB5",
     href: "/all-tutors",
@@ -25,7 +24,6 @@ const subjects = [
   {
     icon: Palette,
     name: "Design",
-    description: "UI/UX, Graphic Design, Illustration",
     tutorCount: 85,
     color: "#FF6B6B",
     href: "/all-tutors",
@@ -33,7 +31,6 @@ const subjects = [
   {
     icon: BarChart3,
     name: "Business",
-    description: "Marketing, Finance, Management",
     tutorCount: 64,
     color: "#4ECDC4",
     href: "/all-tutors",
@@ -41,7 +38,6 @@ const subjects = [
   {
     icon: Languages,
     name: "Languages",
-    description: "English, Spanish, French, Mandarin",
     tutorCount: 95,
     color: "#FFE66D",
     href: "/all-tutors",
@@ -49,7 +45,6 @@ const subjects = [
   {
     icon: Music,
     name: "Music",
-    description: "Piano, Guitar, Singing, Theory",
     tutorCount: 48,
     color: "#95E1D3",
     href: "/all-tutors",
@@ -57,7 +52,6 @@ const subjects = [
   {
     icon: Calculator,
     name: "Mathematics",
-    description: "Algebra, Calculus, Statistics",
     tutorCount: 72,
     color: "#F7DC6F",
     href: "/all-tutors",
@@ -65,7 +59,6 @@ const subjects = [
   {
     icon: Camera,
     name: "Photography",
-    description: "Digital, Portrait, Editing",
     tutorCount: 38,
     color: "#BB8FCE",
     href: "/all-tutors",
@@ -73,7 +66,6 @@ const subjects = [
   {
     icon: PenTool,
     name: "Writing",
-    description: "Creative, Academic, Copywriting",
     tutorCount: 56,
     color: "#85C1E9",
     href: "/all-tutors",
@@ -82,68 +74,69 @@ const subjects = [
 
 export function PopularSubjects() {
   return (
-    <section className="py-20 lg:py-28 bg-[#222831]">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="text-center mb-16">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-[#00ADB5]/10 text-[#00ADB5] text-sm font-medium mb-4">
+    <section className="relative overflow-hidden bg-background text-foreground py-20 lg:py-28">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(59,130,246,0.14),_transparent_25%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,_rgba(16,185,129,0.14),_transparent_30%)]" />
+
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mb-12 max-w-3xl">
+          <span className="inline-flex items-center rounded-full border border-primary/25 bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary">
             Explore Subjects
           </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#EEEEEE] mb-4">
+          <h2 className="mt-6 text-3xl font-bold leading-tight text-foreground sm:text-4xl lg:text-5xl">
             Popular Subjects
           </h2>
-          <p className="text-lg text-[#EEEEEE]/70 max-w-2xl mx-auto">
+          <p className="mt-4 max-w-2xl text-lg leading-8 text-muted-foreground">
             From coding to creative arts, find expert tutors in any subject you're passionate about learning.
           </p>
         </div>
 
-        {/* Subjects Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {subjects.map((subject) => (
-            <Link
-              key={subject.name}
-              href={subject.href}
-              className="group p-6 rounded-2xl bg-[#393E46]/30 border border-[#393E46] hover:border-[#00ADB5]/50 transition-all duration-300 hover:bg-[#393E46]/50"
-            >
-              {/* Icon */}
-              <div
-                className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110"
-                style={{ backgroundColor: `${subject.color}20` }}
-              >
-                <subject.icon
-                  className="h-6 w-6"
-                  style={{ color: subject.color }}
-                />
-              </div>
-
-              {/* Content */}
-              <h3 className="text-lg font-semibold text-[#EEEEEE] mb-2 group-hover:text-[#00ADB5] transition-colors">
-                {subject.name}
-              </h3>
-              <p className="text-[#EEEEEE]/60 text-sm mb-4">
-                {subject.description}
-              </p>
-
-              {/* Tutor Count */}
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-[#00ADB5]">
-                  {subject.tutorCount} tutors
-                </span>
-                <ArrowRight className="h-4 w-4 text-[#EEEEEE]/40 group-hover:text-[#00ADB5] transition-colors" />
-              </div>
-            </Link>
-          ))}
-        </div>
-
-        {/* View All Link */}
-        <div className="text-center mt-12">
-          <Link
-            href="/all-tutors"
-            className="inline-flex items-center gap-2 text-[#00ADB5] hover:text-[#00ADB5]/80 font-medium transition-colors"
+        <div className="relative overflow-hidden rounded-[2rem] border border-border/70 bg-card/80 p-4 shadow-xl shadow-primary/5">
+          <motion.div
+            className="flex gap-4 pb-4"
+            drag="x"
+            dragConstraints={{ left: -100, right: 100 }}
+            dragElastic={0.18}
+            whileTap={{ cursor: "grabbing" }}
+            animate={{ x: ["0%", "-50%"] }}
+            transition={{ duration: 40, ease: "linear", repeat: Infinity }}
           >
-            View all subjects
-            <ArrowRight className="h-4 w-4" />
-          </Link>
+            {[...subjects, ...subjects, ...subjects, ...subjects].map((subject, index) => (
+              <div>
+                 <div className="flex items-stretch gap-2 mx-auto mb-3 *:border *:h-4 *:w-7 *:rounded-sm">
+                  {Array.from({ length: 7 }).map((_, i) => (
+                    <div key={i}></div>
+                  ))}
+                </div>
+
+                <Link
+                  key={`${subject.name}-${index}`}
+                  href={subject.href}
+                  className="group flex min-w-[220px] max-w-[240px] items-center gap-4 rounded-3xl border border-border/60 bg-background/90 px-4 py-4 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/60 hover:bg-primary/5"
+                >
+                  <div
+                    className="flex h-12 w-12 items-center justify-center rounded-3xl"
+                    style={{ backgroundColor: `${subject.color}20` }}
+                  >
+                    <subject.icon className="h-6 w-6 text-current" style={{ color: subject.color }} />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-base font-semibold text-foreground truncate">{subject.name}</p>
+                  </div>
+                  <span className="rounded-full bg-secondary/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-secondary">
+                    {subject.tutorCount}
+                  </span>
+                </Link>
+                <div className="flex items-stretch gap-2 mx-auto mt-3 *:border *:h-4 *:w-7 *:rounded-sm">
+                  {Array.from({ length: 7 }).map((_, i) => (
+                    <div key={i}></div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </motion.div>
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-full bg-gradient-to-r from-background via-background/90 to-transparent" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-background via-background/90 to-transparent" />
         </div>
       </div>
     </section>
