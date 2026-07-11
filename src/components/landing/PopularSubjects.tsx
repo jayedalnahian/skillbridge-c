@@ -1,7 +1,4 @@
-"use client";
-
 import Link from "next/link";
-import { motion } from "framer-motion";
 import {
   Code,
   Palette,
@@ -92,25 +89,16 @@ export function PopularSubjects() {
         </div>
 
         <div className="relative overflow-hidden rounded-[2rem] border border-border/70 bg-card/80 p-4 shadow-xl shadow-primary/5">
-          <motion.div
-            className="flex gap-4 pb-4"
-            drag="x"
-            dragConstraints={{ left: -100, right: 100 }}
-            dragElastic={0.18}
-            whileTap={{ cursor: "grabbing" }}
-            animate={{ x: ["0%", "-50%"] }}
-            transition={{ duration: 40, ease: "linear", repeat: Infinity }}
-          >
+          <div className="flex animate-marquee-left gap-4 pb-4">
             {[...subjects, ...subjects, ...subjects, ...subjects].map((subject, index) => (
-              <div>
-                 <div className="flex items-stretch gap-2 mx-auto mb-3 *:border *:h-4 *:w-7 *:rounded-sm">
+              <div key={`${subject.name}-${index}`}>
+                <div className="flex items-stretch gap-2 mx-auto mb-3 *:border *:h-4 *:w-7 *:rounded-sm">
                   {Array.from({ length: 7 }).map((_, i) => (
                     <div key={i}></div>
                   ))}
                 </div>
 
                 <Link
-                  key={`${subject.name}-${index}`}
                   href={subject.href}
                   className="group flex min-w-[220px] max-w-[240px] items-center gap-4 rounded-3xl border border-border/60 bg-background/90 px-4 py-4 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/60 hover:bg-primary/5"
                 >
@@ -134,7 +122,7 @@ export function PopularSubjects() {
                 </div>
               </div>
             ))}
-          </motion.div>
+          </div>
           <div className="pointer-events-none absolute inset-x-0 top-0 h-full bg-gradient-to-r from-background via-background/90 to-transparent" />
           <div className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-background via-background/90 to-transparent" />
         </div>

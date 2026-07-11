@@ -1,7 +1,6 @@
-"use client";
+
 
 import Link from "next/link";
-import { motion } from "framer-motion";
 import {
   Accordion,
   AccordionContent,
@@ -9,6 +8,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { HelpCircle, ArrowRight } from "lucide-react";
+import { MotionDiv } from "./client/motion-div.client";
 
 const faqs = [
   {
@@ -62,7 +62,7 @@ export function QNA() {
       </div>
 
       <div className="relative z-10 mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <motion.div
+        <MotionDiv
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.5 }}
@@ -80,9 +80,9 @@ export function QNA() {
             Everything you need to know about SkillBridge. Can&apos;t find what you&apos;re looking for?
             Feel free to contact us directly.
           </p>
-        </motion.div>
+        </MotionDiv>
 
-        <motion.div
+        <MotionDiv
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
@@ -90,7 +90,7 @@ export function QNA() {
         >
           <Accordion type="single" collapsible className="w-full">
             {faqs.map((faq, index) => (
-              <motion.div
+              <MotionDiv
                 key={index}
                 initial={{ opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -108,12 +108,12 @@ export function QNA() {
                     {faq.answer}
                   </AccordionContent>
                 </AccordionItem>
-              </motion.div>
+              </MotionDiv>
             ))}
           </Accordion>
-        </motion.div>
+        </MotionDiv>
 
-        <motion.div
+        <MotionDiv
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.5 }}
@@ -133,7 +133,7 @@ export function QNA() {
             Contact Support
             <ArrowRight className="h-4 w-4" />
           </Link>
-        </motion.div>
+        </MotionDiv>
       </div>
     </section>
   );

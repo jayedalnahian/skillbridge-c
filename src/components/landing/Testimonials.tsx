@@ -1,8 +1,5 @@
-"use client";
-
-import { motion } from "framer-motion";
 import { Star, Quote } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { CountUp } from "./client/count-up.client";
 
 const testimonials = [
   {
@@ -67,49 +64,6 @@ const testimonials = [
   },
 ];
 
-function CountUp({ value, suffix = "" }: { value: string; suffix?: string }) {
-  const [displayValue, setDisplayValue] = useState(value);
-  const ref = useRef<HTMLDivElement>(null);
-  const numericValue = parseInt(value.replace(/[^0-9]/g, ""));
-  const hasDecimal = value.includes(".");
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          let start = 0;
-          const duration = 2000;
-          const step = 16;
-          const totalSteps = duration / step;
-          const increment = numericValue / totalSteps;
-
-          const timer = setInterval(() => {
-            start += increment;
-            if (start >= numericValue) {
-              setDisplayValue(hasDecimal ? "4.9" : value);
-              clearInterval(timer);
-            } else {
-              setDisplayValue(hasDecimal ? (start / 1000).toFixed(1) : Math.floor(start).toString());
-            }
-          }, step);
-
-          observer.disconnect();
-          return () => clearInterval(timer);
-        }
-      },
-      { threshold: 0.5 }
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [numericValue, value, hasDecimal]);
-
-  return <div ref={ref}>{displayValue}{suffix}</div>;
-}
-
 export function Testimonials() {
   return (
     <section className="relative overflow-hidden bg-background text-foreground py-20 lg:py-28">
@@ -119,13 +73,7 @@ export function Testimonials() {
       </div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.5 }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
-          className="mb-16 text-center"
-        >
+        <div className="mb-16 text-center">
           <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-sm font-medium text-primary">
             Success Stories
           </span>
@@ -135,14 +83,10 @@ export function Testimonials() {
           <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
             Join thousands of satisfied learners who have achieved their goals with SkillBridge.
           </p>
-        </motion.div>
+        </div>
 
         <div className="relative overflow-hidden">
-          <motion.div
-            className="flex gap-6 pb-8"
-            animate={{ x: ["0%", "-33.33%"] }}
-            transition={{ duration: 50, ease: "linear", repeat: Infinity }}
-          >
+          <div className="flex animate-marquee-left gap-6 pb-8">
             {[...testimonials, ...testimonials, ...testimonials].map((t, i) => (
               <div
                 key={`${t.id}-${i}`}
@@ -179,13 +123,9 @@ export function Testimonials() {
                 </div>
               </div>
             ))}
-          </motion.div>
+          </div>
 
-          <motion.div
-            className="flex gap-6"
-            animate={{ x: ["-33.33%", "0%"] }}
-            transition={{ duration: 50, ease: "linear", repeat: Infinity }}
-          >
+          <div className="flex animate-marquee-right gap-6">
             {[...testimonials, ...testimonials, ...testimonials].map((t, i) => (
               <div
                 key={`${t.id}-r-${i}`}
@@ -222,16 +162,10 @@ export function Testimonials() {
                 </div>
               </div>
             ))}
-          </motion.div>
+          </div>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.5 }}
-          transition={{ duration: 0.5, ease: "easeOut", delay: 0.3 }}
-          className="mt-16 grid grid-cols-2 gap-8 md:grid-cols-4"
-        >
+        <div className="mt-16 grid grid-cols-2 gap-8 md:grid-cols-4">
           {[
             { value: "15000", label: "Happy Students", suffix: "+" },
             { value: "98", label: "Satisfaction Rate", suffix: "%" },
@@ -245,7 +179,7 @@ export function Testimonials() {
               <div className="mt-1 text-sm text-muted-foreground">{stat.label}</div>
             </div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

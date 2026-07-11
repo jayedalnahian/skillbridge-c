@@ -1,9 +1,9 @@
-"use client";
+
 
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Sparkles, ArrowRight } from "lucide-react";
+import { MotionDiv, MotionH2, MotionP } from "./client/motion-div.client";
 
 export function CallToAction() {
   return (
@@ -16,7 +16,7 @@ export function CallToAction() {
           </div>
 
           <div className="relative z-10 mx-auto max-w-3xl text-center">
-            <motion.div
+            <MotionDiv
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.5 }}
@@ -26,9 +26,9 @@ export function CallToAction() {
                 <Sparkles className="h-4 w-4" />
                 Start Your Learning Journey Today
               </span>
-            </motion.div>
+            </MotionDiv>
 
-            <motion.h2
+            <MotionH2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.5 }}
@@ -37,9 +37,9 @@ export function CallToAction() {
             >
               Ready to Unlock Your{" "}
               <span className="text-primary">Full Potential?</span>
-            </motion.h2>
+            </MotionH2>
 
-            <motion.p
+            <MotionP
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.5 }}
@@ -49,9 +49,9 @@ export function CallToAction() {
               Whether you&apos;re looking to learn a new skill, advance your career,
               or pursue a passion, SkillBridge connects you with expert tutors
               who can guide you every step of the way.
-            </motion.p>
+            </MotionP>
 
-            <motion.div
+            <MotionDiv
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.5 }}
@@ -78,9 +78,9 @@ export function CallToAction() {
                   Become a Tutor
                 </Link>
               </Button>
-            </motion.div>
+            </MotionDiv>
 
-            <motion.div
+            <MotionDiv
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.5 }}
@@ -92,7 +92,7 @@ export function CallToAction() {
               <span>Free first session for new users</span>
               <span className="hidden sm:inline">&bull;</span>
               <span>Cancel anytime</span>
-            </motion.div>
+            </MotionDiv>
           </div>
         </div>
       </div>

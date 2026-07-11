@@ -1,7 +1,7 @@
-"use client";
 
-import { motion } from "framer-motion";
+
 import { Target, Users, Zap, Award } from "lucide-react";
+import { MotionDiv } from "./client/motion-div.client";
 
 const values = [
   {
@@ -40,7 +40,7 @@ export function About() {
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid items-center gap-12 lg:grid-cols-[1.3fr_1fr] lg:gap-16">
-          <motion.div
+          <MotionDiv
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.5 }}
@@ -77,9 +77,9 @@ export function About() {
                 <div className="text-sm text-muted-foreground">Subjects</div>
               </div>
             </div>
-          </motion.div>
+          </MotionDiv>
 
-          <motion.div
+          <MotionDiv
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.5 }}
@@ -87,7 +87,7 @@ export function About() {
             className="space-y-6"
           >
             {values.map((value, index) => (
-              <motion.div
+              <MotionDiv
                 key={value.title}
                 initial={{ opacity: 0, x: 20 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -106,9 +106,9 @@ export function About() {
                     {value.description}
                   </p>
                 </div>
-              </motion.div>
+              </MotionDiv>
             ))}
-          </motion.div>
+          </MotionDiv>
         </div>
       </div>
     </section>

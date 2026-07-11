@@ -1,8 +1,8 @@
-"use client";
 
-import { motion } from "framer-motion";
+
 import { Button } from "@/components/ui/button";
 import { Mail, MapPin, Phone, Send } from "lucide-react";
+import { MotionDiv } from "./client/motion-div.client";
 
 const contactInfo = [
   {
@@ -39,7 +39,7 @@ export function Contact() {
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid gap-12 lg:grid-cols-[1fr_1.2fr] lg:gap-16">
-          <motion.div
+          <MotionDiv
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.5 }}
@@ -76,9 +76,9 @@ export function Contact() {
                 </div>
               ))}
             </div>
-          </motion.div>
+          </MotionDiv>
 
-          <motion.div
+          <MotionDiv
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.5 }}
@@ -136,7 +136,7 @@ export function Contact() {
                 <Send className="ml-2 h-4 w-4" />
               </Button>
             </form>
-          </motion.div>
+          </MotionDiv>
         </div>
       </div>
     </section>

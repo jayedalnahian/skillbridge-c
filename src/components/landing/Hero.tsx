@@ -1,10 +1,8 @@
-"use client";
-
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { ArrowRight, BookOpen, CalendarCheck2, Sparkles, Star, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { MotionDiv } from "./client/motion-div.client";
 import "../../../public/skillbridge avatart img.png"
 
 const featuredSkills = ["React", "Python", "Design", "Node.js"];
@@ -20,7 +18,7 @@ export function Hero() {
 
       <div className="relative z-10 mx-auto flex w-full max-w-7xl items-center px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
         <div className="grid w-full items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
-          <motion.div
+          <MotionDiv
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
@@ -76,19 +74,15 @@ export function Hero() {
                 <div className="text-sm text-muted-foreground">Average rating</div>
               </div>
             </div>
-          </motion.div>
+          </MotionDiv>
 
-          <motion.div
+          <MotionDiv
             initial={{ opacity: 0, x: 24 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
             className="relative mx-auto hidden h-[320px] w-full max-w-[460px] lg:block"
           >
-            <motion.div
-              animate={{ y: [0, -8, 0], rotate: [0, -1, 0] }}
-              transition={{ duration: 5, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
-              className="absolute left-0 top-4 w-72 rounded-2xl border border-border/70 bg-card/80 p-5 shadow-xl backdrop-blur"
-            >
+            <div className="animate-float-slow absolute left-0 top-4 w-72 rounded-2xl border border-border/70 bg-card/80 p-5 shadow-xl backdrop-blur">
               <div className="mb-4 flex items-center gap-3">
                 <Avatar>
                   <AvatarImage src="skillbridge avatart img.png" />
@@ -111,13 +105,9 @@ export function Hero() {
                 <Users className="h-4 w-4 text-primary" />
                 200+ students taught
               </div>
-            </motion.div>
+            </div>
 
-            <motion.div
-              animate={{ y: [0, 10, 0], x: [0, 3, 0] }}
-              transition={{ duration: 5.5, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
-              className="absolute right-0 top-28 w-64 rounded-2xl border border-primary/20 bg-background/80 p-4 shadow-xl backdrop-blur"
-            >
+            <div className="animate-float-medium absolute right-0 top-28 w-64 rounded-2xl border border-primary/20 bg-background/80 p-4 shadow-xl backdrop-blur">
               <div className="mb-3 flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
                   <CalendarCheck2 className="h-5 w-5" />
@@ -127,13 +117,9 @@ export function Hero() {
                   <p className="text-xs text-muted-foreground">Tomorrow • 2:00 PM</p>
                 </div>
               </div>
-            </motion.div>
+            </div>
 
-            <motion.div
-              animate={{ y: [0, -6, 0], scale: [1, 1.02, 1] }}
-              transition={{ duration: 4.8, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
-              className="absolute bottom-4 left-10 w-56 rounded-2xl border border-border/70 bg-card/70 p-4 shadow-lg backdrop-blur"
-            >
+            <div className="animate-float-fast absolute bottom-4 left-10 w-56 rounded-2xl border border-border/70 bg-card/70 p-4 shadow-lg backdrop-blur">
               <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-foreground">
                 <BookOpen className="h-4 w-4 text-primary" />
                 Popular skills
@@ -148,8 +134,8 @@ export function Hero() {
                   </span>
                 ))}
               </div>
-            </motion.div>
-          </motion.div>
+            </div>
+          </MotionDiv>
         </div>
       </div>
     </section>

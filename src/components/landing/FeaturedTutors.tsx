@@ -1,9 +1,9 @@
-"use client";
+
 
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Star, BadgeCheck, Clock, ArrowRight } from "lucide-react";
+import { MotionDiv } from "./client/motion-div.client";
 
 const featuredTutors = [
   {
@@ -70,7 +70,7 @@ export function FeaturedTutors() {
       </div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <motion.div
+        <MotionDiv
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.5 }}
@@ -98,11 +98,11 @@ export function FeaturedTutors() {
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>
-        </motion.div>
+        </MotionDiv>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {featuredTutors.map((tutor, index) => (
-            <motion.div
+            <MotionDiv
               key={tutor.id}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -169,7 +169,7 @@ export function FeaturedTutors() {
                   </div>
                 </div>
               </Link>
-            </motion.div>
+            </MotionDiv>
           ))}
         </div>
       </div>
