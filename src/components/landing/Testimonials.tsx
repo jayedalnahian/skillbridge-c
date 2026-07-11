@@ -1,4 +1,5 @@
 import { Star, Quote } from "lucide-react";
+import { MotionDiv } from "./client/motion-div.client";
 import { CountUp } from "./client/count-up.client";
 
 const testimonials = [
@@ -73,7 +74,13 @@ export function Testimonials() {
       </div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-16 text-center">
+        <MotionDiv
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          className="mb-16 text-center"
+        >
           <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-sm font-medium text-primary">
             Success Stories
           </span>
@@ -83,7 +90,7 @@ export function Testimonials() {
           <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
             Join thousands of satisfied learners who have achieved their goals with SkillBridge.
           </p>
-        </div>
+        </MotionDiv>
 
         <div className="relative overflow-hidden">
           <div className="flex animate-marquee-left gap-6 pb-8">
@@ -171,13 +178,20 @@ export function Testimonials() {
             { value: "98", label: "Satisfaction Rate", suffix: "%" },
             { value: "4.9", label: "Average Rating", suffix: "/5" },
             { value: "50000", label: "Sessions Completed", suffix: "+" },
-          ].map((stat) => (
-            <div key={stat.label} className="text-center">
+          ].map((stat, index) => (
+            <MotionDiv
+              key={stat.label}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.5 }}
+              transition={{ duration: 0.4, delay: index * 0.1, ease: "easeOut" }}
+              className="text-center"
+            >
               <div className="text-3xl font-bold text-primary lg:text-4xl">
                 <CountUp value={stat.value} suffix={stat.suffix} />
               </div>
               <div className="mt-1 text-sm text-muted-foreground">{stat.label}</div>
-            </div>
+            </MotionDiv>
           ))}
         </div>
       </div>
