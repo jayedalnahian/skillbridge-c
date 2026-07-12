@@ -19,7 +19,7 @@ export type RouteConfig = {
 
 export const commonProtectedRoutes : RouteConfig = {
     exact : ["/my-profile", "/change-password"],
-    pattern : [/^\/all-tutors\//] // Matches /all-tutors/:id and any path starting with /all-tutors/
+    pattern : []
 }
 
 export const tutorProtectedRoutes : RouteConfig = {

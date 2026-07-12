@@ -8,7 +8,7 @@ export default function AllTutorsLoading() {
       <div className="flex flex-col lg:flex-row gap-6">
         {/* ============ Sidebar Filters ============ */}
         <aside className="w-full lg:w-64 lg:shrink-0 lg:sticky lg:top-20 lg:self-start">
-          <div className="border border-border rounded-xl shadow-sm">
+          <div className="border border-slate-200 rounded-xl shadow-sm">
             <div className="p-4 pb-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -95,8 +95,8 @@ export default function AllTutorsLoading() {
         {/* ============ Main Content ============ */}
         <div className="flex-1 space-y-4 min-w-0">
           {/* Sticky Toolbar */}
-          <div className="sticky top-16 z-10 bg-background/95 backdrop-blur-sm pt-2 pb-2 -mx-2 px-2">
-            <div className="rounded-lg border border-border bg-card p-3 shadow-sm">
+          <div className="sticky top-16 z-10 bg-white/95 backdrop-blur-sm pt-2 pb-2 -mx-2 px-2">
+            <div className="rounded-lg border border-slate-200 bg-white p-3 shadow-sm">
               <div className="flex flex-col sm:flex-row gap-2">
                 {/* Search bar */}
                 <div className="relative sm:w-[61.8%]">
@@ -144,9 +144,9 @@ export default function AllTutorsLoading() {
 
 function TutorCardSkeleton() {
   return (
-    <div className="overflow-hidden rounded-xl border border-border shadow-sm">
+    <div className="overflow-hidden rounded-xl border border-slate-200 shadow-md">
       {/* Header — h-48 with gradient background + avatar + badge */}
-      <div className="relative h-48 w-full bg-gradient-to-br from-muted to-muted/50">
+      <div className="relative h-48 w-full bg-gradient-to-br from-slate-100 to-slate-200">
         <Skeleton className="absolute right-3 top-3 h-5 w-20 rounded-full" />
         <div className="flex h-full w-full items-center justify-center">
           <Skeleton className="h-20 w-20 rounded-full" />
