@@ -97,7 +97,7 @@ export const columns: ColumnDef<IBooking>[] = [
       <DataTableColumnHeader column={column} title="Price" />
     ),
     cell: ({ row }) => (
-      <div className="font-semibold text-slate-900 hover:text-[#00ADB5]">
+      <div className="font-semibold dark:text-slate-200 text-slate-900 hover:text-[#00ADB5]">
         ${Number(row.getValue("price")).toFixed(2)}
       </div>
     ),
@@ -106,7 +106,7 @@ export const columns: ColumnDef<IBooking>[] = [
     accessorKey: "payment.transactionId",
     header: "Transaction ID",
     cell: ({ row }) => (
-      <div className="text-xs font-mono text-slate-500">
+      <div className="text-xs font-mono dark:text-slate-200 text-slate-500">
         {row.original.payment?.transactionId || "N/A"}
       </div>
     ),

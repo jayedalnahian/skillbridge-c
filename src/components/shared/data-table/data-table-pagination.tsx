@@ -38,7 +38,7 @@ export function DataTablePagination<TData>({
   const pageSize = meta?.limit ?? table.getState().pagination.pageSize;
 
   return (
-    <div className="flex items-center justify-between px-2">
+    <div className="flex items-center justify-between px-2 dark:bg-slate-800 dark:border-slate-700 p-4 rounded-md border bg-white">
       <div className="flex-1 text-sm text-muted-foreground">
         {table.getFilteredSelectedRowModel().rows.length} of{" "}
         {totalRows} row(s) selected.

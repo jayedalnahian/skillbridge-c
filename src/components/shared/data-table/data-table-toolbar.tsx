@@ -61,7 +61,7 @@ DataTableToolbar<TData>({
 
   return (
     <>
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-3 dark:bg-slate-800 dark:border-slate-700 p-4 rounded-md border bg-white">
         {/* Row 1: Search and Filters */}
         <div className="flex flex-col lg:flex-row gap-3">
           <Input
@@ -147,7 +147,7 @@ DataTableToolbar<TData>({
               <Button
                 size="sm"
                 onClick={onCreate}
-                className="h-9 bg-[#00ADB5] hover:bg-[#008f96] text-white"
+                className="h-9"
               >
                 <Plus className="mr-2 h-4 w-4" />
                 {createButtonLabel}

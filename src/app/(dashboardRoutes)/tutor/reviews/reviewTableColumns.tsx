@@ -63,7 +63,7 @@ export const columns: ColumnDef<IReview>[] = [
       const comment = row.getValue("comment") as string;
 
       return (
-        <div className="max-w-[200px] truncate text-sm text-slate-600" title={comment}>
+        <div className="max-w-[200px] dark:text-slate-200 truncate text-sm text-slate-600" title={comment}>
           {comment}
         </div>
       );

@@ -81,7 +81,7 @@ export function TutorCreateModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px] bg-white max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[600px] bg-white max-h-[90vh]  dark:bg-slate-950   overflow-y-auto ">
         <DialogHeader>
           <DialogTitle className="text-[#00ADB5]">Create New Tutor</DialogTitle>
           <DialogDescription>

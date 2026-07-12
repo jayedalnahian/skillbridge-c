@@ -98,9 +98,9 @@ export function DateTimePicker({
                 !value && "text-muted-foreground"
               )}
             >
-              <CalendarIcon className="mr-2 h-4 w-4" />
+              <CalendarIcon className="mr-2 h-4 w-4 text-muted-foreground shrink-0" />
               {value ? format(value, "PP") : placeholder}
-              <ChevronDownIcon className="ml-auto h-4 w-4" />
+              <ChevronDownIcon className="ml-auto h-4 w-4 text-muted-foreground" />
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0" align="start">
@@ -166,9 +166,9 @@ export function DatePicker({
               !value && "text-muted-foreground"
             )}
           >
-            <CalendarIcon className="mr-2 h-4 w-4" />
+              <CalendarIcon className="mr-2 h-4 w-4 text-muted-foreground shrink-0" />
             {value ? format(value, "PPP") : placeholder}
-            <ChevronDownIcon className="ml-auto h-4 w-4" />
+            <ChevronDownIcon className="ml-auto h-4 w-4 text-muted-foreground" />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
@@ -240,9 +240,9 @@ export function TimePicker({
               !value && "text-muted-foreground"
             )}
           >
-            <Clock className="mr-2 h-4 w-4" />
+            <Clock className="mr-2 h-4 w-4 text-muted-foreground shrink-0" />
             {value || "--:--"}
-            <ChevronDownIcon className="ml-auto h-4 w-4" />
+            <ChevronDownIcon className="ml-auto h-4 w-4 text-muted-foreground" />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-2" align="start">
@@ -260,7 +260,7 @@ export function TimePicker({
                     onClick={() => handleTimeSelect(hour, selectedMinute || "00")}
                     className={cn(
                       "block w-10 py-1 px-2 text-sm rounded hover:bg-accent",
-                      selectedHour === hour && "bg-[#00ADB5] text-white hover:bg-[#008f96]"
+                      selectedHour === hour && "bg-primary text-primary-foreground hover:bg-primary/90"
                     )}
                   >
                     {hour}
@@ -281,7 +281,7 @@ export function TimePicker({
                     onClick={() => handleTimeSelect(selectedHour || "00", minute)}
                     className={cn(
                       "block w-10 py-1 px-2 text-sm rounded hover:bg-accent",
-                      selectedMinute === minute && "bg-[#00ADB5] text-white hover:bg-[#008f96]"
+                      selectedMinute === minute && "bg-primary text-primary-foreground hover:bg-primary/90"
                     )}
                   >
                     {minute}

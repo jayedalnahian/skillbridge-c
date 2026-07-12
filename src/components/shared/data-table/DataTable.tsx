@@ -188,7 +188,7 @@ export function DataTable<TData extends { id: string }, TValue>({
         createButtonLabel={createButtonLabel}
         queryKey={queryKey}
       />
-      <div className="rounded-md border">
+      <div className="rounded-md border dark:bg-slate-800 dark:border-slate-700 p-4  bg-white">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -199,9 +199,9 @@ export function DataTable<TData extends { id: string }, TValue>({
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
                     </TableHead>
                   );
                 })}

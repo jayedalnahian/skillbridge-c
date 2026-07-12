@@ -111,7 +111,7 @@ export const columns: ColumnDef<IBooking>[] = [
       <DataTableColumnHeader column={column} title="Price" />
     ),
     cell: ({ row }) => (
-      <div className="font-semibold text-slate-900 hover:text-[#00ADB5]">
+      <div className="font-semibold dark:text-slate-200 text-slate-900 hover:text-[#00ADB5]">
         ${row.getValue("price")}$
       </div>
     ),
