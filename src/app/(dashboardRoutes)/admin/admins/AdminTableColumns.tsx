@@ -16,7 +16,7 @@ export const columns: ColumnDef<IAdmin>[] = [
       <DataTableColumnHeader column={column} title="Admin Name" />
     ),
     cell: ({ row }) => (
-      <div className="font-semibold text-slate-900 hover:text-[#00ADB5] italic">
+      <div className="font-semibold dark:text-slate-200 text-slate-900 hover:text-[#00ADB5] italic">
         {row.getValue("name")}
       </div>
     ),
@@ -29,7 +29,7 @@ export const columns: ColumnDef<IAdmin>[] = [
     cell: ({ row }) => {
       const email = row.getValue("email") as string;
       return (
-        <div className="flex items-center gap-2 text-slate-600 hover:text-[#00ADB5]">
+        <div className="flex items-center gap-2 dark:text-slate-200 text-slate-600 hover:text-[#00ADB5]">
           <Mail className="h-4 w-4 text-slate-400" />
           <span className="truncate max-w-[200px]">{email}</span>
         </div>
@@ -44,7 +44,7 @@ export const columns: ColumnDef<IAdmin>[] = [
     cell: ({ row }) => {
       const contact = row.getValue("contactNumber") as string;
       return contact ? (
-        <div className="flex items-center gap-2 text-slate-600 hover:text-[#00ADB5]">
+        <div className="flex items-center gap-2 text-slate-600 dark:text-slate-200 hover:text-[#00ADB5]">
           <Phone className="h-4 w-4 text-slate-400" />
           <span>{contact}</span>
         </div>
@@ -59,7 +59,7 @@ export const columns: ColumnDef<IAdmin>[] = [
     cell: ({ row }) => {
       const address = row.getValue("address") as string;
       return address ? (
-        <div className="flex items-center gap-2 max-w-[200px] truncate text-slate-500 hover:text-[#00ADB5]">
+        <div className="flex items-center gap-2 max-w-[200px] truncate text-slate-500 dark:text-slate-200 hover:text-[#00ADB5]">
           <MapPin className="h-4 w-4 text-slate-400 shrink-0" />
           <span className="truncate">{address}</span>
         </div>
@@ -103,7 +103,7 @@ export const columns: ColumnDef<IAdmin>[] = [
     cell: ({ row }) => {
       const date = row.getValue("createdAt") as string;
       return (
-        <div className="text-sm text-slate-500 hover:text-[#00ADB5]">
+        <div className="text-sm text-slate-500 dark:text-slate-200 hover:text-[#00ADB5]">
           {date ? dateFormatter.format(new Date(date)) : "N/A"}
         </div>
       );

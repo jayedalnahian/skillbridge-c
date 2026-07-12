@@ -40,7 +40,7 @@ export function DataTableFacetedFilter<TData, TValue>({
         <Button
           variant="outline"
           size="sm"
-          className="h-8 border-dashed bg-white"
+          className="h-8 border-dashed"
         >
           <PlusCircle className="mr-2 h-4 w-4" />
           {title}
@@ -79,7 +79,7 @@ export function DataTableFacetedFilter<TData, TValue>({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0 bg-white" align="start">
+      <PopoverContent className="w-[200px] p-0" align="start">
         <div className="flex flex-col p-1">
           {options.map((option) => {
             const isSelected = selectedValues.has(option.value);
@@ -98,8 +98,8 @@ export function DataTableFacetedFilter<TData, TValue>({
                   );
                 }}
                 className={cn(
-                  "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-slate-100",
-                  isSelected && "bg-slate-100",
+                  "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-muted",
+                  isSelected && "bg-muted",
                 )}
               >
                 <div
@@ -129,7 +129,7 @@ export function DataTableFacetedFilter<TData, TValue>({
               <Separator className="my-1" />
               <button
                 onClick={() => column?.setFilterValue(undefined)}
-                className="relative flex cursor-default select-none items-center justify-center rounded-sm py-1.5 text-sm outline-none hover:bg-slate-100"
+                className="relative flex cursor-default select-none items-center justify-center rounded-sm py-1.5 text-sm outline-none hover:bg-muted"
               >
                 Clear filters
               </button>

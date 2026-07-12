@@ -175,7 +175,7 @@ export function Navbar({
       className={cn(
         "sticky top-0 z-50 w-full transition-all duration-300",
         scrolled
-          ? "border-b backdrop-blur-xl shadow-sm bg-background/80"
+          ? "border-b backdrop-blur-xl shadow-sm bg-background/95"
           : "bg-transparent",
       )}
     >

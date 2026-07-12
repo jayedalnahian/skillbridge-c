@@ -476,12 +476,12 @@ export const UniversalDateTimePicker = forwardRef<
               !value && "text-muted-foreground",
             )}
           >
-            <TriggerIcon className="mr-2 h-4 w-4 shrink-0" />
+            <TriggerIcon className="mr-2 h-4 w-4 shrink-0 text-muted-foreground" />
             <span className="truncate">{displayText}</span>
             <ChevronDownIcon className="ml-auto h-4 w-4 shrink-0 text-muted-foreground" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0" align="start" sideOffset={4}>
+        <PopoverContent className="w-auto p-0 bg-slate-50 dark:bg-gray-950 border dark:border-border rounded-md" align="start" sideOffset={4}>
           <div className="flex flex-col sm:flex-row">
             {/* Date Calendar - shown for date and datetime modes */}
             {(mode === "date" || mode === "datetime") && (

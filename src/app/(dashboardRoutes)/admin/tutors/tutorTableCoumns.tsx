@@ -15,7 +15,7 @@ export const columns: ColumnDef<ITutor>[] = [
       <DataTableColumnHeader column={column} title="Tutor Name" />
     ),
     cell: ({ row }) => (
-      <div className="font-semibold text-slate-900 hover:text-[#00ADB5] italic">
+      <div className="font-semibold dark:text-slate-200 text-slate-900 hover:text-[#00ADB5] italic">
         {row.getValue("name")}
       </div>
     ),
@@ -26,7 +26,7 @@ export const columns: ColumnDef<ITutor>[] = [
       <DataTableColumnHeader column={column} title="Email" />
     ),
     cell: ({ row }) => (
-      <div className="max-w-[300px] truncate text-slate-500 hover:text-[#00ADB5]">
+      <div className="max-w-[300px] truncate dark:text-slate-200 text-slate-500 hover:text-[#00ADB5]">
         {row.getValue("email")}
       </div>
     ),
@@ -35,7 +35,7 @@ export const columns: ColumnDef<ITutor>[] = [
     accessorKey: "contactNumber",
     header: "Contact",
     cell: ({ row }) => (
-      <div className="text-slate-500 hover:text-[#00ADB5]">
+      <div className="text-slate-500 dark:text-slate-200 hover:text-[#00ADB5]">
         {row.getValue("contactNumber") || "N/A"}
       </div>
     ),
@@ -44,7 +44,7 @@ export const columns: ColumnDef<ITutor>[] = [
     accessorKey: "designation",
     header: "Designation",
     cell: ({ row }) => (
-      <div className="max-w-[200px] truncate text-slate-500 hover:text-[#00ADB5]">
+      <div className="max-w-[200px] truncate text-slate-500 dark:text-slate-200 hover:text-[#00ADB5]">
         {row.getValue("designation") || "N/A"}
       </div>
     ),
@@ -55,7 +55,7 @@ export const columns: ColumnDef<ITutor>[] = [
       <DataTableColumnHeader column={column} title="Experience" />
     ),
     cell: ({ row }) => (
-      <div className="max-w-[300px] truncate text-slate-500 hover:text-[#00ADB5]">
+      <div className="max-w-[300px] truncate text-slate-500 dark:text-slate-200 hover:text-[#00ADB5]">
         {row.getValue("experienceYears") ? `${row.getValue("experienceYears")} years` : "Fresher"}
       </div>
     ),
@@ -70,7 +70,7 @@ export const columns: ColumnDef<ITutor>[] = [
     accessorKey: "educationLevel",
     header: "Education",
     cell: ({ row }) => (
-      <div className="max-w-[200px] truncate text-slate-500 hover:text-[#00ADB5]">
+      <div className="max-w-[200px] truncate text-slate-500 dark:text-slate-200 hover:text-[#00ADB5]">
         {row.getValue("educationLevel") || "N/A"}
       </div>
     ),
@@ -117,7 +117,7 @@ export const columns: ColumnDef<ITutor>[] = [
       <DataTableColumnHeader column={column} title="Hourly Rate" />
     ),
     cell: ({ row }) => (
-      <div className="font-semibold text-slate-900 hover:text-[#00ADB5]">
+      <div className="font-semibold text-slate-900 dark:text-slate-200 hover:text-[#00ADB5]">
         ${row.getValue("hourlyRate")}/hr
       </div>
     ),
@@ -130,7 +130,7 @@ export const columns: ColumnDef<ITutor>[] = [
     cell: ({ row }) => {
       const date = row.getValue("createdAt") as string;
       return (
-        <div className="text-sm text-slate-500 hover:text-[#00ADB5]">
+        <div className="text-sm text-slate-500 dark:text-slate-200 hover:text-[#00ADB5]">
           {date ? dateFormatter.format(new Date(date)) : "N/A"}
         </div>
       );

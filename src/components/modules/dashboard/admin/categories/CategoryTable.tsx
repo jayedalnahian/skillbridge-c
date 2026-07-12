@@ -147,8 +147,8 @@ export default function CategoryTable({ initialQueryString }: CategoryTableProps
 
   return (
     <main className="container mx-auto min-h-screen">
-      <Card className="border-none shadow-2xl overflow-hidden bg-white ring-1 ring-slate-200">
-        <CardHeader className="border-b border-slate-100 pb-6 bg-slate-50/50">
+      <Card className="border-none shadow-2xl overflow-hidden bg-white dark:bg-slate-950 ring-1 ring-slate-200">
+        <CardHeader className="border-b border-slate-100 pb-6">
           <div className="flex items-center justify-between">
             <div>
               <CardTitle className="text-2xl font-bold text-[#00ADB5]">

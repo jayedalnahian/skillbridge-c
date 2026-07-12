@@ -19,7 +19,7 @@ export const IdCell = ({ id, maxWidth = "120px" }: IdCellProps) => {
   return (
     <div className="flex items-center gap-2 group">
       <code
-        className="text-xs font-mono text-slate-500 truncate hover:text-[#00ADB5]"
+        className="text-xs font-mono text-muted-foreground truncate hover:text-primary"
         style={{ maxWidth }}
       >
         {id}

@@ -47,7 +47,7 @@ export function DataTableRowActions<TData>({
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isRestoreOpen, setIsRestoreOpen] = useState(false);
-  const [isRestoring, setIsRestoring] = useState(false);
+ 
 
   const { hasCopiedRecently, copyText } = useCopyToClipboard();
 
@@ -149,7 +149,7 @@ export function DataTableRowActions<TData>({
 
       {/* View Dialog */}
       <Dialog open={isViewOpen} onOpenChange={setIsViewOpen}>
-        <DialogContent className="sm:max-w-[425px] mt-2">
+        <DialogContent className="sm:max-w-[425px] mt-2 bg-slate-50 dark:bg-slate-950 ">
           <DialogHeader>
             <DialogTitle>View Details</DialogTitle>
             <DialogDescription>
@@ -158,12 +158,12 @@ export function DataTableRowActions<TData>({
           </DialogHeader>
 
           {viewConfig ? (
-            <div className="py-2">{viewConfig.children(item as any)}</div>
+            <div className="py-2 ">{viewConfig.children(item as any)}</div>
           ) : (
-            <div className="grid gap-4 py-4">
+            <div className="grid gap-4 py-4  ">
               <div className="grid grid-cols-4 items-center gap-4">
                 <span className="font-bold">Name:</span>
-                <span className="col-span-3">
+                <span className="col-span-3 dark:text-slate-200 text-gray-500">
                   {(item.name as string) || (item.title as string) || "N/A"}
                 </span>
               </div>
@@ -201,7 +201,7 @@ export function DataTableRowActions<TData>({
 
       {/* Edit Dialog */}
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-        <DialogContent className="sm:max-w-[425px] max-h-[90vh] flex flex-col p-0">
+        <DialogContent className="sm:max-w-[425px] max-h-[90vh] flex flex-col p-0  bg-slate-50 dark:bg-slate-950">
           <DialogHeader className="px-6 pt-6 pb-2 shrink-0">
             <DialogTitle>Edit Information</DialogTitle>
             <DialogDescription>
