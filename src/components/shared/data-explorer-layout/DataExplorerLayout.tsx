@@ -43,8 +43,7 @@ interface DataExplorerLayoutProps<TData> {
   // Grid Layout
   gridCols?: GridCols;
 
-  // Sorting
-  sortOptions: SortOption[];
+  // Sorting (reserved for future use)
 
   // Search
   searchPlaceholder?: string;
@@ -74,7 +73,6 @@ export function DataExplorerLayout<TData>({
   filtersConfig,
   renderFilters,
   gridCols,
-  sortOptions,
   searchPlaceholder,
   onCreate,
   createButtonLabel,
@@ -87,18 +85,15 @@ export function DataExplorerLayout<TData>({
 
   const {
     optimisticPaginationState,
-    optimisticSortState,
     optimisticFilterState,
     optimisticSearchTerm,
     isRouteRefreshPending,
     handlePaginationChange,
-    handleSortChange,
     handleFilterChange,
     handleSearchChange,
     handleResetFilters,
   } = useDataExplorerState({
     searchParams,
-    sortOptions,
     filtersConfig,
     defaultPage,
     defaultLimit,
@@ -114,10 +109,6 @@ export function DataExplorerLayout<TData>({
     }));
   };
 
-  const currentSortValue = optimisticSortState
-    ? `${optimisticSortState.sortBy}_${optimisticSortState.sortOrder}`
-    : null;
-
   return (
     <div className="flex flex-col lg:flex-row gap-6">
       {/* Sidebar */}
@@ -132,14 +123,11 @@ export function DataExplorerLayout<TData>({
       {/* Main Content */}
       <div className="flex-1 space-y-4 min-w-0">
         {/* Toolbar - Sticky at top */}
-        <div className="sticky top-16 z-10 bg-white/95 backdrop-blur-sm pt-2 pb-2 -mx-2 px-2">
+        <div className="sticky top-16 z-10 bg-background/95 backdrop-blur-sm pt-2 pb-2 -mx-2 px-2">
           <DataExplorerToolbar
           searchValue={optimisticSearchTerm}
           onSearchChange={handleSearchChange}
           searchPlaceholder={searchPlaceholder}
-          sortValue={currentSortValue}
-          onSortChange={handleSortChange}
-          sortOptions={sortOptions}
           onCreate={onCreate}
           createButtonLabel={createButtonLabel}
           queryKey={queryKey}

@@ -162,7 +162,7 @@ const RegisterForm = () => {
           </form.Subscribe>
         </form>
 
-        <div className="relative my-6">
+        {/* <div className="relative my-6">
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-gray-300"></div>
           </div>
@@ -210,7 +210,7 @@ const RegisterForm = () => {
             />
           </svg>
           Sign up with Google
-        </Button>
+        </Button> */}
       </CardContent>
 
       <CardFooter className="justify-center border-t pt-4">

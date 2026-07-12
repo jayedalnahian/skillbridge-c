@@ -192,10 +192,10 @@ export function TutorFilters() {
         </div>
         {activeFilterCount > 0 && (
           <Button
-            variant="default"
+            variant="destructive"
             size="sm"
             onClick={resetAllFilters}
-            className="h-8 px-3 bg-red-500 hover:bg-red-600 text-white border-0 shadow-sm"
+            className="h-8 px-3"
           >
             <X className="mr-1.5 h-4 w-4" />
             Reset
@@ -262,13 +262,13 @@ export function TutorFilters() {
           {educationLevels.map((level) => (
             <label
               key={level.value}
-              className="flex items-center gap-2 cursor-pointer hover:bg-slate-50 p-1 rounded"
+              className="flex items-center gap-2 cursor-pointer hover:bg-muted p-1 rounded"
             >
               <input
                 type="checkbox"
                 checked={selectedEducationLevels.includes(level.value)}
                 onChange={() => toggleEducationLevel(level.value)}
-                className="rounded border-gray-300"
+                className="rounded border-border"
               />
               <span className="text-sm">{level.label}</span>
             </label>
@@ -285,13 +285,13 @@ export function TutorFilters() {
           {daysOfWeek.map((day) => (
             <label
               key={day.value}
-              className="flex items-center gap-2 cursor-pointer hover:bg-slate-50 p-1 rounded"
+              className="flex items-center gap-2 cursor-pointer hover:bg-muted p-1 rounded"
             >
               <input
                 type="checkbox"
                 checked={selectedDays.includes(day.value)}
                 onChange={() => toggleDay(day.value)}
-                className="rounded border-gray-300"
+                className="rounded border-border"
               />
               <span className="text-sm">{day.label}</span>
             </label>

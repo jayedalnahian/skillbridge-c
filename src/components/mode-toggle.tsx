@@ -1,50 +1,41 @@
 "use client";
 
 import * as React from "react";
-import { Monitor, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Moon, Sun } from "lucide-react";
 
 export function ModeToggle() {
-  const { setTheme, resolvedTheme } = useTheme();
-  const [mounted, setMounted] = React.useState(false);
+    const { setTheme, resolvedTheme } = useTheme();
+    const [mounted, setMounted] = React.useState(false);
 
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
+    React.useEffect(() => {
+        setMounted(true);
+    }, []);
 
-  if (!mounted) {
+    if (!mounted) {
+        return <div className="w-10 h-6" />;
+    }
+
+    const isDark = resolvedTheme === "dark";
+
     return (
-      <Button variant="ghost" size="icon" className="h-9 w-9" aria-label="Toggle theme">
-        <Sun className="h-4 w-4" />
-      </Button>
+        <label
+            htmlFor="ThemeToggle"
+            className="inline-flex items-center space-x-4 cursor-pointer dark:text-gray-800"
+        >
+            <span> <Sun className="dark:text-[#f3f4f6] transition-colors" /></span>
+            <span className="relative">
+                <input
+                    id="ThemeToggle"
+                    type="checkbox"
+                    className="hidden peer"
+                    checked={isDark}
+                    onChange={() => setTheme(isDark ? "light" : "dark")}
+                />
+                <div className="w-10 h-6 rounded-full shadow-inner border  dark:bg-gray-600 peer-checked:dark:bg-cyan-500" />
+                <div className="absolute inset-y-0 left-0 w-4 h-4 m-1 border rounded-full shadow peer-checked:right-0 peer-checked:left-auto dark:bg-gray-100" />
+            </span>
+            <span><Moon className="dark:text-[#f3f4f6] transition-colors" /></span>
+        </label>
     );
-  }
-
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-9 w-9" aria-label="Toggle theme">
-          {resolvedTheme === "dark" ? (
-            <Moon className="h-4 w-4" />
-          ) : resolvedTheme === "light" ? (
-            <Sun className="h-4 w-4" />
-          ) : (
-            <Monitor className="h-4 w-4" />
-          )}
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme("light")}>Light</DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")}>Dark</DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
 }

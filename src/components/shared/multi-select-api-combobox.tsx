@@ -134,10 +134,10 @@ export function MultiSelectApiCombobox<T extends Record<string, any>>({
   }
 
   return (
-    <div className={cn("space-y-2", className)}>
+    <div className={cn("space-y-2 text-foreground dark:bg-black bg-white", className)}>
       {/* Selected items display */}
       {selectedItems.length > 0 && (
-        <div className="flex flex-wrap gap-1">
+        <div className="flex flex-wrap gap-1 dark:bg-black bg-white border">
           {selectedItems.map((item) => (
             <Badge
               key={String(item[valueKey])}
@@ -169,15 +169,16 @@ export function MultiSelectApiCombobox<T extends Record<string, any>>({
       )}
 
       {/* Combobox */}
-      <Popover open={open} onOpenChange={setOpen}>
+      <Popover open={open} onOpenChange={setOpen} >
         <PopoverTrigger asChild>
           <Button
             variant="outline"
             role="combobox"
+            
             aria-expanded={open}
             disabled={disabled}
             className={cn(
-              "w-full justify-between",
+              "w-full justify-between bg-background dark:bg-background  border-x",
               !selectedItems.length && "text-muted-foreground"
             )}
           >
@@ -193,14 +194,16 @@ export function MultiSelectApiCombobox<T extends Record<string, any>>({
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-full p-0" align="start">
-          <Command shouldFilter={false}>
+        <PopoverContent className="w-(--radix-popover-trigger-width) p-0 ring-1 ring-border" align="start">
+
+          <Command shouldFilter={false} className="dark:bg-black bg-white">
             <CommandInput
+              
               placeholder="Type to search..."
               value={searchTerm}
               onValueChange={setSearchTerm}
             />
-            <CommandList style={{ maxHeight }}>
+            <CommandList style={{ maxHeight }} className="dark:bg-black bg-white">
               {isLoading ? (
                 <div className="flex items-center justify-center py-6 text-sm text-muted-foreground">
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -213,7 +216,7 @@ export function MultiSelectApiCombobox<T extends Record<string, any>>({
                       ? "No results found."
                       : "Type to search..."}
                   </CommandEmpty>
-                  <CommandGroup>
+                  <CommandGroup className="dark:bg-black bg-white">
                     {suggestions.map((item) => {
                       const selected = isSelected(item)
                       return (

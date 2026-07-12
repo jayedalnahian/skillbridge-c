@@ -36,7 +36,7 @@ export function DataExplorerPagination({
   const currentPage = pageIndex + 1;
 
   return (
-    <div className="flex items-center justify-between px-2 py-4">
+    <div className="flex items-center justify-between px-5 py-4 border rounded-2xl">
       <div className="flex-1 text-sm text-muted-foreground">
         Showing {Math.min((currentPage - 1) * pageSize + 1, total)} to{" "}
         {Math.min(currentPage * pageSize, total)} of {total} results
@@ -52,7 +52,7 @@ export function DataExplorerPagination({
               <SelectValue placeholder={pageSize} />
             </SelectTrigger>
             <SelectContent side="top">
-              {[10, 20, 30, 40, 50].map((size) => (
+              {[8, 20, 30, 40, 50].map((size) => (
                 <SelectItem key={size} value={`${size}`}>
                   {size}
                 </SelectItem>

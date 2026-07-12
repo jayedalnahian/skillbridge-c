@@ -9,6 +9,7 @@ import { User as UserType } from "@/types/user.types";
 import { ChevronRight, GraduationCap } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { ModeToggle } from "@/components/mode-toggle"
 
 
 interface DashboardSidebarContentProps {
@@ -21,14 +22,14 @@ interface DashboardSidebarContentProps {
 const DashboardSidebarContent = ({ dashboardHome, navItems, userInfo }: DashboardSidebarContentProps) => {
   const pathname = usePathname()
   return (
-    <div className="hidden md:flex h-full w-64 flex-col overflow-y-auto bg-white border-r border-slate-200">
+    <div className="hidden md:flex h-full w-64 flex-col overflow-y-auto bg-white dark:bg-gray-950 border-r border-slate-200 dark:border-gray-800">
       {/* Logo / Brand */}
-      <div className="flex h-20 py-3 items-center px-6 border-b border-slate-200">
-        <Link href={dashboardHome} className="flex items-center gap-2">
+      <div className="flex h-20 py-3 items-center px-6 border-b border-slate-200 dark:border-gray-800">
+        <Link href={"/"} className="flex items-center gap-2">
           <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[#00ADB5] to-[#008f96] flex items-center justify-center shadow-lg shadow-[#00ADB5]/25">
-            <GraduationCap className="text-slate-700 w-6 h-6" />
+            <GraduationCap className="text-slate-700 dark:text-gray-300 w-6 h-6" />
           </div>
-          <span className="text-lg font-bold text-slate-700">
+          <span className="text-lg font-bold text-slate-700 dark:text-gray-200">
             SkillBridge
           </span>
         </Link>
@@ -40,7 +41,7 @@ const DashboardSidebarContent = ({ dashboardHome, navItems, userInfo }: Dashboar
           {navItems?.map((section, sectionId) => (
             <div key={sectionId}>
               {section.title && (
-                <h4 className="mb-3 px-3 text-[11px] font-semibold text-slate-400 uppercase tracking-[0.15em]">
+                <h4 className="mb-3 px-3 text-[11px] font-semibold text-slate-400 dark:text-gray-500 uppercase tracking-[0.15em]">
                   {section.title}
                 </h4>
               )}
@@ -58,7 +59,7 @@ const DashboardSidebarContent = ({ dashboardHome, navItems, userInfo }: Dashboar
                         "group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200",
                         isActive
                           ? "bg-gradient-to-r from-[#00ADB5] to-[#008f96] text-white shadow-lg shadow-[#00ADB5]/25"
-                          : "text-slate-600 hover:bg-slate-100 hover:text-slate-900",
+                          : "text-slate-600 dark:text-gray-400 hover:bg-slate-100 dark:hover:bg-gray-800/60 hover:text-slate-900 dark:hover:text-gray-100",
                       )}
                     >
                       <Icon className={cn(
@@ -73,7 +74,7 @@ const DashboardSidebarContent = ({ dashboardHome, navItems, userInfo }: Dashboar
               </div>
 
               {sectionId < navItems.length - 1 && (
-                <div className="my-4 mx-3 h-px bg-slate-200" />
+                <div className="my-4 mx-3 h-px bg-slate-200 dark:bg-gray-800" />
               )}
             </div>
           ))}
@@ -81,20 +82,23 @@ const DashboardSidebarContent = ({ dashboardHome, navItems, userInfo }: Dashboar
       </ScrollArea>
 
       {/* User Info At Bottom */}
-      <div className="border-t border-slate-200 px-3 py-4">
-        <div className="flex items-center gap-3 rounded-xl p-2 hover:bg-slate-100 transition-colors duration-200 cursor-pointer">
+      <div className="border-t border-slate-200 dark:border-gray-800 px-3 py-4">
+        <div className="flex items-center gap-3 rounded-xl p-2 hover:bg-slate-100 dark:hover:bg-gray-800/60 transition-colors duration-200 cursor-pointer">
           <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-[#00ADB5] to-[#008f96] flex items-center justify-center ring-2 ring-[#00ADB5]/20 shadow-lg shadow-[#00ADB5]/20">
-            <span className="text-sm font-bold text-slate-700">
+            <span className="text-sm font-bold text-slate-700 dark:text-gray-200">
               {userInfo.name?.charAt(0).toUpperCase()}
             </span>
           </div>
 
           <div className="flex-1 overflow-hidden">
-            <p className="text-sm font-medium text-slate-700 truncate">{userInfo.name}</p>
-            <p className="text-xs text-slate-500 capitalize whitespace-nowrap overflow-hidden text-ellipsis">
+            <p className="text-sm font-medium text-slate-700 dark:text-gray-200 truncate">{userInfo.name}</p>
+            <p className="text-xs text-slate-500 dark:text-gray-400 capitalize whitespace-nowrap overflow-hidden text-ellipsis">
               {userInfo.role.toLocaleLowerCase().replace("_", " ")}
             </p>
           </div>
+        </div>
+        <div className="ml-2 mt-2">
+          <ModeToggle />
         </div>
       </div>
     </div>

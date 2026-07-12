@@ -104,7 +104,13 @@ export function DataExplorerGrid<TData>({
   return (
     <div className={gridClasses}>
       {data.map((item, index) => (
-        <div key={index}>{renderCard(item)}</div>
+        <div
+          key={index}
+          className="animate-in fade-in slide-in-from-bottom-4 duration-500"
+          style={{ animationDelay: `${index * 60}ms`, animationFillMode: "backwards" }}
+        >
+          {renderCard(item)}
+        </div>
       ))}
     </div>
   );

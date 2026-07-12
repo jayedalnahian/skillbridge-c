@@ -11,16 +11,6 @@ import { QUERY_KEYS, CACHE_DURATIONS } from "@/lib/constants";
 import { ITutorWithRelations } from "@/types/tutor.types";
 import { TutorFilters } from "./TutorFilters";
 
-// Sort options for tutor listing
-const tutorSortOptions = [
-  { value: "hourlyRate_asc", label: "Price: Low to High" },
-  { value: "hourlyRate_desc", label: "Price: High to Low" },
-  { value: "experienceYears_desc", label: "Most Experienced" },
-  { value: "createdAt_desc", label: "Newest First" },
-  { value: "createdAt_asc", label: "Oldest First" },
-  { value: "name_asc", label: "Name: A to Z" },
-];
-
 // Grid layout configuration
 const gridCols = {
   sm: 1,
@@ -73,7 +63,6 @@ export function AllTutorsGrid({ initialQueryString }: AllTutorsGridProps) {
         searchParams={searchParams}
         renderCard={renderTutorCard}
         renderFilters={renderFilters}
-        sortOptions={tutorSortOptions}
         gridCols={gridCols}
         searchPlaceholder="Search by name, designation, or subject..."
         queryKey={[QUERY_KEYS.TUTORS]}

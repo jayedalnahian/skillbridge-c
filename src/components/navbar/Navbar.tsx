@@ -163,7 +163,7 @@ export function Navbar({
           // Desktop active underline
           !mobile &&
           // Mobile active bg
-          mobile && isActive(link.href) && "bg-[#13A0A8]/10",
+          mobile && isActive(link.href) && "bg-primary/10 text-primary",
         )}
       >
         {link.label}
@@ -175,7 +175,7 @@ export function Navbar({
       className={cn(
         "sticky top-0 z-50 w-full transition-all duration-300",
         scrolled
-          ? "border-b backdrop-blur-xl shadow-sm supports-backdrop-filter:bg-[#13A0A8]/60"
+          ? "border-b backdrop-blur-xl shadow-sm bg-background/80"
           : "bg-transparent",
       )}
     >
@@ -195,7 +195,9 @@ export function Navbar({
 
         {/* ---- Desktop Actions ---- */}
         <div className="hidden md:flex items-center gap-3">
-          <ModeToggle />
+          <div className="margin-right-2 flex items-center justify-center">
+            <ModeToggle />
+          </div>
           {auth.isLoggedIn ? (
             <div className="flex items-center gap-3">
               <DropdownMenu>
@@ -300,45 +302,45 @@ export function Navbar({
             </Button>
           </SheetTrigger>
 
-          <SheetContent side="right" className="w-[300px] p-0 bg-[#05585d] border-[#00ADB5]">
+          <SheetContent side="right" className="w-[300px] p-0 bg-background border-border">
             <SheetHeader className="px-6 pt-6 pb-4">
-              <SheetTitle className="flex items-center gap-2 text-white">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/20 text-white">
+              <SheetTitle className="flex items-center gap-2 text-foreground">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/20 text-primary">
                   <GraduationCap className="h-4 w-4" />
                 </div>
                 {brandName}
               </SheetTitle>
             </SheetHeader>
 
-            <Separator className="bg-white/20" />
+            <Separator className="bg-border" />
 
             {/* Mobile Nav Links */}
             <nav className="flex flex-col gap-1 px-4 py-4">
               {renderNavLinks(true)}
             </nav>
 
-            <Separator className="bg-white/20" />
+            <Separator className="bg-border" />
 
             {/* Mobile Auth Actions */}
             <div className="px-4 py-4 space-y-3">
-              <div className="flex justify-end">
+              <div className="flex justify-center">
                 <ModeToggle />
               </div>
               {auth.isLoggedIn ? (
                 <>
                   {/* User info */}
                   <div className="flex items-center gap-3 px-2 py-2">
-                    <Avatar className="h-10 w-10 border-2 border-white/30">
-                      <AvatarFallback className="bg-white/20 text-white text-sm font-semibold">
+                    <Avatar className="h-10 w-10 border-2 border-primary/20">
+                      <AvatarFallback className="bg-primary/10 text-primary text-sm font-semibold">
                         {initials}
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-white truncate">
+                      <p className="text-sm font-medium text-foreground truncate">
                         {auth.name ?? "User"}
                       </p>
                       {auth.email && (
-                        <p className="text-xs text-white/70 truncate">
+                        <p className="text-xs text-muted-foreground truncate">
                           {auth.email}
                         </p>
                       )}
@@ -348,7 +350,7 @@ export function Navbar({
                   <Button
                     asChild
                     variant="outline"
-                    className="w-full justify-start bg-white/10 border-white/30 text-white hover:bg-white/20 hover:text-white"
+                    className="w-full justify-start bg-muted border-border text-foreground hover:bg-muted/80 hover:text-foreground"
                     onClick={() => setMobileOpen(false)}
                   >
                     <Link href={dashboardRoute}>
@@ -363,7 +365,7 @@ export function Navbar({
                       key={link.href}
                       asChild
                       variant="outline"
-                      className="w-full justify-start bg-white/10 border-white/30 text-white hover:bg-white/20 hover:text-white"
+                      className="w-full justify-start bg-muted border-border text-foreground hover:bg-muted/80 hover:text-foreground"
                       onClick={() => setMobileOpen(false)}
                     >
                       <Link href={link.href}>
@@ -376,7 +378,7 @@ export function Navbar({
                   <Button
                     asChild
                     variant="outline"
-                    className="w-full justify-start bg-white/10 border-white/30 text-white hover:bg-white/20 hover:text-white"
+                    className="w-full justify-start bg-muted border-border text-foreground hover:bg-muted/80 hover:text-foreground"
                     onClick={() => setMobileOpen(false)}
                   >
                     <Link href="/change-password">
@@ -387,7 +389,7 @@ export function Navbar({
                   <Button
                     asChild
                     variant="outline"
-                    className="w-full justify-start bg-white/10 border-white/30 text-white hover:bg-white/20 hover:text-white"
+                    className="w-full justify-start bg-muted border-border text-foreground hover:bg-muted/80 hover:text-foreground"
                     onClick={() => setMobileOpen(false)}
                   >
                     <Link href="/contact">
@@ -418,14 +420,14 @@ export function Navbar({
                   <Button
                     asChild
                     variant="outline"
-                    className="w-full bg-white/10 border-white/30 text-white hover:bg-white/20 hover:text-white"
+                    className="w-full bg-muted border-border text-foreground hover:bg-muted/80 hover:text-foreground"
                     onClick={() => setMobileOpen(false)}
                   >
                     <Link href="/login">Login</Link>
                   </Button>
                   <Button
                     asChild
-                    className="w-full bg-white text-[#00ADB5] hover:bg-white/90 hover:text-[#00ADB5]"
+                    className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
                     onClick={() => setMobileOpen(false)}
                   >
                     <Link href="/register">Get Started</Link>

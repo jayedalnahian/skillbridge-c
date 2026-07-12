@@ -54,7 +54,7 @@ const DashboardNavbarContent = ({dashboardHome, navItems, userInfo} : DashboardN
 
 
       {/* Search Component */}
-      <div className="flex-1 flex items-center">
+      {/* <div className="flex-1 flex items-center">
           <div className="relative w-full max-w-md hidden sm:block">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"/>
               <Input
@@ -63,17 +63,17 @@ const DashboardNavbarContent = ({dashboardHome, navItems, userInfo} : DashboardN
                 className="pl-10 pr-4 h-10 rounded-xl border-border/60 bg-muted/40 focus:bg-background focus:border-primary/40 focus:ring-2 focus:ring-primary/10 transition-all duration-200"
               />
           </div>
-      </div>
+      </div> */}
 
 
       {/* Right Side Actions */}
-      <div className="flex items-center gap-2">
-          {/* Notification */}
+      {/* <div className="flex items-center gap-2">
+   ]
           <NotificationDropdown/>
 
-          {/* User Dropdown  */}
+         
           <UserDropdown userInfo={userInfo}/>
-      </div>
+      </div> */}
     </div>
   )
 }

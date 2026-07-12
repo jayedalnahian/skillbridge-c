@@ -42,7 +42,7 @@ function FacetedFilter({
         <Button
           variant="outline"
           size="sm"
-          className="h-8 w-full justify-start border-dashed bg-white"
+          className="h-8 w-full justify-start border-dashed bg-card"
         >
           <SlidersHorizontal className="mr-2 h-4 w-4" />
           {config.label}
@@ -59,7 +59,7 @@ function FacetedFilter({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0 bg-white" align="start">
+      <PopoverContent className="w-[200px] p-0 bg-card" align="start">
         <div className="flex flex-col p-1">
           {config.options.map((option) => {
             const isSelected = selectedSet.has(option.value);
@@ -76,8 +76,8 @@ function FacetedFilter({
                   onChange(nextValues);
                 }}
                 className={cn(
-                  "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-slate-100",
-                  isSelected && "bg-slate-100",
+                  "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-muted",
+                  isSelected && "bg-muted",
                 )}
               >
                 <div
@@ -107,7 +107,7 @@ function FacetedFilter({
               <Separator className="my-1" />
               <button
                 onClick={() => onChange([])}
-                className="relative flex cursor-default select-none items-center justify-center rounded-sm py-1.5 text-sm outline-none hover:bg-slate-100"
+                className="relative flex cursor-default select-none items-center justify-center rounded-sm py-1.5 text-sm outline-none hover:bg-muted"
               >
                 Clear filters
               </button>
@@ -140,7 +140,7 @@ export function DataExplorerSidebar({
           <Sidebar
             variant="floating"
             collapsible="none"
-            className="relative h-fit w-full border border-slate-200 rounded-xl shadow-sm"
+            className="relative h-fit w-full border border-border rounded-xl shadow-sm"
           >
             <SidebarHeader className="p-4 pb-2">
               <div className="flex items-center justify-between">
@@ -178,7 +178,7 @@ export function DataExplorerSidebar({
         <Sidebar
           variant="floating"
           collapsible="none"
-          className="relative h-fit w-full border border-slate-200 rounded-xl shadow-sm"
+          className="relative h-fit w-full border border-border rounded-xl shadow-sm"
         >
           <SidebarHeader className="p-4 pb-2">
             <div className="flex items-center justify-between">

@@ -49,7 +49,7 @@ const parsePositiveInteger = (
 
 interface UseDataExplorerStateParams {
   searchParams: ReadonlyURLSearchParams;
-  sortOptions: SortOption[];
+  sortOptions?: SortOption[];
   defaultPage?: number;
   defaultLimit?: number;
   filtersConfig?: FilterConfig[];
@@ -62,10 +62,9 @@ export interface SortingState {
 
 export const useDataExplorerState = ({
   searchParams,
-  sortOptions,
+  sortOptions = [],
   defaultPage = 1,
-  defaultLimit = 10,
-  filtersConfig: filtersConfigProp,
+  defaultLimit = 10,  filtersConfig: filtersConfigProp,
 }: UseDataExplorerStateParams) => {
   // Use stable reference for undefined filtersConfig
   const filtersConfig = filtersConfigProp ?? EMPTY_FILTERS_CONFIG;
