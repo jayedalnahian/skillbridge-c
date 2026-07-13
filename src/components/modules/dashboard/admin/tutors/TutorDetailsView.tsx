@@ -216,8 +216,7 @@ export function TutorDetailsView({ item }: TutorDetailsViewProps) {
         {/* Categories */}
         {item.tutorCategory && item.tutorCategory.length > 0 && (
           <div className="space-y-2">
-            <Label className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-              Categories
+            <Label className="text-xs font-semibold uppercase tracking-wider text-slate-500"> Categories
             </Label>
             <div className="flex flex-col sm:flex-row sm:items-center gap-2 p-3 rounded-lg border border-slate-100 bg-white">
               <BookOpen className="h-4 w-4 text-[#00ADB5] shrink-0" />

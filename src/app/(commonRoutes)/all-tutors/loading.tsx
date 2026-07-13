@@ -95,8 +95,8 @@ export default function AllTutorsLoading() {
         {/* ============ Main Content ============ */}
         <div className="flex-1 space-y-4 min-w-0">
           {/* Sticky Toolbar */}
-          <div className="sticky top-16 z-10 bg-white/95 backdrop-blur-sm pt-2 pb-2 -mx-2 px-2">
-            <div className="rounded-lg border border-slate-200 bg-white p-3 shadow-sm">
+          <div className="sticky top-16 rounded-2xl z-10 dark:bg-gray-200 bg-white/95 backdrop-blur-sm pt-2 pb-2 -mx-2 px-2">
+            <div className="rounded-lg border border-slate-200  p-3 shadow-sm">
               <div className="flex flex-col sm:flex-row gap-2">
                 {/* Search bar */}
                 <div className="relative sm:w-[61.8%]">

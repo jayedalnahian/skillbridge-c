@@ -7,6 +7,7 @@ import { ITutorWithRelations } from "@/types/tutor.types";
 import { ICategory } from "@/types/category.types";
 import { MagneticButton } from "./ui/MagneticButton";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 interface TutorHeroProps {
   tutor: ITutorWithRelations;
@@ -177,25 +178,20 @@ export function TutorHero({ tutor, categories, onBook }: TutorHeroProps) {
           </motion.div>
 
           {/* CTA */}
-          <motion.div variants={itemVariants} className="flex flex-wrap items-center gap-3 pt-4 justify-center lg:justify-start">
-            <MagneticButton
+          <motion.div variants={itemVariants} className="flex flex-wrap items-center gap-3 pt-4 justify-center lg:justify-start " >
+            <Button
               onClick={onBook}
-              className="h-14 px-8 text-base"
+              className="h-10 w-full rounded-full bg-gradient-to-r from-primary via-cyan-500 to-emerald-500 px-8 text-base font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-all duration-300 hover:scale-[1.03] hover:shadow-xl hover:shadow-primary/30 sm:w-auto"
             >
               <Users className="h-5 w-5" />
               Book a Session
-            </MagneticButton>
-            <button
-              className="group flex h-14 items-center gap-2.5 rounded-xl border border-border bg-muted px-6 text-sm font-medium text-foreground transition-all duration-300 hover:border-primary/30 hover:bg-primary/10 hover:text-primary"
-            >
-              <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-              </svg>
-              Send Message
-            </button>
+            </Button>
           </motion.div>
         </div>
       </motion.div>
     </section>
   );
 }
+
+
+// className="h-10 w-full rounded-full bg-gradient-to-r from-primary via-cyan-500 to-emerald-500 px-8 text-base font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-all duration-300 hover:scale-[1.03] hover:shadow-xl hover:shadow-primary/30 sm:w-auto"

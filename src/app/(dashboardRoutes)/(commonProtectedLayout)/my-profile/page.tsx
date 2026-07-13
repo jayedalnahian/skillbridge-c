@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import {
   User,
   Mail,
@@ -63,18 +62,20 @@ const InfoRow = ({
   icon: Icon,
   label,
   value,
+  isLast = false,
 }: {
   icon: React.ElementType;
   label: string;
   value: React.ReactNode;
+  isLast?: boolean;
 }) => (
-  <div className="flex items-start gap-3 py-2.5">
-    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#00ADB5]/10">
-      <Icon className="h-4 w-4 text-[#00ADB5]" />
+  <div className={`flex items-start gap-3 py-3 px-1 rounded-lg transition-colors hover:bg-muted/30 ${!isLast ? "border-b border-border/50" : ""}`}>
+    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-primary/10 to-primary/5">
+      <Icon className="h-4 w-4 text-primary" />
     </div>
     <div className="flex-1 min-w-0">
-      <p className="text-xs text-slate-500 uppercase tracking-wide">{label}</p>
-      <div className="text-sm font-medium text-slate-900 mt-0.5">{value}</div>
+      <p className="text-xs text-muted-foreground uppercase tracking-wide font-medium">{label}</p>
+      <div className="text-sm font-medium text-foreground mt-0.5">{value}</div>
     </div>
   </div>
 );
@@ -96,16 +97,19 @@ const ProfileHeader = ({ user }: { user: UserInfo }) => {
 
   return (
     <div className="flex flex-col md:flex-row md:items-center gap-6">
-      <Avatar size="lg" className="h-24 w-24 ring-4 ring-[#00ADB5]/20">
-        <AvatarImage src={profilePhoto || undefined} alt={displayName} />
-        <AvatarFallback className="text-2xl bg-[#00ADB5] text-white">
-          {displayName?.charAt(0).toUpperCase()}
-        </AvatarFallback>
-      </Avatar>
+      <div className="relative shrink-0">
+        <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 blur-sm animate-pulse-glow" />
+        <Avatar size="lg" className="h-24 w-24 ring-4 ring-primary/20 relative">
+          <AvatarImage src={profilePhoto || undefined} alt={displayName} />
+          <AvatarFallback className="text-2xl bg-gradient-to-br from-primary to-primary/80 text-primary-foreground">
+            {displayName?.charAt(0).toUpperCase()}
+          </AvatarFallback>
+        </Avatar>
+      </div>
 
       <div className="flex-1 min-w-0">
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 flex-wrap">
-          <h1 className="text-2xl font-bold text-slate-900">{displayName}</h1>
+          <h1 className="text-2xl font-heading font-bold text-gradient">{displayName}</h1>
           <div className="flex items-center gap-2">
             <Badge variant={getRoleBadgeVariant(user.role)} className="capitalize">
               {user.role.toLowerCase()}
@@ -119,9 +123,9 @@ const ProfileHeader = ({ user }: { user: UserInfo }) => {
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mt-2 text-slate-600">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mt-2 text-muted-foreground">
           <span className="flex items-center gap-1.5">
-            <Mail className="h-4 w-4 text-slate-400" />
+            <Mail className="h-4 w-4 text-muted-foreground/60" />
             {displayEmail}
           </span>
           {user.emailVerified && (
@@ -138,19 +142,18 @@ const ProfileHeader = ({ user }: { user: UserInfo }) => {
 
 // Account Information Card
 const AccountInfoCard = ({ user }: { user: UserInfo }) => (
-  <Card className="h-full">
+  <Card className="h-full relative overflow-hidden transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg">
+    <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary/40 via-primary/20 to-transparent" />
     <CardHeader className="pb-3">
-      <CardTitle className="text-lg font-semibold flex items-center gap-2">
-        <Shield className="h-5 w-5 text-[#00ADB5]" />
+      <CardTitle className="text-lg font-heading font-semibold flex items-center gap-2">
+        <Shield className="h-5 w-5 text-primary" />
         Account Information
       </CardTitle>
       <CardDescription>Your account details and security status</CardDescription>
     </CardHeader>
     <CardContent className="pt-0">
       <InfoRow icon={User} label="User ID" value={user.id} />
-      <Separator />
       <InfoRow icon={Shield} label="Role" value={user.role} />
-      <Separator />
       <InfoRow
         icon={user.status === "ACTIVE" ? CheckCircle2 : XCircle}
         label="Account Status"
@@ -163,17 +166,16 @@ const AccountInfoCard = ({ user }: { user: UserInfo }) => (
           </Badge>
         }
       />
-      <Separator />
       <InfoRow
         icon={Calendar}
         label="Member Since"
         value={format(new Date(user.createdAt), "MMMM d, yyyy")}
       />
-      <Separator />
       <InfoRow
         icon={Calendar}
         label="Last Updated"
         value={format(new Date(user.updatedAt), "MMMM d, yyyy")}
+        isLast
       />
     </CardContent>
   </Card>
@@ -184,22 +186,20 @@ const AdminProfileCard = ({ admin }: { admin: UserInfo["admin"] }) => {
   if (!admin) return null;
 
   return (
-    <Card className="h-full">
+    <Card className="h-full relative overflow-hidden transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg">
+      <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary/40 via-primary/20 to-transparent" />
       <CardHeader className="pb-3">
-        <CardTitle className="text-lg font-semibold flex items-center gap-2">
-          <Shield className="h-5 w-5 text-[#00ADB5]" />
+        <CardTitle className="text-lg font-heading font-semibold flex items-center gap-2">
+          <Shield className="h-5 w-5 text-primary" />
           Admin Profile
         </CardTitle>
         <CardDescription>Your administrator information</CardDescription>
       </CardHeader>
       <CardContent className="pt-0">
         <InfoRow icon={User} label="Name" value={admin.name} />
-        <Separator />
         <InfoRow icon={Mail} label="Email" value={admin.email} />
-        <Separator />
         <InfoRow icon={Phone} label="Contact Number" value={admin.contactNumber} />
-        <Separator />
-        <InfoRow icon={MapPin} label="Address" value={admin.address} />
+        <InfoRow icon={MapPin} label="Address" value={admin.address} isLast />
       </CardContent>
     </Card>
   );
@@ -210,36 +210,29 @@ const StudentProfileCard = ({ student }: { student: UserInfo["student"] }) => {
   if (!student) return null;
 
   return (
-    <Card className="h-full">
+    <Card className="h-full relative overflow-hidden transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg">
+      <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary/40 via-primary/20 to-transparent" />
       <CardHeader className="pb-3">
-        <CardTitle className="text-lg font-semibold flex items-center gap-2">
-          <GraduationCap className="h-5 w-5 text-[#00ADB5]" />
+        <CardTitle className="text-lg font-heading font-semibold flex items-center gap-2">
+          <GraduationCap className="h-5 w-5 text-primary" />
           Student Profile
         </CardTitle>
         <CardDescription>Your student information and bio</CardDescription>
       </CardHeader>
       <CardContent className="pt-0">
         <InfoRow icon={User} label="Name" value={student.name} />
-        <Separator />
         <InfoRow icon={Mail} label="Email" value={student.email} />
-        <Separator />
         <InfoRow
           icon={Phone}
           label="Contact Number"
           value={student.contactNumber || "Not provided"}
         />
-        <Separator />
-        <div className="flex items-start gap-3 py-2.5">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#00ADB5]/10">
-            <User className="h-4 w-4 text-[#00ADB5]" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-xs text-slate-500 uppercase tracking-wide">About</p>
-            <div className="text-sm font-medium text-slate-900 mt-0.5">
-              {student.description || "No description provided"}
-            </div>
-          </div>
-        </div>
+        <InfoRow
+          icon={User}
+          label="About"
+          value={student.description || "No description provided"}
+          isLast
+        />
       </CardContent>
     </Card>
   );
@@ -250,43 +243,37 @@ const TutorProfileCard = ({ tutor }: { tutor: UserInfo["tutor"] }) => {
   if (!tutor) return null;
 
   return (
-    <Card className="h-full">
+    <Card className="h-full relative overflow-hidden transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg">
+      <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary/40 via-primary/20 to-transparent" />
       <CardHeader className="pb-3">
-        <CardTitle className="text-lg font-semibold flex items-center gap-2">
-          <GraduationCap className="h-5 w-5 text-[#00ADB5]" />
+        <CardTitle className="text-lg font-heading font-semibold flex items-center gap-2">
+          <GraduationCap className="h-5 w-5 text-primary" />
           Tutor Profile
         </CardTitle>
         <CardDescription>Your tutoring information and expertise</CardDescription>
       </CardHeader>
       <CardContent className="pt-0">
         <InfoRow icon={User} label="Name" value={tutor.name} />
-        <Separator />
         <InfoRow icon={Mail} label="Email" value={tutor.email} />
-        <Separator />
         <InfoRow icon={Phone} label="Contact Number" value={tutor.contactNumber} />
-        <Separator />
         <InfoRow icon={Award} label="Designation" value={tutor.designation} />
-        <Separator />
         <InfoRow icon={GraduationCap} label="Education Level" value={tutor.educationLevel} />
-        <Separator />
         <InfoRow icon={Clock} label="Experience" value={`${tutor.experienceYears} years`} />
-        <Separator />
         <InfoRow
           icon={DollarSign}
           label="Hourly Rate"
           value={`$${tutor.hourlyRate.toFixed(2)}`}
         />
-        <Separator />
         <InfoRow
           icon={Clock}
           label="Availability"
           value={`${formatTime(tutor.availabilityStartTime)} - ${formatTime(tutor.availabilityEndTime)}`}
         />
-        <Separator />
         <InfoRow
           icon={Calendar}
           label="Available Days"
           value={tutor.availableDays.join(", ")}
+          isLast
         />
       </CardContent>
     </Card>
@@ -302,37 +289,44 @@ const MyProfilePage = async () => {
   }
 
   return (
-    <div className="w-full max-w-none px-4 sm:px-6 lg:px-8 py-6">
-      {/* Page Header */}
-      <div className="mb-8">
-        <h2 className="text-3xl font-bold text-slate-900">My Profile</h2>
-        <p className="text-slate-600 mt-1">
-          View and manage your personal information and account details
-        </p>
-      </div>
+    <div className="w-full max-w-none px-4 sm:px-6 lg:px-8 py-6 relative">
+      {/* Decorative background blobs */}
+      <div className="fixed top-1/4 -right-32 w-96 h-96 bg-gradient-to-br from-primary/10 to-transparent rounded-full blur-3xl animate-float-slow pointer-events-none" />
+      <div className="fixed bottom-1/4 -left-32 w-80 h-80 bg-gradient-to-tr from-primary/5 to-transparent rounded-full blur-3xl animate-float-medium pointer-events-none" />
 
-      {/* Profile Header Card */}
-      <Card className="mb-6">
-        <CardContent className="pt-6">
-          <ProfileHeader user={user} />
-        </CardContent>
-      </Card>
+      <div className="relative z-10">
+        {/* Page Header */}
+        <div className="mb-8">
+          <h2 className="text-3xl font-heading font-bold text-foreground">My Profile</h2>
+          <p className="text-muted-foreground mt-1">
+            View and manage your personal information and account details
+          </p>
+        </div>
 
-      {/* Profile Details Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Left Column - Account Info */}
-        <AccountInfoCard user={user} />
+        {/* Profile Header Card */}
+        <Card className="mb-6 relative overflow-hidden transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg">
+          <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary/40 via-primary/20 to-transparent" />
+          <CardContent className="pt-6">
+            <ProfileHeader user={user} />
+          </CardContent>
+        </Card>
 
-        {/* Right Column - Role-Specific Info */}
-        {user.role === UserRole.ADMIN && user.admin && (
-          <AdminProfileCard admin={user.admin} />
-        )}
-        {user.role === UserRole.STUDENT && user.student && (
-          <StudentProfileCard student={user.student} />
-        )}
-        {user.role === UserRole.TUTOR && user.tutor && (
-          <TutorProfileCard tutor={user.tutor} />
-        )}
+        {/* Profile Details Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Left Column - Account Info */}
+          <AccountInfoCard user={user} />
+
+          {/* Right Column - Role-Specific Info */}
+          {user.role === UserRole.ADMIN && user.admin && (
+            <AdminProfileCard admin={user.admin} />
+          )}
+          {user.role === UserRole.STUDENT && user.student && (
+            <StudentProfileCard student={user.student} />
+          )}
+          {user.role === UserRole.TUTOR && user.tutor && (
+            <TutorProfileCard tutor={user.tutor} />
+          )}
+        </div>
       </div>
     </div>
   );

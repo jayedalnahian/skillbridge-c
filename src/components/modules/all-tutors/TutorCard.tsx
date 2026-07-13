@@ -14,6 +14,7 @@ interface TutorCardProps {
 
 export function TutorCard({ tutor }: TutorCardProps) {
   const profileImage = tutor.profilePhoto || tutor.User?.image;
+  console.log("TutorCard - tutor:", tutor);
   const displayName = tutor.name || tutor.User?.name || "Unknown";
   const categories = tutor.tutorCategory
     ?.map((tc) => tc.Category?.name)
@@ -136,7 +137,7 @@ export function TutorCard({ tutor }: TutorCardProps) {
 
           {/* CTA */}
           <Link href={`/all-tutors/${tutor.id}`} className="block pt-1">
-            <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-xs transition-all duration-300 hover:shadow-md hover:shadow-primary/20 active:scale-[0.98]">
+            <Button className="h-10 w-full rounded-full bg-gradient-to-r from-primary via-cyan-500 to-emerald-500 px-8 text-base font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-all duration-300 hover:scale-[1.03] hover:shadow-xl hover:shadow-primary/30 sm:w-auto">
               View Profile
             </Button>
           </Link>
