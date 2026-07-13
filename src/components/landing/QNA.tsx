@@ -127,7 +127,7 @@ export function QNA() {
             Can&apos;t find the answer you&apos;re looking for? Our support team is here to help.
           </p>
           <Link
-            href="/#contact"
+            href="/contact"
             className="inline-flex items-center gap-2 font-medium text-primary transition-colors hover:text-primary/80"
           >
             Contact Support

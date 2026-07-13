@@ -4,10 +4,15 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { MotionDiv } from "./client/motion-div.client";
 import "../../../public/skillbridge avatart img.png"
+import { getHeroStats } from "@/services/stats.service";
 
 const featuredSkills = ["React", "Python", "Design", "Node.js"];
 
-export function Hero() {
+export async function  Hero() {
+
+
+  const { data } = await getHeroStats()
+
   return (
     <section className="relative flex min-h-[60vh] items-center overflow-hidden bg-background text-foreground">
       <div className="absolute inset-0 overflow-hidden">
@@ -62,16 +67,16 @@ export function Hero() {
 
             <div className="mt-8 grid gap-4 border-t border-border pt-6 sm:grid-cols-3">
               <div>
-                <div className="text-2xl font-semibold text-primary">500+</div>
+                <div className="text-2xl font-semibold text-primary">{data?.totalTutors ?? 0}+</div>
                 <div className="text-sm text-muted-foreground">Expert tutors</div>
               </div>
               <div>
-                <div className="text-2xl font-semibold text-primary">10k+</div>
+                <div className="text-2xl font-semibold text-primary">{data?.totalBookedSessions ?? 0}+</div>
                 <div className="text-sm text-muted-foreground">Sessions booked</div>
               </div>
               <div>
-                <div className="text-2xl font-semibold text-primary">4.9/5</div>
-                <div className="text-sm text-muted-foreground">Average rating</div>
+                <div className="text-2xl font-semibold text-primary">{data?.totalStudents ?? 0}+</div>
+                <div className="text-sm text-muted-foreground">Total Students</div>
               </div>
             </div>
           </MotionDiv>

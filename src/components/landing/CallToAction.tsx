@@ -68,16 +68,6 @@ export function CallToAction() {
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
-              <Button
-                asChild
-                variant="outline"
-                size="lg"
-                className="border-foreground/30 px-8 py-6 text-base text-foreground transition-all hover:bg-foreground/10"
-              >
-                <Link href="/register">
-                  Become a Tutor
-                </Link>
-              </Button>
             </MotionDiv>
 
             <MotionDiv

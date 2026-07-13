@@ -1,7 +1,9 @@
+import { HowItWorks } from "@/components/landing";
+
 const HowItWorksPage = () => {
     return (
         <div>
-            this is the how it works page
+           <HowItWorks></HowItWorks> 
         </div>
     )
 }

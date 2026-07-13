@@ -1,8 +1,12 @@
 
+"use client";
 
 import { Button } from "@/components/ui/button";
 import { Mail, MapPin, Phone, Send } from "lucide-react";
 import { MotionDiv } from "./client/motion-div.client";
+import { createMessage } from "@/services/message.service";
+import { useState } from "react";
+import { toast } from "sonner";
 
 const contactInfo = [
   {
@@ -30,6 +34,28 @@ const contactInfo = [
 ];
 
 export function Contact() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [subject, setSubject] = useState("");
+  const [body, setBody] = useState("");
+  const [isPending, setIsPending] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsPending(true);
+    const result = await createMessage({ name, email, subject, body });
+    setIsPending(false);
+    if (result.success) {
+      toast.success(result.message);
+      setName("");
+      setEmail("");
+      setSubject("");
+      setBody("");
+    } else {
+      toast.error(result.message);
+    }
+  };
+
   return (
     <section className="relative overflow-hidden bg-background text-foreground py-20 lg:py-28">
       <div className="absolute inset-0 overflow-hidden">
@@ -84,7 +110,7 @@ export function Contact() {
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.5, ease: "easeOut", delay: 0.15 }}
           >
-            <form className="space-y-5 rounded-2xl border border-border bg-card/50 p-8 backdrop-blur-sm">
+            <form onSubmit={handleSubmit} className="space-y-5 rounded-2xl border border-border bg-card/50 p-8 backdrop-blur-sm">
               <div className="grid gap-5 sm:grid-cols-2">
                 <div>
                   <label htmlFor="name" className="mb-1.5 block text-sm font-medium text-foreground">
@@ -94,6 +120,9 @@ export function Contact() {
                     id="name"
                     type="text"
                     placeholder="Your name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
                     className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
                   />
                 </div>
@@ -105,6 +134,9 @@ export function Contact() {
                     id="email"
                     type="email"
                     placeholder="your@email.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
                     className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
                   />
                 </div>
@@ -117,6 +149,9 @@ export function Contact() {
                   id="subject"
                   type="text"
                   placeholder="How can we help?"
+                  value={subject}
+                  onChange={(e) => setSubject(e.target.value)}
+                  required
                   className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
                 />
               </div>
@@ -128,11 +163,14 @@ export function Contact() {
                   id="message"
                   rows={4}
                   placeholder="Tell us more about your inquiry..."
+                  value={body}
+                  onChange={(e) => setBody(e.target.value)}
+                  required
                   className="w-full resize-none rounded-lg border border-border bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
                 />
               </div>
-              <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
-                Send Message
+              <Button type="submit" disabled={isPending} className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
+                {isPending ? "Sending..." : "Send Message"}
                 <Send className="ml-2 h-4 w-4" />
               </Button>
             </form>

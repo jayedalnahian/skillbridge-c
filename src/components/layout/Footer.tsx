@@ -10,27 +10,26 @@ const footerLinks = {
     title: "For Students",
     links: [
       { label: "Find Tutors", href: "/all-tutors" },
-      { label: "How it Works", href: "/#how-it-works" },
-      { label: "Pricing", href: "/#faq" },
+      { label: "How it Works", href: "/how-it-works" },
+      { label: "Pricing", href: "/faq" },
       { label: "Student Dashboard", href: "/dashboard" },
     ],
   },
   tutors: {
     title: "For Tutors",
     links: [
-      { label: "Become a Tutor", href: "/register" },
-      { label: "Tutor Resources", href: "/#faq" },
+
+      { label: "Tutor Resources", href: "/faq" },
       { label: "Tutor Dashboard", href: "/tutor/dashboard" },
-      { label: "Success Stories", href: "/#testimonials" },
+    
     ],
   },
   company: {
     title: "Company",
     links: [
-      { label: "About Us", href: "/#about" },
-      { label: "Contact", href: "/#contact" },
-      { label: "FAQ", href: "/#faq" },
-      { label: "Careers", href: "/contact" },
+      { label: "About Us", href: "/about" },
+      { label: "Contact", href: "/contact" },
+      { label: "FAQ", href: "/faq" },
     ],
   },
   legal: {
@@ -103,33 +102,7 @@ export function Footer() {
           ))}
         </div>
 
-        {/* Newsletter Section */}
-        <div className="mt-12 pt-8 border-t border-border">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-            <div>
-              <h3 className="text-foreground font-semibold mb-1">
-                Subscribe to our newsletter
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                Get the latest updates on new tutors and learning resources.
-              </p>
-            </div>
-            <form className="flex gap-2 w-full md:w-auto" onSubmit={(e) => e.preventDefault()}>
-              <Input
-                type="email"
-                placeholder="Enter your email"
-                className="bg-muted/50 border-border text-foreground placeholder:text-muted-foreground w-full md:w-64"
-              />
-              <Button
-                type="submit"
-                className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-6"
-              >
-                Subscribe
-                <ArrowRight className="h-4 w-4 ml-2" />
-              </Button>
-            </form>
-          </div>
-        </div>
+   
       </div>
 
       {/* Bottom Bar */}

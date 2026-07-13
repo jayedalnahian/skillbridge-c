@@ -63,20 +63,7 @@ export function About() {
               or advancing your career, we are here to help you achieve your goals.
             </p>
 
-            <div className="grid grid-cols-3 gap-6">
-              <div>
-                <div className="text-3xl font-bold text-primary">500+</div>
-                <div className="text-sm text-muted-foreground">Expert Tutors</div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-primary">15K+</div>
-                <div className="text-sm text-muted-foreground">Students</div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-primary">50+</div>
-                <div className="text-sm text-muted-foreground">Subjects</div>
-              </div>
-            </div>
+           
           </MotionDiv>
 
           <MotionDiv

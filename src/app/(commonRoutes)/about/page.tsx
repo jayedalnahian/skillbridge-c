@@ -1,8 +1,9 @@
+import { About } from "@/components/landing";
+
 export default function AboutPage() {
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold">About</h1>
-      <p className="text-gray-600 mt-2">Learn more about SkillBridge.</p>
+    <div>
+      <About></About>
     </div>
   );
 }

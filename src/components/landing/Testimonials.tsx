@@ -1,6 +1,7 @@
 import { Star, Quote } from "lucide-react";
 import { MotionDiv } from "./client/motion-div.client";
 import { CountUp } from "./client/count-up.client";
+import { getHeroStats } from "@/services/stats.service";
 
 const testimonials = [
   {
@@ -65,7 +66,9 @@ const testimonials = [
   },
 ];
 
-export function Testimonials() {
+export async function Testimonials() {
+
+    const { data } = await getHeroStats()
   return (
     <section className="relative overflow-hidden bg-background text-foreground py-20 lg:py-28">
       <div className="absolute inset-0 overflow-hidden">
@@ -174,10 +177,10 @@ export function Testimonials() {
 
         <div className="mt-16 grid grid-cols-2 gap-8 md:grid-cols-4">
           {[
-            { value: "15000", label: "Happy Students", suffix: "+" },
-            { value: "98", label: "Satisfaction Rate", suffix: "%" },
-            { value: "4.9", label: "Average Rating", suffix: "/5" },
-            { value: "50000", label: "Sessions Completed", suffix: "+" },
+            { value: String(data?.totalStudents ?? "15000"), label: "Happy Students", suffix: "+" },
+            { value: String(data?.totalTutors ?? "500"), label: "Expert Tutors", suffix: "+" },
+            { value: String(data?.totalCategories ?? "50"), label: "Subjects Covered", suffix: "+" },
+            { value: String(data?.totalBookedSessions ?? "50000"), label: "Sessions Completed", suffix: "+" },
           ].map((stat, index) => (
             <MotionDiv
               key={stat.label}
